@@ -1,0 +1,17 @@
+<ion-header class="ion-no-border">
+  <div class="header-container">
+    <div class="top-row">
+      <ion-buttons slot="start">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+
+      <ion-label class="doctor-name">
+        Dr. {{ medicoLogueado?.nombre || 'Médico' }} {{ medicoLogueado?.apellidoP || '' }}
+      </ion-label>
+
+      <ion-avatar class="doctor-photo">
+        <img src="assets/images/perfil-default.png" />
+      </ion-avatar>
+    </div>
+  </div>
+</ion-header>

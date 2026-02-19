@@ -1,0 +1,30 @@
+.header-container {
+  background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+  padding: 20px 10px 40px 10px; // Espacio extra abajo para el efecto redondeado
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; // Needed for absolute centering of the name
+  height: 50px; // Ensure consistent height
+}
+
+.doctor-name {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.doctor-photo {
+  width: 45px;
+  height: 45px;
+  border: 2px solid white;
+}

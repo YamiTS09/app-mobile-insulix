@@ -1,0 +1,78 @@
+<app-paciente-header></app-paciente-header>
+
+<ion-content [fullscreen]="true" class="main-content">
+  <div class="main-container">
+
+    <div class="custom-tabs">
+      <div class="tab-item" (click)="cambiarSegmento('dieta')" [class.active]="segmentoSeleccionado === 'dieta'">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <span>Dieta</span>
+      </div>
+      <div class="tab-item" (click)="cambiarSegmento('ejercicio')" [class.active]="segmentoSeleccionado === 'ejercicio'">
+        <ion-icon name="accessibility-outline"></ion-icon>
+        <span>Actividad física</span>
+      </div>
+    </div>
+
+    <div class="date-header">
+      <div class="line"></div>
+      <div class="date-text">{{ fechaActual }}</div>
+      <div class="line"></div>
+    </div>
+
+    <div *ngIf="segmentoSeleccionado === 'dieta'">
+      <div *ngIf="dietasAsignadas.length > 0; else sinDieta">
+        <ion-accordion-group [multiple]="true" class="catalog-list">
+          
+          <ion-accordion *ngFor="let dieta of dietasAsignadas; let i = index" [value]="'dieta-' + i" class="diet-card-accordion">
+            <ion-item slot="header" lines="none">
+              <div class="card-header-acc">
+                <h3>{{ dieta.tipo || 'Comida' }}: {{ dieta.platillo }}</h3>
+              </div>
+            </ion-item>
+            <div class="card-body-acc" slot="content">
+              <ul>
+                <li><strong>Acompañante:</strong> {{ dieta.acompanante || 'No especificado' }}</li>
+                <li><strong>Bebida:</strong> {{ dieta.bebida || 'No especificada' }}</li>
+              </ul>
+            </div>
+          </ion-accordion>
+
+        </ion-accordion-group>
+      </div>
+      <ng-template #sinDieta>
+        <div class="ion-text-center ion-padding" style="margin-top: 50px; color: #888;">
+          <ion-icon name="restaurant-outline" style="font-size: 64px; opacity: 0.3;"></ion-icon>
+          <p>Tu médico aún no ha asignado planes alimenticios para hoy.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div *ngIf="segmentoSeleccionado === 'ejercicio'">
+      <div *ngIf="ejercicioAsignado; else sinEjercicio">
+        <ion-accordion-group class="catalog-list">
+          <ion-accordion value="ejercicio_hoy" class="diet-card-accordion">
+            <ion-item slot="header" lines="none">
+              <div class="card-header-acc">
+                <h3>{{ ejercicioAsignado.nombre }}</h3>
+              </div>
+            </ion-item>
+            <div class="card-body-acc" slot="content">
+              <ul>
+                <li><strong>Duración:</strong> {{ ejercicioAsignado.duracion }}</li>
+                <li><strong>Instrucciones:</strong> {{ ejercicioAsignado.descripcion || 'Realizar de forma moderada siguiendo su ritmo.' }}</li>
+              </ul>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </div>
+      <ng-template #sinEjercicio>
+        <div class="ion-text-center ion-padding" style="margin-top: 50px; color: #888;">
+          <ion-icon name="walk-outline" style="font-size: 64px; opacity: 0.3;"></ion-icon>
+          <p>No tienes actividades físicas asignadas por ahora.</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </div>
+</ion-content>

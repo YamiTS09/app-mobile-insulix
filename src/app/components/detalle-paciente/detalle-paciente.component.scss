@@ -1,0 +1,197 @@
+ion-content {
+    --background: #F4F9FF;
+}
+
+.header-background {
+    background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
+    height: 140px;
+    width: 100%;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+
+    .header-content {
+        padding-top: 10px;
+        padding-left: 10px;
+    }
+}
+
+.main-container {
+    padding: 0 16px;
+    margin-top: 80px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 40px;
+}
+
+// Patient Card
+.patient-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    margin: 0;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+
+    .status-strip {
+        width: 12px;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+
+        &.high {
+            background-color: #00C806;
+        }
+
+        // Green strip
+    }
+
+    .card-content {
+        display: flex;
+        align-items: center;
+        padding: 20px 20px 20px 35px; // Extra left padding for strip
+        gap: 15px;
+    }
+
+    .patient-avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .patient-info {
+        .patient-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 5px 0;
+            line-height: 1.2;
+        }
+
+        .patient-details {
+            font-size: 14px;
+            color: #333;
+            margin: 0 0 5px 0;
+            font-weight: 500;
+        }
+
+        .sensor-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0070e0;
+        }
+    }
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 15px;
+    margin-left: 5px;
+}
+
+// Analysis Card
+.analysis-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin: 0;
+    margin-bottom: 25px;
+
+    .filter-pills {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+
+        ion-chip {
+            --background: white;
+            --color: #888;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            margin: 0;
+            height: 36px;
+            border-radius: 18px;
+
+            &.active-pill {
+                border-color: #666;
+                --color: #333;
+                background: #f9f9f9;
+            }
+        }
+    }
+}
+
+// Wellness Card
+// Wellness Card
+.wellness-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin: 0;
+    margin-bottom: 30px;
+
+    // Agrega esto para limpiar el separador negro
+    ion-item {
+        --background: transparent; // O white
+        --min-height: 1px;
+        margin: 10px 0;
+    }
+
+    .wellness-buttons {
+        // ... tu código actual
+    }
+}
+
+// Footer Actions
+.footer-actions {
+    display: flex;
+    gap: 15px;
+    padding: 0 5px;
+
+    .action-btn {
+        flex: 1;
+        --background: #0088FF;
+        --border-radius: 25px;
+        --box-shadow: 0 4px 10px rgba(0, 136, 255, 0.4);
+        height: 50px;
+        font-weight: 700;
+        text-transform: none;
+        font-size: 16px;
+        color: #ffffff;
+    }
+    .assignment-box {
+  padding: 10px 0;
+  .assigned-info {
+    background: #f4f7f9;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+    p { margin: 0; color: #333; }
+    small { color: #666; }
+
+    ion-button {
+    background: #0070e0;
+    --border-color: #0070e0;
+    --color: #0070e0;
+    text-transform: none;
+    font-weight: 600;
+    margin-left: auto; // Empuja el botón a la derecha
+    font-size: 12px;
+  }
+  }
+}
+}

@@ -1,0 +1,132 @@
+.main-content {
+  --background: #f4f6fa;
+}
+
+.main-container {
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin: 10px 0 15px 0;
+}
+
+
+.custom-searchbar {
+  --background: #ffffff;
+  --border-radius: 30px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --placeholder-color: #999;
+  --icon-color: #005BAA;
+  /* Darker blue icon as in image */
+  padding: 0;
+  margin-bottom: 20px;
+  height: 50px;
+  color: #000;
+  --border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+// Estilo para los filtros tipo pastilla
+.filter-segment {
+  background: transparent;
+  margin-bottom: 25px;
+
+  ion-segment-button {
+    --background: #ffffff;
+    --background-checked: #ffffff;
+    --color: #888;
+    --color-checked: #333;
+    --border-radius: 25px;
+    --indicator-color: transparent; // Quitamos la línea de abajo nativa
+    margin: 0 5px;
+    min-height: 38px;
+    border: 1px solid #aaa;
+    border-radius: 25px;
+
+    ion-label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    &.segment-button-checked {
+      border-color: #007bff;
+      color: #007bff;
+
+    }
+  }
+}
+
+// Estilo de la tarjeta de paciente
+.patient-card {
+  margin: 0 0 20px 0;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  .status-indicator {
+    width: 12px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+  }
+
+  .card-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px 15px 30px; // Padding extra a la izquierda por el indicador
+
+    ion-avatar {
+      width: 55px;
+      height: 55px;
+      margin-right: 15px;
+    }
+  }
+
+  .text-content {
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+
+    .glucose-info {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0;
+      color: #000;
+      font-weight: 500;
+
+      .sensor-icon {
+        transform: rotate(90deg);
+        font-size: 18px;
+        color: #0088FF; // Color temático para el sensor
+      }
+    }
+  }
+}
+
+.custom-fab {
+  margin-bottom: 90px;
+  margin-right: 10px;
+
+  ion-fab-button {
+    --background: #0088FF;
+    --box-shadow: 0 4px 10px rgba(0, 136, 255, 0.4);
+    width: 60px;
+    height: 60px;
+
+    ion-icon {
+      font-size: 30px;
+      color: white;
+    }
+  }
+
+}

@@ -1,0 +1,176 @@
+.main-content {
+    --background: #f4f6fa;
+    /* Light greyish blue background for the whole page */
+    position: relative;
+}
+.main-container {
+  padding: 20px;
+  background: #f4f6fa;
+  min-height: 100%;
+  padding-bottom: 100px;
+  /* Ensure space for FAB and Tabs */
+}
+
+/* Custom Top Tabs */
+.custom-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* Align bottom to match underline visual */
+    gap: 40px;
+    margin-bottom: 25px;
+    padding-top: 10px;
+
+    .tab-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #333;
+        /* Default color */
+
+        ion-icon {
+            font-size: 32px;
+            color: #000;
+        }
+
+        span {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.1;
+            text-align: left;
+        }
+
+        &.active {
+            border-bottom-color: #0088ff;
+            /* Active underline */
+            color: #0088ff;
+
+            ion-icon {
+                color: #0088ff;
+            }
+        }
+    }
+}
+
+.custom-searchbar {
+    --background: #ffffff;
+    --border-radius: 30px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --placeholder-color: #999;
+    --icon-color: #005BAA;
+    /* Darker blue icon as in image */
+    padding: 0;
+    margin-bottom: 20px;
+    height: 50px;
+    color: #000;
+    --border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+
+    button {
+        background: white;
+        border: 1px solid #ccc;
+        padding: 6px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #777;
+        background: white;
+        transition: all 0.2s;
+
+        &.active {
+            color: #007bff;
+            border-color: #007bff;
+        }
+    }
+}
+
+.catalog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 80px;
+}
+
+.diet-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+    .card-header {
+        margin-bottom: 15px;
+
+        h3 {
+            color: #0066cc;
+            /* Blue title */
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0;
+        }
+    }
+
+    .card-body {
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+
+            li {
+                margin-bottom: 8px;
+                color: #333;
+                font-size: 14px;
+                line-height: 1.4;
+
+                strong {
+                    color: #000;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    .card-footer {
+        margin-top: 15px;
+        text-align: right;
+
+        .assigned-text {
+            color: #0088ff;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.custom-fab {
+    margin-bottom: 90px;
+    margin-right: 10px;
+
+    ion-fab-button {
+        --background: #0088FF;
+        --box-shadow: 0 4px 10px rgba(0, 136, 255, 0.4);
+        width: 60px;
+        height: 60px;
+
+        ion-icon {
+            font-size: 30px;
+            color: white;
+        }
+    }
+
+    
+}

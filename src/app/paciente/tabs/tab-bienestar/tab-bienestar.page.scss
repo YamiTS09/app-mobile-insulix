@@ -1,0 +1,132 @@
+/* Estructura Principal */
+.main-content {
+    --background: #f4f6fa;
+    position: relative;
+}
+
+.main-container {
+    padding: 20px;
+    background: #f4f6fa;
+    min-height: 100%;
+}
+
+/* Custom Top Tabs (Iguales al catálogo) */
+.custom-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 25px;
+    padding-top: 10px;
+
+    .tab-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #333;
+
+        ion-icon {
+            font-size: 32px;
+            color: #000;
+        }
+
+        span {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        &.active {
+            border-bottom-color: #0088ff;
+            color: #0088ff;
+
+            ion-icon {
+                color: #0088ff;
+            }
+        }
+    }
+}
+
+/* Date Header */
+.date-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+
+    .line {
+        height: 1px;
+        background-color: #ccc;
+        flex: 1;
+        margin: 0 10px;
+    }
+
+    .date-text {
+        font-weight: 700;
+        color: #555;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+}
+
+/* Catalog Style Cards */
+.catalog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // Espacio entre "tarjetas-acordeón"
+}
+
+.diet-card-accordion {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 15px;
+
+    /* Estilo del Header (Botón del acordeón) */
+    ion-item {
+        --background: white;
+        --padding-start: 20px;
+        --min-height: 65px;
+        
+        .card-header-acc h3 {
+            color: #0066cc;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 0;
+        }
+    }
+
+    /* Estilo del Contenido Expandido */
+    .card-body-acc {
+        padding: 0 20px 20px 20px;
+        background: white;
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid #f0f0f0; // Línea sutil al expandir
+            padding-top: 15px;
+
+            li {
+                margin-bottom: 8px;
+                color: #444;
+                font-size: 15px;
+                line-height: 1.4;
+
+                strong { color: #000; font-weight: 700; }
+            }
+        }
+    }
+}
+
+/* Eliminar la línea divisoria automática de Ionic en acordeones */
+ion-accordion.accordion-expanding, 
+ion-accordion.accordion-expanded {
+    margin-bottom: 15px;
+}

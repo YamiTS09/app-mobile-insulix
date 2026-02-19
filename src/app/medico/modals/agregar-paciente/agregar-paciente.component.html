@@ -1,0 +1,76 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <ion-icon name="close-circle-outline" class="close-icon" (click)="dismiss()"></ion-icon>
+  </div>
+
+  <div class="modal-content">
+    <h2 class="modal-title">Nuevo paciente</h2>
+    <div class="title-underline"></div>
+
+    <form (ngSubmit)="savePatient()">
+      
+      <p class="section-label">Datos Personales</p>
+      
+      <div class="input-group">
+        <label>Nombre del paciente:</label>
+        <input type="text" [(ngModel)]="patientData.nombre" name="nombre" class="custom-input" placeholder="Nombre(s)">
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Apellido Paterno:</label>
+          <input type="text" [(ngModel)]="patientData.apellidoP" name="apellidoP" class="custom-input">
+        </div>
+        <div class="input-group">
+          <label>Apellido Materno:</label>
+          <input type="text" [(ngModel)]="patientData.apellidoM" name="apellidoM" class="custom-input">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Edad:</label>
+          <input type="number" [(ngModel)]="patientData.edad" name="edad" class="custom-input">
+        </div>
+        <div class="input-group">
+          <label>Glucosa (mg/dL):</label>
+          <input type="number" [(ngModel)]="patientData.glucosa" name="glucosa" class="custom-input">
+        </div>
+      </div>
+
+      <p class="section-label">Información de Contacto</p>
+
+      <div class="input-group">
+        <label>Teléfono:</label>
+        <input type="tel" [(ngModel)]="patientData.telefono" name="telefono" class="custom-input" placeholder="Ej. 271...">
+      </div>
+
+      <div class="input-group">
+        <label>Correo Electrónico:</label>
+        <input type="email" [(ngModel)]="patientData.email" name="email" class="custom-input" placeholder="paciente@correo.com">
+      </div>
+
+      <p class="section-label">Credenciales de Acceso</p>
+
+      <div class="input-group">
+        <label>Usuario:</label>
+        <input type="text" [(ngModel)]="patientData.usuario" name="usuario" class="custom-input">
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Contraseña:</label>
+          <input type="password" [(ngModel)]="patientData.password" name="password" class="custom-input">
+        </div>
+        <div class="input-group">
+          <label>Confirmar:</label>
+          <input type="password" [(ngModel)]="patientData.confirmarPassword" name="confirmarPassword" class="custom-input">
+        </div>
+      </div>
+
+      <div class="button-container">
+        <button type="submit" class="save-button">Guardar paciente</button>
+      </div>
+    </form>
+  </div>
+</div>

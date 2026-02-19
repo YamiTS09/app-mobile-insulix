@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { HomePage } from './home.page';
-
-import { HomePageRoutingModule } from './home-routing.module';
+import { InicioSesionPage } from './inicio-sesion.page';
+import { InicioSesionPageRoutingModule } from './inicio-sesion-routing.module';
 
 
 @NgModule({
@@ -12,8 +11,8 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    InicioSesionPageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [InicioSesionPage]
 })
-export class HomePageModule {}
+export class InicioSesionPageModule { }

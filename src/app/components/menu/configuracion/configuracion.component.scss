@@ -1,0 +1,100 @@
+.header-container {
+    background-color: #0070e0;
+    /* Vibrant Blue */
+    background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
+    padding: 20px 16px 30px 16px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    position: relative;
+    z-index: 10;
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .back-button {
+            --padding-start: 0;
+            margin-left: -10px;
+
+            ion-icon {
+                font-size: 28px;
+                color: white;
+            }
+        }
+
+        h1 {
+            color: white;
+            font-size: 30px;
+            font-weight: 700;
+            margin: 0;
+        }
+    }
+}
+
+.content-container {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #F4F9FF;
+    flex: 1;
+    padding-top: 20px;
+    min-height: 100vh;
+    margin-top: -20px;
+}
+
+.menu-list {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+
+    .menu-item {
+        background-color: white;
+        border-radius: 25px;
+        /* Fully rounded buttons */
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        /* Soft shadow */
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+
+        &:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            ion-icon {
+                font-size: 26px;
+                color: #005bb5;
+                /* Blue icons */
+            }
+        }
+
+        .label {
+            font-size: 16px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Specific style for delete item if needed to be different, 
+       but image shows it similar style, maybe just different icon */
+        &.delete-item {
+            .icon-box ion-icon {
+                color: #005bb5;
+                /* Keep blue as per image, or change to red if desired later */
+            }
+        }
+    }
+}

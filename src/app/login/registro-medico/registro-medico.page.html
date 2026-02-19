@@ -1,0 +1,114 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="header-image">
+    <img src="https://estaticos-cdn.prensaiberica.es/clip/31c3e21e-9f7c-4b65-a741-530fcad48807_alta-libre-aspect-ratio_default_0.jpg" alt="MRI Machine" />
+  </div>
+
+  <div class="register-container">
+    <div class="header-text">
+      <h2>Registro médico</h2>
+      <p>Crea una nueva cuenta médica (Paso {{step}} de 3)</p>
+    </div>
+
+    <form (ngSubmit)="$event.preventDefault()">
+
+      <div *ngIf="step === 1">
+        <div class="input-group">
+          <label>Nombre</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input type="text" [(ngModel)]="medicoData.nombre" name="nombre" placeholder="Nombre"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Apellido paterno</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-input type="text" [(ngModel)]="medicoData.apellidoP" name="apellidoP" placeholder="Apellido paterno"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Apellido materno</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-input type="text" [(ngModel)]="medicoData.apellidoM" name="apellidoM" placeholder="Apellido materno"></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" shape="round" class="register-btn" (click)="siguiente()">
+          Siguiente
+        </ion-button>
+      </div>
+
+      <div *ngIf="step === 2">
+        <div class="input-group">
+          <label>Teléfono</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            <ion-input type="tel" [(ngModel)]="medicoData.telefono" name="telefono" placeholder="Teléfono"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input type="email" [(ngModel)]="medicoData.email" name="email" placeholder="Correo electrónico"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Cédula profesional</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="card-outline" slot="start"></ion-icon>
+            <ion-input type="text" [(ngModel)]="medicoData.cedula" name="cedula" placeholder="Ej: 12345678"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="buttons-row">
+          <ion-button shape="round" fill="outline" class="half-btn" (click)="anterior()">Atrás</ion-button>
+          <ion-button shape="round" class="register-btn half-btn" (click)="siguiente()">Siguiente</ion-button>
+        </div>
+      </div>
+
+      <div *ngIf="step === 3">
+        <div class="input-group">
+          <label>Usuario</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+            <ion-input type="text" [(ngModel)]="medicoData.usuario" name="usuario" placeholder="Nombre de usuario"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Contraseña</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input type="password" [(ngModel)]="medicoData.password" name="password" placeholder="Contraseña">
+              <ion-input-password-toggle slot="end" color="secondary"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Confirmar contraseña</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input type="password" [(ngModel)]="medicoData.confirmarPassword" name="confirmarPassword" placeholder="Confirmar contraseña">
+              <ion-input-password-toggle slot="end" color="secondary"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="buttons-row">
+          <ion-button shape="round" fill="outline" class="half-btn" (click)="anterior()">Atrás</ion-button>
+          <ion-button shape="round" class="register-btn half-btn" (click)="registrarMedico()">Crear cuenta</ion-button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="register-link">
+      <p>¿Ya tienes cuenta? <a routerLink="/inicio-sesion">Inicia sesión</a></p>
+    </div>
+  </div>
+</ion-content>

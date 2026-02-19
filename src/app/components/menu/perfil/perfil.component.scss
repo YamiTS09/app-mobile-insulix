@@ -1,0 +1,470 @@
+// Configuración de fondo general
+ion-content {
+    --background: #F4F9FF;
+}
+
+// Fondo azul curvo superior
+.header-background {
+    background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+    height: 180px;
+    width: 100%;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 0 16px;
+
+        h1 {
+            color: white;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0;
+        }
+    }
+}
+
+// Contenedor principal con efecto de superposición
+.main-container {
+    padding: 0 16px;
+    margin-top: 100px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+// Tarjeta de perfil (Común para ambos roles)
+.profile-card {
+    background: white !important; // Evita el fondo negro
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 0;
+    margin-bottom: 25px;
+
+    .profile-content {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border: 2px solid #fff;
+        img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            margin: 0;
+            margin-bottom: 5px;
+        }
+
+        .profile-role {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+            font-weight: 400;
+        }
+    }
+}
+
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA MÉDICO
+   ========================================= */
+
+// Fila de estadísticas
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 30px;
+    gap: 10px;
+
+    .stat-item {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        flex: 1;
+        padding: 15px 5px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 500;
+        }
+    }
+}
+
+// Chips de especialidades
+.chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+
+    ion-chip {
+        --background: #e0f0ff;
+        --color: #0070e0;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+// Tarjetas de detalles (Horarios e Info de contacto)
+
+// About Section
+
+.about-section {
+
+    width: 100%;
+
+
+
+    .section-title {
+
+        font-size: 18px;
+
+        font-weight: 800;
+
+        color: #000;
+
+        margin-bottom: 15px;
+
+        margin-left: 5px;
+
+    }
+
+
+
+    .about-card {
+
+        background: white;
+
+        border-radius: 20px;
+
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+        margin: 0;
+
+        min-height: 100px; // Provide some height as in the image
+
+    }
+
+}
+
+
+
+.info-section {
+
+  width: 100%;
+
+  margin-top: 25px;
+
+
+
+  .section-title {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    color: #000;
+
+    margin-bottom: 12px;
+
+    margin-left: 5px;
+
+  }
+
+  .about-card {
+
+        background: white;
+
+        border-radius: 20px;
+
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+        margin: 0;
+
+        min-height: 150px; // Provide some height as in the image
+
+    }
+
+}
+
+
+
+// Contenedor de etiquetas (Especialidades)
+
+.chips-container {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 5px;
+
+  padding-left: 5px;
+
+ 
+
+  ion-chip {
+
+    --background: #e0f0ff;
+
+    --color: #0070e0;
+
+    font-weight: 600;
+
+    margin: 0;
+
+  }
+
+}
+
+
+
+// Tarjetas de detalle de contacto
+
+.detail-card {
+
+  background: white;
+
+        border-radius: 20px;
+
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+        margin: 0;
+
+        min-height: 150px;
+
+
+
+  ion-item {
+
+    --padding-start: 15px;
+
+    --inner-padding-end: 15px;
+
+   
+
+    ion-icon {
+
+      font-size: 20px;
+
+      margin-right: 15px;
+
+    }
+
+
+
+    p {
+
+      font-size: 14px;
+
+      font-weight: 600;
+
+      color: #333;
+
+      margin-bottom: 2px;
+
+    }
+
+
+
+    span {
+
+      font-size: 13px;
+
+      color: #888;
+
+    }
+
+  }
+}
+
+
+  ion-card-content {
+
+    ion-row {
+
+      padding: 8px 0;
+
+      font-size: 14px;
+
+      border-bottom: 1px solid #f0f0f0;
+
+     
+
+      &:last-child {
+
+        border-bottom: none;
+
+      }
+
+    }
+
+  }
+
+// Tarjetas de detalles (Horarios e Info de contacto)
+.detail-cardP {
+    background: white !important;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin: 0;
+    width: 100%;
+
+    ion-item {
+        --padding-start: 15px;
+        --inner-padding-end: 15px;
+        --background: transparent;
+
+        ion-icon {
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        span {
+            font-size: 13px;
+            color: #888;
+        }
+    }
+
+    ion-grid {
+        padding: 10px 20px;
+        ion-row {
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            &:last-child { border-bottom: none; }
+        }
+    }
+}
+
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA PACIENTE
+   ========================================= */
+
+// Tarjeta de formulario de datos personales
+.patient-form-card {
+    background: white !important; // Fondo blanco forzado
+    border-radius: 20px;
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin: 0;
+
+    .data-group {
+        margin-bottom: 15px;
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .data-input {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #666;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); // Efecto visual de input
+        }
+    }
+}
+
+// Botón de edición azul corporativo
+.edit-button {
+    --background: #0088ff;
+    --border-radius: 25px;
+    --box-shadow: 0 4px 10px rgba(0, 136, 255, 0.3);
+    margin-top: 10px;
+    font-weight: 700;
+    text-transform: none;
+    height: 48px;
+    color: #ffffff;
+}
+
+// Títulos de secciones
+.section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #000;
+    margin: 25px 0 15px 5px;
+    width: 100%;
+    text-align: left;
+}
+
+.custom-input {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 15px;
+  --padding-start: 15px;
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  min-height: 45px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+// Estilo cuando el input es solo lectura (no editando)
+.custom-input[readonly="true"] {
+  background: #f9f9f9;
+  border-color: #eee;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+  color: #ffffff;
+
+  ion-button {
+    color: #ffffff;
+  }
+}

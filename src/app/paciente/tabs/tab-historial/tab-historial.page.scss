@@ -1,0 +1,99 @@
+.main-content { --background: #f4f6fa; }
+
+.main-container {
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000;
+  margin: 10px 0 15px 0;
+}
+
+.custom-searchbar {
+  --background: #ffffff;
+  --border-radius: 30px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  margin-bottom: 20px;
+  height: 50px;
+}
+
+.filter-segment {
+  background: transparent;
+  margin-bottom: 25px;
+  
+  ion-segment-button {
+    --background: #ffffff;
+    --background-checked: #ffffff;
+    --color: #888;
+    --color-checked: #333;
+    --border-radius: 25px;
+    --indicator-color: transparent; // Quitamos la línea de abajo nativa
+    margin: 0 5px;
+    min-height: 38px;
+    border: 1px solid #aaa;
+    border-radius: 25px;
+    
+    ion-label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    &.segment-button-checked {
+ border-color: #007bff;
+                  color: #007bff;    }
+  }
+}
+
+/* ESTILO DE LA TARJETA DE ALERTA (INDIVIDUAL) */
+.alert-card {
+  margin: 0 0 20px 0;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+
+    .bell-icon { font-size: 20px; }
+    .alert-date { font-size: 14px; font-weight: 600; color: #444; }
+  }
+
+  .alert-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin-bottom: 15px;
+  }
+
+  .alert-body {
+    .alert-main-info {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+
+      .trend-icon { font-size: 26px; }
+
+      .alert-text {
+        .patient-name-alert { margin: 0; font-size: 17px; font-weight: 700; color: #111; }
+        .status-message { margin: 2px 0 0 0; font-size: 15px; color: #666; font-weight: 500; }
+      }
+    }
+
+    .alert-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 12px;
+
+      .glucose-val { font-size: 19px; font-weight: 800; }
+      .alert-time { font-size: 13px; color: #888; font-weight: 600; }
+    }
+  }
+}

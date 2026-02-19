@@ -1,3 +1,70 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" class="custom-menu" (ionWillOpen)="actualizarDatosMenu()">
+    <ion-content class="menu-content-bg">
+      <div class="menu-inner-container">
+
+        <div class="menu-header">
+          <div class="logo-container">
+            <img src="assets/images/logo.png" alt="Insulix Logo" class="app-logo-img" />
+            <span class="app-name">INSULIX</span>
+          </div>
+        </div>
+
+        <ion-menu-toggle auto-hide="false">
+          <div class="profile-section" routerLink="/perfil">
+            <ion-avatar class="profile-avatar">
+              <img [src]="'assets/images/perfil-default.png'" alt="Profile" />
+            </ion-avatar>
+            <div class="profile-info">
+              <h3 class="profile-name">
+                <span *ngIf="usuarioLogueado?.role === 'medico'">Dr. </span>
+                {{ usuarioLogueado?.nombre || 'Usuario' }} 
+                {{ usuarioLogueado?.apellidoP || '' }}
+              </h3>
+              <p style="color: #a2c8ff; font-size: 0.8em; margin-top: 4px;" *ngIf="usuarioLogueado">
+                {{ usuarioLogueado.role === 'medico' ? 'Médico Especialista' : 'Paciente' }}
+              </p>
+            </div>
+          </div>
+        </ion-menu-toggle>
+
+        <ion-list lines="none" class="menu-list">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item button routerLink="/configuracion" detail="false">
+              <ion-icon name="settings" slot="start"></ion-icon>
+              <ion-label>Configuración</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="false">
+            <ion-item button routerLink="/nosotros" detail="false">
+              <ion-icon name="people" slot="start"></ion-icon>
+              <ion-label>Nosotros</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="false">
+            <ion-item button routerLink="/acercade" detail="false">
+              <ion-icon name="alert-circle" slot="start"></ion-icon>
+              <ion-label>Acerca de</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <div class="menu-footer">
+          <ion-menu-toggle auto-hide="false">
+            <ion-button fill="clear" class="logout-btn" (click)="cerrarSesion()">
+              <ion-icon name="arrow-back-circle-outline" slot="start"></ion-icon>
+              Cerrar sesión
+            </ion-button>
+          </ion-menu-toggle>
+        </div>
+
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content">
+    <ion-router-outlet></ion-router-outlet>
+  </div>
 </ion-app>

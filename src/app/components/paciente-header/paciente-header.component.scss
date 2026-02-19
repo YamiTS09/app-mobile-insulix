@@ -1,0 +1,39 @@
+.header-container {
+  background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
+  padding: 15px 10px 25px 10px; // Ajuste de padding para simular la imagen
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  min-height: 56px;
+}
+
+.app-title {
+  color: white;
+  font-size: 1.4rem; // Un poco más grande para resaltar
+  font-weight: 700;  // Negrita más marcada
+  letter-spacing: 1px; // Espaciado entre letras
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.custom-menu-btn {
+  --color: white;
+  font-size: 1.8rem;
+}
+
+.notification-btn {
+  --color: white;
+  margin-right: 5px;
+
+  ion-icon {
+    font-size: 1.8rem; // Tamaño igual al menú para simetría
+  }
+}

@@ -1,0 +1,47 @@
+<app-medico-header></app-medico-header>
+
+<ion-content [fullscreen]="true" class="main-content">
+
+  <div class="content-container">
+
+    <h2 class="section-title">Nuevo reporte general</h2>
+
+    <div class="report-card">
+      <p class="instruction-text">
+        Seleccione la información que desea incluir en el reporte consolidado de todos sus pacientes:
+      </p>
+
+      <div class="checkbox-list">
+        <div class="checkbox-item" *ngFor="let opt of options">
+          <ion-checkbox slot="start" [(ngModel)]="opt.checked"></ion-checkbox>
+          <ion-label>{{ opt.label }}</ion-label>
+        </div>
+      </div>
+
+      <ion-button expand="block" shape="round" class="generate-btn" (click)="generateReport()">
+        Generar reporte general (PDF)
+      </ion-button>
+    </div>
+
+    <h2 class="section-title">Historial de reportes</h2>
+
+    <div class="history-list">
+      <div *ngIf="historyReports.length === 0" class="empty-history">
+        <p>No hay reportes generados anteriormente.</p>
+      </div>
+
+      <div class="history-card" *ngFor="let report of historyReports">
+        <h3 class="card-title">{{ report.title }}</h3>
+        <p class="patient-name">Pacientes: {{ report.patient }}</p>
+        <p class="creation-date">Fecha de creación: {{ report.date }}</p>
+
+        <div class="card-actions">
+          <ion-icon name="download-outline" class="action-icon" (click)="generateReport()"></ion-icon>
+          <ion-icon name="share-social-outline" class="action-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

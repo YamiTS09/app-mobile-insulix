@@ -1,0 +1,130 @@
+// Ajuste para el encabezado
+.header-container {
+    background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
+    padding: 20px 16px 30px 16px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    
+    .header-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        h1 {
+            color: white;
+            font-size: 30px;
+            font-weight: 700;
+            margin: 0;
+        }
+    }
+}
+
+.content-container {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #F4F9FF;
+    min-height: 100%;
+    margin-top: -20px;
+    padding-bottom: 40px;
+}
+
+.branding-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+
+    .logo-placeholder {
+        position: relative;
+        width: 60px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .heart-icon {
+            font-size: 50px;
+            color: #00897b;
+            position: absolute;
+        }
+
+        .drop-icon {
+            font-size: 20px;
+            color: #d32f2f;
+            position: absolute;
+            z-index: 2;
+            top: 15px;
+        }
+    }
+
+    .brand-name {
+        font-size: 28px;
+        font-weight: 800;
+        color: #004d40;
+        letter-spacing: 1px;
+        margin: 0;
+    }
+}
+
+.cards-list {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .info-card {
+        margin: 0; // Ionic cards traen margen por defecto
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // Sombreado más suave y moderno
+        text-align: center;
+
+        ion-card-header {
+            padding-bottom: 0;
+        }
+
+        h3 {
+            color: #0070e0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        p {
+            color: #444;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    }
+    
+}
+.branding-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  .logo-container-nosotros {
+    display: flex;
+    align-items: center;
+    gap: 8px; // Gap reducido para que el logo esté junto al nombre
+
+    .app-logo-img-small {
+      width: 100px; // Tamaño pequeño y profesional
+      height: 100px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+  }
+}

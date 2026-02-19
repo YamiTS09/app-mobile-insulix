@@ -1,0 +1,62 @@
+<app-medico-header></app-medico-header>
+
+<ion-content [fullscreen]="true" class="main-content">
+  <div class="main-container">
+    <ion-text>
+      <h2 class="title">Pacientes</h2>
+    </ion-text>
+
+    <ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar paciente..." show-clear-button="focus"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <ion-segment [(ngModel)]="filtroActivo" (ionChange)="setFiltro(filtroActivo)" mode="ios" class="filter-segment">
+      <ion-segment-button value="todos"><ion-label>Todos</ion-label></ion-segment-button>
+      <ion-segment-button value="alto"><ion-label>Alto</ion-label></ion-segment-button>
+      <ion-segment-button value="normal"><ion-label>Normal</ion-label></ion-segment-button>
+      <ion-segment-button value="bajo"><ion-label>Bajo</ion-label></ion-segment-button>
+    </ion-segment>
+
+    <div class="patient-list">
+      <ion-card *ngFor="let p of pacientesFiltrados" class="patient-card">
+        <div class="status-indicator" [style.background-color]="getColor(p.estado)"></div>
+        
+        <ion-card-content class="card-wrapper">
+          <div class="card-header-flex" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+            <div class="info-section" [routerLink]="['/detalle-paciente', p.usuario]" style="display: flex; align-items: center; flex: 1;">
+              <ion-avatar slot="start">
+                <img src="assets/images/perfil-default.png" />
+              </ion-avatar>
+              <div class="text-content" style="margin-left: 15px;">
+                <ion-text color="dark">
+                  <h3 style="margin: 0; font-weight: 700;">{{ p.nombre }}</h3>
+                </ion-text>
+                <p class="glucose-info" style="margin: 5px 0 0 0;">
+                  <ion-icon name="wifi" class="sensor-icon"></ion-icon>
+                  <span class="glucose-value">{{ p.glucosa }} mg/dL</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="button-group" slot="end">
+  <ion-button fill="clear" (click)="$event.stopPropagation(); openAddPatientModal(p)" size="small">
+    <ion-icon name="create-outline" slot="icon-only" color="primary"></ion-icon>
+  </ion-button>
+  
+  <ion-button fill="clear" (click)="$event.stopPropagation(); eliminarPaciente(p)" size="small">
+    <ion-icon name="trash-outline" slot="icon-only" color="danger"></ion-icon>
+  </ion-button>
+</div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+    <ion-fab-button (click)="openAddPatientModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

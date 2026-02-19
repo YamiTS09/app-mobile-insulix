@@ -1,0 +1,68 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <ion-icon name="close-circle-outline" class="close-icon" (click)="dismiss()"></ion-icon>
+  </div>
+
+  <div class="modal-content">
+    <h2 class="modal-title">
+      {{ itemAEditar ? 'Editar' : 'Nueva' }} {{ type === 'dieta' ? 'dieta' : 'actividad física' }}
+    </h2>
+    <div class="title-underline"></div>
+
+    <form>
+      <div *ngIf="type === 'dieta'" class="fields-list">
+        <div class="input-group">
+          <label>Categoría (Filtro):</label>
+          <select [(ngModel)]="dietaData.tipo" name="tipoD" class="custom-input">
+            <option value="Desayuno">Desayuno</option>
+            <option value="Comida">Comida</option>
+            <option value="Cena">Cena</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Nombre del plan:</label>
+          <input type="text" [(ngModel)]="dietaData.nombre" name="nombreD" class="custom-input">
+        </div>
+
+        <div class="input-group">
+          <label>Platillo principal:</label>
+          <input type="text" [(ngModel)]="dietaData.platillo" name="platilloD" class="custom-input">
+        </div>
+
+        <div class="input-group">
+          <label>Acompañante:</label>
+          <input type="text" [(ngModel)]="dietaData.acompanante" name="acompananteD" class="custom-input">
+        </div>
+
+        <div class="input-group">
+          <label>Bebida:</label>
+          <input type="text" [(ngModel)]="dietaData.bebida" name="bebidaD" class="custom-input">
+        </div>
+      </div>
+
+      <div *ngIf="type === 'ejercicio'" class="fields-list">
+        <div class="input-group">
+          <label>Nombre de la actividad:</label>
+          <input type="text" [(ngModel)]="ejercicioData.nombre" name="nombreE" class="custom-input">
+        </div>
+
+        <div class="input-group">
+          <label>Duración sugerida:</label>
+          <input type="text" [(ngModel)]="ejercicioData.duracion" name="duracionE" class="custom-input">
+        </div>
+
+        <div class="input-group">
+          <label>Descripción:</label>
+          <input type="text" [(ngModel)]="ejercicioData.descripcion" name="descripcionE" class="custom-input">
+        </div>
+      </div>
+
+      <div class="button-container">
+        <button type="button" (click)="save()" class="save-button">
+          {{ itemAEditar ? 'Actualizar registro' : 'Guardar en catálogo' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="header-image">
+    <img
+      src="https://estaticos-cdn.prensaiberica.es/clip/31c3e21e-9f7c-4b65-a741-530fcad48807_alta-libre-aspect-ratio_default_0.jpg"
+      alt="MRI Machine" />
+  </div>
+
+  <div class="register-container">
+    <div class="header-text">
+      <h2>¿Olvidaste tu contraseña?</h2>
+      <p>Recupera el acceso a tu cuenta</p>
+    </div>
+
+    <form>
+
+      <!-- ================= PASO 1 ================= -->
+      <div *ngIf="step === 1">
+
+        <div class="input-group">
+          <label>Correo electrónico</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input type="email" placeholder="Ingresa tu correo electrónico"></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" shape="round" class="register-btn" (click)="siguiente()">
+          Siguiente
+        </ion-button>
+
+      </div>
+
+
+      <!-- ================= PASO 2 ================= -->
+      <div *ngIf="step === 2">
+
+        <div class="input-group">
+          <ion-input-otp length="6"> ¿No recibiste un código? <a href="#">Reenviar código</a> </ion-input-otp>
+        </div>
+
+
+
+        <div class="buttons-row">
+          <ion-button shape="round" fill="outline" class="half-btn" (click)="anterior()">
+            Atrás
+          </ion-button>
+
+          <ion-button shape="round" class="register-btn half-btn" (click)="siguiente()">
+            Siguiente
+          </ion-button>
+        </div>
+
+      </div>
+
+
+      <!-- ================= PASO 3 ================= -->
+      <div *ngIf="step === 3">
+
+        <div class="input-group">
+          <label>Nueva contraseña</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input type="password" placeholder="Ingresa tu nueva contraseña">
+              <ion-input-password-toggle slot="end" color="secondary"></ion-input-password-toggle>
+
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="input-group">
+          <label>Confirmar nueva contraseña</label>
+          <ion-item lines="none" class="custom-input">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input type="password" placeholder="Confirma tu nueva contraseña">
+              <ion-input-password-toggle slot="end" color="secondary"></ion-input-password-toggle>
+
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="buttons-row">
+          <ion-button shape="round" fill="outline" class="half-btn" (click)="anterior()">
+            Atrás
+          </ion-button>
+
+          <ion-button shape="round" class="register-btn half-btn">
+            Reestablecer contraseña
+          </ion-button>
+        </div>
+
+
+      </div>
+
+    </form>
+
+    <div class="register-link">
+      <p>¿Ya tienes cuenta? <a href="#" routerLink="/inicio-sesion">Inicia sesión</a></p>
+    </div>
+
+  </div>
+</ion-content>

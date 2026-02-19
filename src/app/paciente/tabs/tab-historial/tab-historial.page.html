@@ -1,0 +1,58 @@
+<app-paciente-header></app-paciente-header>
+
+<ion-content [fullscreen]="true" class="main-content">
+  <div class="main-container">
+    <ion-text>
+      <h2 class="title">Registro de alertas</h2>
+    </ion-text>
+
+    <ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar paciente..." show-clear-button="focus"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <ion-segment [(ngModel)]="filtroActivo" mode="ios" class="filter-segment">
+      <ion-segment-button value="todos"><ion-label>Todos</ion-label></ion-segment-button>
+      <ion-segment-button value="alto"><ion-label>Alto</ion-label></ion-segment-button>
+      <ion-segment-button value="normal"><ion-label>Normal</ion-label></ion-segment-button>
+      <ion-segment-button value="bajo"><ion-label>Bajo</ion-label></ion-segment-button>
+    </ion-segment>
+
+    <div class="alert-list">
+      <ion-card *ngFor="let h of historialFiltrado" class="alert-card" [routerLink]="['/detalle-paciente', h.usuario]">
+        <ion-card-content>
+          <div class="alert-header">
+            <ion-icon [name]="h.estado === 'normal' ? 'notifications-outline' : 'notifications'" 
+                      [style.color]="getColor(h.estado)" class="bell-icon"></ion-icon>
+            <span class="alert-date">{{ h.fecha }}</span>
+          </div>
+
+          <div class="alert-divider"></div>
+
+          <div class="alert-body">
+            <div class="alert-main-info">
+              <ion-icon [name]="h.estado === 'alto' ? 'arrow-up-outline' : (h.estado === 'bajo' ? 'arrow-down-outline' : 'checkmark-circle-outline')" 
+                        [style.color]="getColor(h.estado)" class="trend-icon"></ion-icon>
+              
+              <div class="alert-text">
+                <h3 class="patient-name-alert">{{ h.nombre }}</h3>
+                <p class="status-message">
+                  Nivel de glucosa {{ h.estado === 'alto' ? 'elevado' : (h.estado === 'bajo' ? 'bajo' : 'normal') }}.
+                </p>
+              </div>
+            </div>
+
+            <div class="alert-footer">
+              <span class="glucose-val" [style.color]="getColor(h.estado)">{{ h.glucosa }} mg/dL</span>
+              <span class="alert-time">{{ h.hora || '9:15 am' }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div *ngIf="historialFiltrado.length === 0" class="ion-text-center" style="margin-top: 50px; color: #999;">
+      <ion-icon name="archive-outline" style="font-size: 48px; opacity: 0.5;"></ion-icon>
+      <p>No se encontraron registros en el historial.</p>
+    </div>
+  </div>
+</ion-content>

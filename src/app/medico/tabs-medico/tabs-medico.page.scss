@@ -1,0 +1,68 @@
+ion-tabs {
+  background: transparent;
+}
+
+ion-tab-bar {
+  --background: #0d253f; 
+  --border: none;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  border-radius: 35px; /* Un poco más redondeado */
+  height: 65px;
+  padding: 0 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow: hidden;
+}
+
+ion-tab-button {
+  --background: transparent;
+  --color: #8da0b6; 
+  --color-selected: #ffffff; 
+  --ripple-color: transparent; /* Evita el círculo de feedback gris de Android */
+
+  display: flex;
+  flex-direction: row; 
+  align-items: center;     /* Alineación vertical perfecta */
+  justify-content: center;    /* Alineación horizontal perfecta */
+  border-radius: 30px;
+  height: 48px;            /* Altura fija para centrar dentro de la barra */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 0 1 auto;
+  margin: 0;
+  padding: 0 12px;
+
+  ion-icon {
+    font-size: 26px;      /* Tamaño ligeramente mayor para mejor visibilidad */
+    margin: 0;             /* Limpieza de márgenes */
+    display: flex;
+    align-items: center;
+  }
+
+  ion-label {
+    font-size: 14px;
+    font-weight: 700;      /* Un poco más de peso para legibilidad */
+    margin: 0;             /* Reset de márgenes */
+    opacity: 0;
+    max-width: 0;
+    white-space: nowrap;
+    transition: all 0.4s ease;
+    /* Eliminamos el transform translateX que causaba el desalineamiento */
+  }
+
+  &.tab-selected {
+    background: #007bff;
+    flex: 2 1 auto;        /* Permite que crezca más que los otros */
+    padding: 0 20px;
+
+    ion-label {
+      opacity: 1;
+      max-width: 100px;
+      margin-left: 9px;   /* Espacio controlado entre icono y texto */
+    }
+  }
+}

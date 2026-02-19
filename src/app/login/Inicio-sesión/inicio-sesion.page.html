@@ -1,0 +1,67 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="header-image">
+    <img
+      src="https://estaticos-cdn.prensaiberica.es/clip/31c3e21e-9f7c-4b65-a741-530fcad48807_alta-libre-aspect-ratio_default_0.jpg"
+      alt="MRI Machine" />
+  </div>
+
+  <div class="login-container">
+    <div class="header-text">
+      <h2>Bienvenido</h2>
+      <p>Ingresa tus datos para iniciar sesión</p>
+    </div>
+
+    <form (ngSubmit)="login()">
+  <div class="input-group">
+    <label>Usuario</label>
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-input type="text" name="usuario" [(ngModel)]="loginData.usuario"
+        placeholder="Escribe aquí tu usuario"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="input-group">
+    <label>Contraseña</label>
+    <ion-item lines="none" class="custom-input">
+      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+      <ion-input type="password" name="password" [(ngModel)]="loginData.password"
+        placeholder="Escribe aquí tu contraseña">
+        <ion-input-password-toggle slot="end" color="secondary"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+  </div>
+
+  <div class="options-row">
+    <ion-checkbox mode="md" labelPlacement="end">Recordarme</ion-checkbox>
+    <a class="forgot-password" routerLink="/reestablecer-contrasenia">¿Olvidaste tu contraseña?</a>
+  </div>
+
+  <ion-button 
+    expand="block" 
+    shape="round" 
+    class="login-btn" 
+    type="submit" 
+    [disabled]="!loginData.usuario || !loginData.password">
+    Iniciar sesión
+  </ion-button>
+</form>
+
+    <div class="divider">
+      <div class="line"></div>
+      <span>O iniciar sesión con</span>
+      <div class="line"></div>
+    </div>
+
+    <div class="social-login">
+      <ion-button shape="round" color="light" class="social-btn">
+        <img src="assets/icon/google-icon.svg" class="google-icon" />
+        Google
+      </ion-button>
+    </div>
+
+    <div class="signup-link">
+      <p>¿Eres médico? <a routerLink="/registro-medico">Regístrate</a></p>
+    </div>
+  </div>
+</ion-content>

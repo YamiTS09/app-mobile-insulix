@@ -1,0 +1,27 @@
+<app-paciente-header></app-paciente-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div class="greeting-section">
+    <h1>¡Hola {{ nombre }}!</h1>
+    <h2>¿Cómo te sientes hoy?</h2>
+  </div>
+
+  <div class="glucose-display">
+    <div class="glucose-value">
+      {{ glucosa }}
+      <span class="unit">mg/dL</span>
+    </div>
+
+    <div class="trend-indicator" [class.high]="estado === 'Alto'">
+      <ion-icon name="arrow-up" *ngIf="tendencia === 'subiendo'"></ion-icon>
+      <span class="status-text">{{ estado }}</span>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <img src="assets/images/grafica.png" alt="Gráfica de glucosa" />
+    <p class="chart-label">Indicador de tendencia</p>
+  </div>
+
+</ion-content>

@@ -1,0 +1,74 @@
+<app-medico-header></app-medico-header>
+
+<ion-content [fullscreen]="true" class="main-content">
+  <div class="main-container">
+
+    <div class="custom-tabs">
+      <div class="tab-item" (click)="segmentValue = 'dieta'; filterItems()" [class.active]="segmentValue === 'dieta'">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <span>Dieta</span>
+      </div>
+      <div class="tab-item" (click)="segmentValue = 'ejercicio'; filterItems()" [class.active]="segmentValue === 'ejercicio'">
+        <ion-icon name="accessibility-outline"></ion-icon>
+        <span>Actividad física</span>
+      </div>
+    </div>
+
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterItems()" class="custom-searchbar" placeholder="Buscar..."></ion-searchbar>
+
+    <div class="filter-buttons" *ngIf="segmentValue === 'dieta'">
+      <button (click)="setFiltroComida('Desayuno')" [class.active]="filtroComida === 'Desayuno'">Desayuno</button>
+      <button (click)="setFiltroComida('Comida')" [class.active]="filtroComida === 'Comida'">Comida</button>
+      <button (click)="setFiltroComida('Cena')" [class.active]="filtroComida === 'Cena'">Cena</button>
+    </div>
+
+    <div class="catalog-list">
+      <div *ngFor="let item of itemsFiltrados" class="diet-card">
+        
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>{{ segmentValue === 'dieta' ? (item.nombre || item.tipo) : item.nombre }}</h3>
+          
+          <div class="action-buttons">
+            <ion-button fill="clear" (click)="openAddModal(item)" size="small">
+              <ion-icon name="create-outline" slot="icon-only" color="primary"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="eliminarItem(item)" size="small">
+              <ion-icon name="trash-outline" slot="icon-only" color="danger"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <ul *ngIf="segmentValue === 'dieta'">
+            <li><strong>Platillo:</strong> {{ item.platillo }}</li>
+            <li><strong>Acompañante:</strong> {{ item.acompanante }}</li>
+            <li><strong>Bebida:</strong> {{ item.bebida }}</li>
+          </ul>
+          <ul *ngIf="segmentValue === 'ejercicio'">
+            <li><strong>Duración:</strong> {{ item.duracion }}</li>
+            <li><strong>Instrucciones:</strong> {{ item.descripcion }}</li>
+          </ul>
+        </div>
+        
+        <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="assigned-text">Asignado a: {{ item.pacientes || 0 }} pacientes</span>
+          
+          <ion-button *ngIf="pacienteEnSeleccion" 
+                      fill="solid" 
+                      color="success" 
+                      size="small" 
+                      style="--border-radius: 20px;"
+                      (click)="seleccionarItem(item)">
+            Asignar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+    <ion-fab-button (click)="openAddModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
