@@ -6,11 +6,11 @@
       </ion-buttons>
 
       <ion-label class="doctor-name">
-        Dr. {{ medicoLogueado?.nombre || 'Médico' }} {{ medicoLogueado?.apellidoP || '' }}
+        Dr. {{ medicoLogueado?.nombre || 'Médico' }} {{ medicoLogueado?.apellido_paterno || medicoLogueado?.apellido_materno || '' }}
       </ion-label>
 
       <ion-avatar class="doctor-photo">
-        <img src="assets/images/perfil-default.png" />
+        <img [src]="medicoLogueado?.foto_url || ('https://ui-avatars.com/api/?name=' + (medicoLogueado?.nombre || 'U') + '+' + (medicoLogueado?.apellido_paterno || medicoLogueado?.apellido_materno || '') + '&background=0D8ABC&color=fff&size=500')" />
       </ion-avatar>
     </div>
   </div>

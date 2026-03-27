@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController, AlertController, LoadingController } from '@ionic/angular';
 import { AgregarPacienteComponent } from '../../modals/agregar-paciente/agregar-paciente.component';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-tab-pacientes',
@@ -12,20 +14,45 @@ export class TabPacientesPage implements OnInit {
   searchTerm: string = '';
   filtroActivo: string = 'todos';
   pacientes: any[] = [];
+  usuarioLogueado: any;
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(
+    private modalCtrl: ModalController,
+    private http: HttpClient,
+    private toastCtrl: ToastController,
+    private alertController: AlertController,
+    private loadingCtrl: LoadingController
+  ) { }
 
   ngOnInit() {
+    const session = localStorage.getItem('userProfile');
+    if (session) {
+      this.usuarioLogueado = JSON.parse(session);
+    }
     this.cargarPacientes();
   }
 
   cargarPacientes() {
-    const datosLocales = localStorage.getItem('insulix_pacientes');
-    this.pacientes = datosLocales ? JSON.parse(datosLocales) : [];
-  }
-
-  guardarEnLocal() {
-    localStorage.setItem('insulix_pacientes', JSON.stringify(this.pacientes));
+    if (!this.usuarioLogueado || !this.usuarioLogueado.uid) return;
+    
+    this.http.get(`${environment.apiUrl}/paciente?medico_id=${this.usuarioLogueado.uid}`).subscribe({
+      next: (res: any) => {
+        this.pacientes = res.map((p: any) => {
+          const g = Number(p.glucosa_base);
+          let estadoCalculado = 'normal';
+          if (g > 180) estadoCalculado = 'alto';
+          else if (g < 70) estadoCalculado = 'bajo';
+          
+          p.estado = estadoCalculado;
+          // Asseguramos la compatibilidad del routerLink anterior
+          p.usuario = p.paciente_id;
+          p.glucosa = p.glucosa_base;
+          return p;
+        });
+        localStorage.setItem('insulix_pacientes', JSON.stringify(this.pacientes));
+      },
+      error: (err) => console.error('Error cargando pacientes:', err)
+    });
   }
 
   async openAddPatientModal(pacienteParaEditar?: any) {
@@ -33,7 +60,6 @@ export class TabPacientesPage implements OnInit {
       component: AgregarPacienteComponent,
       cssClass: 'add-patient-modal',
       componentProps: {
-        // Al igual que en catálogo, pasamos el item para editar
         itemAEditar: pacienteParaEditar 
       }
     });
@@ -43,20 +69,54 @@ export class TabPacientesPage implements OnInit {
     const { data } = await modal.onWillDismiss();
     
     if (data) {
+      const loading = await this.loadingCtrl.create({
+        message: 'Guardando...',
+        spinner: 'crescent',
+        cssClass: 'white-custom-loading'
+      });
+      await loading.present();
+
       if (pacienteParaEditar) {
-        // LÓGICA DE EDICIÓN (Busca por usuario, que es tu ID único)
-        const index = this.pacientes.findIndex(p => p.usuario === data.usuario);
-        if (index !== -1) {
-          this.pacientes[index] = data;
-        }
+        // LÓGICA DE EDICIÓN: PUT Request
+        this.http.put(`${environment.apiUrl}/paciente/${pacienteParaEditar.paciente_id}`, data).subscribe({
+          next: () => {
+            loading.dismiss();
+            this.mostrarMensaje('Paciente actualizado con éxito');
+            this.cargarPacientes();
+          },
+          error: (err) => {
+            loading.dismiss();
+            this.mostrarMensaje('Error al actualizar paciente', 'danger');
+          }
+        });
       } else {
-        // LÓGICA DE CREACIÓN
-        // Si no tiene imagen, el modal ya le asigna una por defecto
-        this.pacientes.unshift(data);
+        // LÓGICA DE CREACIÓN: POST Request
+        const payload = {
+          ...data,
+          medico_id: this.usuarioLogueado.uid
+        };
+        this.http.post(`${environment.apiUrl}/paciente`, payload).subscribe({
+          next: () => {
+            loading.dismiss();
+            this.mostrarMensaje('Paciente agregado a tu lista');
+            this.cargarPacientes();
+          },
+          error: (err) => {
+            loading.dismiss();
+            this.mostrarMensaje('Error al guardar el paciente', 'danger');
+          }
+        });
       }
-      
-      this.guardarEnLocal();
     }
+  }
+
+  async mostrarMensaje(mensaje: string, color: string = 'success') {
+    const toast = await this.toastCtrl.create({
+      message: mensaje,
+      duration: 2000,
+      color: color
+    });
+    toast.present();
   }
 
   get pacientesFiltrados() {
@@ -81,17 +141,32 @@ export class TabPacientesPage implements OnInit {
   }
 
   async eliminarPaciente(paciente: any) {
-  const confirmacion = confirm(`¿Estás seguro de que deseas eliminar a ${paciente.nombre}?`);
-  
-  if (confirmacion) {
-    // Filtramos el arreglo para quitar el paciente seleccionado
-    this.pacientes = this.pacientes.filter(p => p.usuario !== paciente.usuario);
-    
-    // Guardamos la lista actualizada en LocalStorage
-    this.guardarEnLocal();
-    
-    // Si usas una lista filtrada aparte, recuerda refrescarla
-    // this.filterItems(); 
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      cssClass: 'light-alert',
+      message: `¿Estás seguro de que deseas eliminar este registro? `,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this.http.delete(`${environment.apiUrl}/paciente/${paciente.paciente_id}`).subscribe({
+              next: () => {
+                this.mostrarMensaje('Paciente eliminado con éxito');
+                this.cargarPacientes();
+              },
+              error: (err) => this.mostrarMensaje('Error al eliminar paciente', 'danger')
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
-}
 }

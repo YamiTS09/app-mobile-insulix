@@ -1,7 +1,6 @@
-// Mantenemos tu header original
 .header-container {
     background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
-    padding: 20px 16px 30px 16px;
+    padding: calc(20px + env(safe-area-inset-top)) 16px 30px 16px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 

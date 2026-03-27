@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NavController, ToastController } from '@ionic/angular';
-
+import { NavController, ToastController, LoadingController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-inicio-sesion',
   templateUrl: 'inicio-sesion.page.html',
@@ -9,57 +11,82 @@ import { NavController, ToastController } from '@ionic/angular';
   standalone: false,
 })
 export class InicioSesionPage {
-
   loginData = {
-    usuario: '',
+    email: '',
     password: ''
   };
 
   constructor(
-    private router: Router,
+    private authService: AuthService,
+    private http: HttpClient,
     private navCtrl: NavController,
-    private toastCtrl: ToastController
-  ) { }
+    private toastCtrl: ToastController,
+    private loadingCtrl: LoadingController
+  ) {}
 
   async login() {
-    const { usuario, password } = this.loginData;
-
-    if (!usuario || !password) {
-      this.presentToast('Por favor, rellena todos los campos', 'warning');
+    // Aunque el botón esté deshabilitado, es buena práctica re-confirmar
+    if (!this.loginData.email || !this.loginData.password) {
       return;
     }
 
-    // 1. Intentar buscar en Médicos (puedes crear una llave 'insulix_medicos' en el registro)
-    const medicosRaw = localStorage.getItem('insulix_medicos');
-    const medicos = medicosRaw ? JSON.parse(medicosRaw) : [];
-    
-    // 2. Intentar buscar en Pacientes (la que ya usamos)
-    const pacientesRaw = localStorage.getItem('insulix_pacientes');
-    const pacientes = pacientesRaw ? JSON.parse(pacientesRaw) : [];
+    const loading = await this.loadingCtrl.create({
+      message: 'Accediendo a Insulix...',
+      spinner: 'crescent',
+      cssClass: 'white-custom-loading'
+    });
+    await loading.present();
 
-    // BUSCAR COINCIDENCIA
-    const medicoEncontrado = medicos.find((m: any) => m.usuario === usuario && m.password === password);
-    const pacienteEncontrado = pacientes.find((p: any) => p.usuario === usuario && p.password === password);
+    this.authService.login(this.loginData.email, this.loginData.password).pipe(
+      switchMap((res: any) => {
+        return this.authService.getToken(); 
+      }),
+      switchMap((firebaseToken) => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${firebaseToken}`
+        });
+        return this.http.get(`${environment.authUrl}/verify`, { headers });
+      })
+    ).subscribe({
+      next: (response: any) => {
+        loading.dismiss();
 
-    if (medicoEncontrado) {
-      // Guardar sesión activa del médico
-      localStorage.setItem('user_session', JSON.stringify({ ...medicoEncontrado, role: 'medico' }));
-      this.navCtrl.navigateRoot('/tabs-medico/tab-pacientes'); // Redirigir a panel médico
-    } 
-    else if (pacienteEncontrado) {
-      // Guardar sesión activa del paciente
-      localStorage.setItem('user_session', JSON.stringify({ ...pacienteEncontrado, role: 'paciente' }));
-      this.navCtrl.navigateRoot('/tabs-paciente/tab-monitoreo'); // Redirigir a panel paciente (debes crear esta ruta)
-    } 
-    else {
-      this.presentToast('Usuario o contraseña incorrectos', 'danger');
-    }
+        if (response.valid && response.access_token) {
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('userProfile', JSON.stringify(response.user));
+
+          if (response.user.role === 'MEDICO') {
+            this.navCtrl.navigateRoot('/tabs-medico/tab-pacientes');
+          } else if (response.user.role === 'PACIENTE') {
+            this.navCtrl.navigateRoot('/tabs-paciente/tab-monitoreo');
+          } else {
+            // fallback
+            if (response.user.cedula_profesional) {
+              this.navCtrl.navigateRoot('/tabs-medico/tab-pacientes');
+            } else {
+              this.navCtrl.navigateRoot('/tabs-paciente/tab-monitoreo');
+            }
+          }
+        } else {
+          this.presentToast('No se pudo validar al usuario', 'danger');
+        }
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error:', err);
+        // Manejo de errores específicos de Firebase
+        let mensaje = 'Correo o contraseña incorrectos';
+        if (err.code === 'auth/network-request-failed') mensaje = 'Error de conexión con el servidor';
+        
+        this.presentToast(mensaje, 'danger');
+      }
+    });
   }
 
   async presentToast(message: string, color: string) {
     const toast = await this.toastCtrl.create({
       message,
-      duration: 2000,
+      duration: 2500,
       color,
       position: 'bottom'
     });

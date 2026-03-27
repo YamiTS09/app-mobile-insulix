@@ -35,3 +35,31 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Custom alert styling to force light mode */
+.light-alert {
+  --background: #ffffff;
+  --color: #000000;
+  
+  .alert-title, h2.alert-title {
+    color: #000000 !important;
+  }
+  
+  .alert-message, .alert-message.sc-ion-alert-md {
+    color: #333333 !important;
+  }
+  
+  .alert-button {
+    color: var(--ion-color-primary, #0088FF);
+    &.alert-button-role-destructive {
+      color: var(--ion-color-danger, #c5000f);
+    }
+  }
+}
+
+/* Custom white loading */
+.white-custom-loading {
+  --background: #ffffff;
+  --spinner-color: #007bff;
+  color: #007bff;
+}

@@ -1,6 +1,6 @@
 .header-container {
   background: linear-gradient(180deg, #0070e0 0%, #005bb5 100%);
-  padding: 15px 10px 25px 10px; // Ajuste de padding para simular la imagen
+  padding: calc(15px + env(safe-area-inset-top)) 10px 25px 10px; // Ajuste de padding para simular la imagen
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }

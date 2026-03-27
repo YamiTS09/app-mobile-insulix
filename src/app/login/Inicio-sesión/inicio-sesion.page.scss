@@ -4,11 +4,13 @@
 
 .header-image {
   width: 100%;
-  height: 25vh; // Occupy roughly 40% of the screen height
+  height: 250px; // Un tamaño fijo para evitar el redimensionamiento del teclado
+  padding-top: env(safe-area-inset-top); // Evitar superposición de iconos del dispositivo
   overflow: hidden;
-  position: relative;
+  position: relative; // Needed for absolute centering of the name
+  background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
 
-  img {
+  .brand-logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -22,8 +24,8 @@
   margin-top: -30px; // Negative margin to overlap the image
   position: relative;
   z-index: 10;
-  padding: 30px 25px;
-  min-height: 65vh; // Ensure it covers the rest of the screen
+  padding: 30px 25px 150px 25px; // Añadir margen abajo para permitir el scroll y que el teclado no tape
+  min-height: calc(100vh - 220px); // Ensure it covers the rest of the screen
 }
 
 .header-text {
@@ -168,4 +170,26 @@ ion-input-password-toggle {
     color: #007bff;
     font-weight: 600;
   }
+}
+
+.error-container {
+  margin-top: 4px;
+  padding-left: 5px;
+  min-height: 18px; // Evita que el formulario "salte" al aparecer el texto
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.75rem;
+  display: block;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.input-error {
+  border: 1px solid var(--ion-color-danger) !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

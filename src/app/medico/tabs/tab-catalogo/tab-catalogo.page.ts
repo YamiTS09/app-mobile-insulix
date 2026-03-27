@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router'; // Asegúrate de tener esta importación
+import { Component, OnInit, inject } from '@angular/core';
+import { ModalController, NavController, LoadingController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 import { AddCatalogComponent } from '../../modals/add-catalog/add-catalog.component';
+import { DietasService } from 'src/app/services/dietas.service';
+import { ActividadService } from 'src/app/services/actividad.service';
 
 @Component({
   selector: 'app-tab-catalogo',
@@ -19,13 +21,16 @@ export class TabCatalogoPage implements OnInit {
   ejercicios: any[] = [];
   itemsFiltrados: any[] = [];
   
-  // 1. DECLARAR LA VARIABLE (Esto quita el primer error)
   pacienteEnSeleccion: string | null = null;
+
+  private dietasService = inject(DietasService);
+  private actividadService = inject(ActividadService);
 
   constructor(
     private modalCtrl: ModalController,
     private route: ActivatedRoute,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit() {
@@ -41,44 +46,58 @@ export class TabCatalogoPage implements OnInit {
     });
   }
 
-  // 2. DECLARAR LA FUNCIÓN (Esto quita el segundo error)
   seleccionarItem(item: any) {
-    const datosLocales = localStorage.getItem('insulix_pacientes');
-    if (datosLocales && this.pacienteEnSeleccion) {
-      let pacientes = JSON.parse(datosLocales);
-      const index = pacientes.findIndex((p: any) => p.usuario === this.pacienteEnSeleccion);
+    if (this.pacienteEnSeleccion) {
+      const asignacion = {
+        paciente_id: this.pacienteEnSeleccion,
+        fecha_asignacion: new Date().toISOString(),
+        dieta_id: item.id, // el id mapeado es el _id de mongo
+        actividad_id: item.id, // igual
+        notas_medicas: 'Asignado desde el catálogo',
+        fecha: new Date().toISOString() // por si el back lo requiere para actividad
+      };
 
-      if (index !== -1) {
-        // Asignamos el objeto según el segmento actual
-        if (this.segmentValue === 'dieta') {
-          pacientes[index].dietaAsignada = item;
-        } else {
-          pacientes[index].ejercicioAsignado = item;
-        }
-
-        // Guardamos la lista actualizada
-        localStorage.setItem('insulix_pacientes', JSON.stringify(pacientes));
-        
-        // Regresamos al detalle del paciente
-        this.navCtrl.navigateBack(['/detalle-paciente', this.pacienteEnSeleccion]);
+      if (this.segmentValue === 'dieta') {
+        this.dietasService.asignarDieta(asignacion).subscribe({
+          next: () => this.navCtrl.navigateBack(['/detalle-paciente', this.pacienteEnSeleccion]),
+          error: (err) => console.error('Error asignando dieta', err)
+        });
+      } else {
+        this.actividadService.asignarActividad(asignacion).subscribe({
+          next: () => this.navCtrl.navigateBack(['/detalle-paciente', this.pacienteEnSeleccion]),
+          error: (err) => console.error('Error asignando actividad', err)
+        });
       }
     }
   }
 
-  // Los demás métodos (cargarDatos, filterItems, openAddModal, eliminarItem, etc.)
-  // deben ir aquí abajo, siempre DENTRO de la llave final de la clase.
-
   cargarDatos() {
-    const d = localStorage.getItem('insulix_dietas');
-    const e = localStorage.getItem('insulix_ejercicios');
-    this.dietas = d ? JSON.parse(d) : [];
-    this.ejercicios = e ? JSON.parse(e) : [];
-    this.filterItems();
-  }
+    this.dietasService.getDietasCatalogo().subscribe({
+      next: (res) => {
+        this.dietas = res.map(d => ({
+          ...d,
+          id: d._id || d.id,
+          nombre: d.nombre_platillo || d.nombre,
+          tipo: d.categoria || d.tipo
+        }));
+        this.filterItems();
+      },
+      error: (err) => console.error('Error cargando dietas', err)
+    });
 
-  guardarDatos() {
-    localStorage.setItem('insulix_dietas', JSON.stringify(this.dietas));
-    localStorage.setItem('insulix_ejercicios', JSON.stringify(this.ejercicios));
+    this.actividadService.getActividadesCatalogo().subscribe({
+      next: (res) => {
+        this.ejercicios = res.map(e => ({
+          ...e,
+          id: e._id || e.id,
+          nombre: e.nombre_ejercicio || e.nombre,
+          duracion: e.duracion_min + ' min' || e.duracion,
+          descripcion: e.intensidad || e.descripcion
+        }));
+        this.filterItems();
+      },
+      error: (err) => console.error('Error cargando actividades', err)
+    });
   }
 
   filterItems() {
@@ -104,18 +123,65 @@ export class TabCatalogoPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
+    
     if (data) {
+      const loading = await this.loadingCtrl.create({
+        message: 'Guardando...',
+        spinner: 'crescent',
+        cssClass: 'white-custom-loading'
+      });
+      await loading.present();
+
       if (itemParaEditar) {
-        const list = this.segmentValue === 'dieta' ? this.dietas : this.ejercicios;
-        const index = list.findIndex(i => i.id === data.id);
-        if (index !== -1) list[index] = data;
+        // Edit pattern
+        const id = itemParaEditar.id;
+        if (this.segmentValue === 'dieta') {
+          const payload = {
+            nombre_platillo: data.nombre,
+            categoria: data.tipo,
+            platillo: data.platillo,
+            bebida: data.bebida
+          };
+          this.dietasService.updateDietaCatalogo(id, payload).subscribe({
+            next: () => { loading.dismiss(); this.cargarDatos(); },
+            error: () => loading.dismiss()
+          });
+        } else {
+          const payload = {
+            nombre_ejercicio: data.nombre,
+            duracion_min: parseInt(data.duracion),
+            intensidad: data.descripcion
+          };
+          this.actividadService.updateActividadCatalogo(id, payload).subscribe({
+            next: () => { loading.dismiss(); this.cargarDatos(); },
+            error: () => loading.dismiss()
+          });
+        }
       } else {
-        data.id = Date.now();
-        data.pacientes = 0;
-        this.segmentValue === 'dieta' ? this.dietas.push(data) : this.ejercicios.push(data);
+        // Create pattern
+        if (this.segmentValue === 'dieta') {
+          const payload = {
+            nombre_platillo: data.nombre,
+            categoria: data.tipo,
+            platillo: data.platillo,
+            bebida: data.bebida
+          };
+          this.dietasService.createDietaCatalogo(payload).subscribe({
+            next: () => { loading.dismiss(); this.cargarDatos(); },
+            error: () => loading.dismiss()
+          });
+        } else {
+          const payload = {
+            nombre_ejercicio: data.nombre,
+            duracion_min: parseInt(data.duracion) || 30,
+            intensidad: data.descripcion || 'Media'
+          };
+          this.actividadService.createActividadCatalogo(payload).subscribe({
+            next: () => { loading.dismiss(); this.cargarDatos(); },
+            error: () => loading.dismiss()
+          });
+        }
       }
-      this.guardarDatos();
-      this.filterItems();
     }
   }
 
@@ -128,12 +194,10 @@ export class TabCatalogoPage implements OnInit {
     const confirmacion = confirm(`¿Deseas eliminar "${item.nombre || item.tipo}"?`);
     if (confirmacion) {
       if (this.segmentValue === 'dieta') {
-        this.dietas = this.dietas.filter(d => d.id !== item.id);
+        this.dietasService.deleteDietaCatalogo(item.id).subscribe(() => this.cargarDatos());
       } else {
-        this.ejercicios = this.ejercicios.filter(e => e.id !== item.id);
+        this.actividadService.deleteActividadCatalogo(item.id).subscribe(() => this.cargarDatos());
       }
-      this.guardarDatos();
-      this.filterItems();
     }
   }
 }

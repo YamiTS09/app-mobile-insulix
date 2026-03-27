@@ -1,6 +1,6 @@
 .header-container {
   background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
-  padding: 20px 10px 40px 10px; // Espacio extra abajo para el efecto redondeado
+  padding: calc(20px + env(safe-area-inset-top)) 10px 40px 10px; // Espacio extra abajo para el efecto redondeado
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
 }

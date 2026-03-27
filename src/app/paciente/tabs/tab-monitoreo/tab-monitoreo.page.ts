@@ -20,7 +20,7 @@ export class TabMonitoreoPage implements OnInit {
   }
 
   cargarDatosUsuario() {
-    const session = localStorage.getItem('user_session');
+    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
     if (session) {
       const user = JSON.parse(session);
       // If the user has a name in the session, use it. Otherwise keep 'Sandra' as requested mockup.

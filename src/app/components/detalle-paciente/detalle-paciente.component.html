@@ -18,11 +18,11 @@
 
       <ion-card-content class="card-content">
         <ion-avatar class="patient-avatar">
-          <img src="assets/images/perfil-default.png" alt="Patient" />
+          <img [src]="paciente.foto_url || 'assets/images/perfil-default.png'" alt="Patient" />
         </ion-avatar>
         <div class="patient-info">
-          <h2 class="patient-name">{{ paciente.nombre }}</h2>
-          <p class="patient-details">{{ paciente.edad }} años<br>Diabetes Tipo 2</p>
+          <h2 class="patient-name">{{ paciente.nombre }} {{ paciente.apellido_paterno }}</h2>
+          <p class="patient-details"><span *ngIf="paciente.edad">{{ paciente.edad }} años<br></span>Diabetes Tipo 2</p>
           <div class="sensor-status">
             <ion-icon name="checkmark-circle" color="primary"></ion-icon>
             <span>Glucosa: <strong>{{ paciente.glucosa }} mg/dL</strong></span>

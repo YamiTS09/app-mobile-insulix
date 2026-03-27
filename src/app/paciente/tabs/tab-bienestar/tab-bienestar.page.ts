@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { DietasService } from '../../../services/dietas.service';
+import { ActividadService } from '../../../services/actividad.service';
 
 @Component({
   selector: 'app-tab-bienestar',
@@ -16,6 +18,9 @@ export class TabBienestarPage implements OnInit {
   ejercicioAsignado: any = null;
   usuarioLogueado: any = null;
 
+  private dietasService = inject(DietasService);
+  private actividadService = inject(ActividadService);
+
   constructor() { }
 
   ngOnInit() {
@@ -29,22 +34,41 @@ export class TabBienestarPage implements OnInit {
   }
 
   cargarDatosAsignados() {
-    // 1. Obtener la sesión activa y la lista de pacientes del médico
-    const session = localStorage.getItem('user_session');
-    const todosLosPacientes = localStorage.getItem('insulix_pacientes');
-
-    if (session && todosLosPacientes) {
+    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
+    
+    if (session) {
       this.usuarioLogueado = JSON.parse(session);
-      const listaPacientes = JSON.parse(todosLosPacientes);
+      const pacienteId = this.usuarioLogueado.usuario_id || this.usuarioLogueado.usuario || this.usuarioLogueado.uid;
 
-      // 2. Buscar al paciente logueado dentro de la lista que gestiona el médico
-      const misDatos = listaPacientes.find((p: any) => p.usuario === this.usuarioLogueado.usuario);
+      // Obtener dietas de la API
+      this.dietasService.getAsignaciones(pacienteId).subscribe({
+        next: (asignaciones: any[]) => {
+          this.dietasAsignadas = asignaciones.map((a: any) => ({
+            ...a.dieta_id,
+            nombre: a.dieta_id?.nombre_platillo,
+            tipo: a.dieta_id?.categoria
+          }));
+        },
+        error: (e: any) => console.error('Error cargando dietas del paciente', e)
+      });
 
-      if (misDatos) {
-        // 3. Sincronizar con lo que el médico asignó en el Detalle Paciente
-        this.dietasAsignadas = misDatos.dietasAsignadas || [];
-        this.ejercicioAsignado = misDatos.ejercicioAsignado || null;
-      }
+      // Obtener ejercicio de la API
+      this.actividadService.getAsignaciones(pacienteId).subscribe({
+        next: (asignaciones: any[]) => {
+          if (asignaciones.length > 0) {
+            const a = asignaciones[asignaciones.length - 1]; // Toma la más reciente
+            this.ejercicioAsignado = {
+              ...a.actividad_id,
+              nombre: a.actividad_id?.nombre_ejercicio,
+              duracion: a.actividad_id?.duracion_min + ' min',
+              descripcion: a.actividad_id?.intensidad
+            };
+          } else {
+            this.ejercicioAsignado = null;
+          }
+        },
+        error: (e: any) => console.error('Error cargando actividad del paciente', e)
+      });
     }
   }
 

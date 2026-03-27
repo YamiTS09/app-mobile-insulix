@@ -19,7 +19,7 @@ ion-content {
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-top: 20px;
+        margin-top: calc(20px + env(safe-area-inset-top));
         padding: 0 16px;
 
         h1 {
@@ -99,15 +99,16 @@ ion-content {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 30px;
-    gap: 10px;
+    margin-bottom: 25px;
+    gap: 15px;
 
     .stat-item {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        border: 1px solid #eef2f6;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
         flex: 1;
-        padding: 15px 5px;
+        padding: 18px 5px;
         text-align: center;
         display: flex;
         flex-direction: column;
@@ -115,7 +116,7 @@ ion-content {
         align-items: center;
 
         .stat-value {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 800;
             color: #000;
             margin-bottom: 4px;
@@ -123,7 +124,7 @@ ion-content {
 
         .stat-label {
             font-size: 11px;
-            color: #aaa;
+            color: #999;
             font-weight: 500;
         }
     }
@@ -148,171 +149,98 @@ ion-content {
 // About Section
 
 .about-section {
-
     width: 100%;
-
-
+    margin-bottom: 25px;
 
     .section-title {
-
-        font-size: 18px;
-
+        font-size: 20px;
         font-weight: 800;
-
         color: #000;
-
-        margin-bottom: 15px;
-
+        margin-bottom: 12px;
         margin-left: 5px;
-
     }
-
-
 
     .about-card {
-
         background: white;
-
         border-radius: 20px;
-
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
+        border: 1px solid #eef2f6;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
         margin: 0;
-
-        min-height: 100px; // Provide some height as in the image
-
+        padding: 10px;
+        min-height: auto;
     }
-
 }
-
-
 
 .info-section {
-
   width: 100%;
-
-  margin-top: 25px;
-
-
+  margin-bottom: 25px;
 
   .section-title {
-
-    font-size: 18px;
-
+    font-size: 20px;
     font-weight: 800;
-
     color: #000;
-
     margin-bottom: 12px;
-
     margin-left: 5px;
-
   }
-
-  .about-card {
-
-        background: white;
-
-        border-radius: 20px;
-
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-        margin: 0;
-
-        min-height: 150px; // Provide some height as in the image
-
-    }
-
 }
 
-
-
 // Contenedor de etiquetas (Especialidades)
-
 .chips-container {
-
   display: flex;
-
   flex-wrap: wrap;
-
-  gap: 5px;
-
-  padding-left: 5px;
-
- 
+  gap: 8px;
+  padding: 5px;
 
   ion-chip {
-
-    --background: #e0f0ff;
-
-    --color: #0070e0;
-
-    font-weight: 600;
-
+    --background: #eef6ff;
+    --color: #007bff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 0 15px;
+    border-radius: 20px;
     margin: 0;
-
   }
-
 }
 
 
 
 // Tarjetas de detalle de contacto
-
 .detail-card {
-
   background: white;
-
-        border-radius: 20px;
-
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-        margin: 0;
-
-        min-height: 150px;
-
-
+  border-radius: 20px;
+  border: 1px solid #eef2f6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  margin: 0;
+  padding: 10px 0;
 
   ion-item {
-
-    --padding-start: 15px;
-
-    --inner-padding-end: 15px;
-
-   
+    --padding-start: 20px;
+    --inner-padding-end: 20px;
+    --background: transparent;
+    padding: 5px 0;
 
     ion-icon {
-
-      font-size: 20px;
-
-      margin-right: 15px;
-
+      font-size: 22px;
+      margin-right: 18px;
     }
-
-
 
     p {
-
-      font-size: 14px;
-
-      font-weight: 600;
-
-      color: #333;
-
-      margin-bottom: 2px;
-
+      font-size: 13px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 4px;
+      margin-top: 0;
     }
-
-
 
     span {
-
       font-size: 13px;
-
       color: #888;
-
+      font-weight: 500;
     }
+  }
 
+  .empty-content {
+      min-height: 150px;
   }
 }
 

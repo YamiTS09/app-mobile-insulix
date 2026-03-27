@@ -8,7 +8,7 @@
   overflow: hidden;
   position: relative;
 
-  img {
+  .brand-logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -109,4 +109,17 @@
 .half-btn{
   flex: 1;
   height: 50px;
+}
+.error-container {
+  margin-top: 4px;
+  min-height: 18px;
+}
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.75rem;
+  display: block;
+  margin-left: 10px;
+}
+.input-error {
+  border-bottom: 2px solid var(--ion-color-danger) !important;
 }

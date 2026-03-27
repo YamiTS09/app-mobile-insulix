@@ -14,21 +14,22 @@
     <ion-card class="profile-card">
       <ion-card-content class="profile-content">
         <ion-avatar class="profile-avatar">
-          <img [src]="'assets/images/perfil-default.png'" alt="Profile" />
+          <img [src]="usuarioLogueado?.foto_url || ('https://ui-avatars.com/api/?name=' + (usuarioLogueado?.nombre || 'U') + '+' + (usuarioLogueado?.apellido_paterno || usuarioLogueado?.apellidoP || '') + '&background=0D8ABC&color=fff&size=500')" alt="Profile" />
         </ion-avatar>
         <div class="profile-info">
           <h2 class="profile-name">
-            {{ usuarioLogueado?.role === 'medico' ? 'Dr. ' : '' }}{{ usuarioLogueado?.nombre }} {{
-            usuarioLogueado?.apellidoP }}
+            {{ (usuarioLogueado?.role === 'medico' || usuarioLogueado?.role === 'MEDICO') ? 'Dr. ' : '' }}{{ usuarioLogueado?.nombre }} {{
+            usuarioLogueado?.apellido_paterno || usuarioLogueado?.apellidoP || '' }}
           </h2>
           <p class="profile-role">
-            {{ usuarioLogueado?.role === 'medico' ? 'Cédula: ' + (usuarioLogueado?.cedula || 'N/A') : 'Paciente' }}
+            {{ (usuarioLogueado?.role === 'medico' || usuarioLogueado?.role === 'MEDICO') ? (usuarioLogueado?.especialidad || 'Especialista') :
+            'Paciente' }}
           </p>
         </div>
       </ion-card-content>
     </ion-card>
 
-    <ng-container *ngIf="usuarioLogueado?.role === 'medico'">
+    <ng-container *ngIf="usuarioLogueado?.role === 'medico' || usuarioLogueado?.role === 'MEDICO'">
       <div class="stats-row">
         <div class="stat-item">
           <div class="stat-value">+ 200</div>
@@ -44,7 +45,7 @@
         </div>
       </div>
 
-      
+
 
       <!-- About Section -->
 
@@ -57,15 +58,13 @@
           <ion-card-content>
 
             <div class="chips-container">
-
-              <ion-chip color="primary">Diabetes Tipo 2</ion-chip>
-
-              <ion-chip color="primary">Geriatría</ion-chip>
-
-              <ion-chip color="primary">Nutrición Clínica</ion-chip>
-
+              <ion-chip color="primary" *ngIf="usuarioLogueado?.especialidad">
+                {{ usuarioLogueado?.especialidad }}
+              </ion-chip>
+              <ion-chip color="primary" *ngIf="!usuarioLogueado?.especialidad">
+                Médico General
+              </ion-chip>
             </div>
-            <div class="empty-content"></div>
 
           </ion-card-content>
 
@@ -79,11 +78,11 @@
 
       <div class="info-section">
 
-        <h3 class="section-title">Información Personal</h3>
+        <h3 class="section-title">Información personal</h3>
 
         <ion-card class="detail-card">
 
-          <ion-item lines="none" color="lighth">
+          <ion-item lines="none">
 
             <ion-icon name="mail" slot="start" color="primary"></ion-icon>
 
@@ -99,7 +98,7 @@
 
 
 
-          <ion-item lines="none" color="lighth">
+          <ion-item lines="none">
 
             <ion-icon name="call" slot="start" color="success"></ion-icon>
 
@@ -125,27 +124,9 @@
 
         <ion-card class="detail-card">
 
-          <ion-card-content>
+          <ion-card-content class="empty-content">
 
-            <ion-grid class="ion-no-padding">
-
-              <ion-row>
-
-                <ion-col>Lun - Vie</ion-col>
-
-                <ion-col class="ion-text-end"><strong>09:00 - 18:00</strong></ion-col>
-
-              </ion-row>
-
-              <ion-row>
-
-                <ion-col>Sábado</ion-col>
-
-                <ion-col class="ion-text-end"><strong>10:00 - 14:00</strong></ion-col>
-
-              </ion-row>
-
-            </ion-grid>
+            <!-- Espacio reservado para horarios -->
 
           </ion-card-content>
 
@@ -155,46 +136,48 @@
     </ng-container>
 
     <ng-container *ngIf="usuarioLogueado?.role === 'paciente'">
-  <div class="info-section">
-    <h3 class="section-title">Información personal</h3>
-    <ion-card class="patient-form-card">
-      
-      <div class="data-group">
-        <label>Nombre:</label>
-        <ion-input [(ngModel)]="usuarioLogueado.nombre" [readonly]="!editando" class="custom-input"></ion-input>
-      </div>
+      <div class="info-section">
+        <h3 class="section-title">Información personal</h3>
+        <ion-card class="patient-form-card">
 
-      <div class="data-group">
-        <label>Apellido paterno:</label>
-        <ion-input [(ngModel)]="usuarioLogueado.apellidoP" [readonly]="!editando" class="custom-input"></ion-input>
-      </div>
+          <div class="data-group">
+            <label>Nombre:</label>
+            <ion-input [(ngModel)]="usuarioLogueado.nombre" [readonly]="!editando" class="custom-input"></ion-input>
+          </div>
 
-      <div class="data-group">
-        <label>Apellido materno:</label>
-        <ion-input [(ngModel)]="usuarioLogueado.apellidoM" [readonly]="!editando" class="custom-input"></ion-input>
-      </div>
+          <div class="data-group">
+            <label>Apellido paterno:</label>
+            <ion-input [(ngModel)]="usuarioLogueado.apellidoP" [readonly]="!editando" class="custom-input"></ion-input>
+          </div>
 
-      <div class="data-group">
-        <label>Teléfono:</label>
-        <ion-input type="tel" [(ngModel)]="usuarioLogueado.telefono" [readonly]="!editando" class="custom-input"></ion-input>
-      </div>
+          <div class="data-group">
+            <label>Apellido materno:</label>
+            <ion-input [(ngModel)]="usuarioLogueado.apellidoM" [readonly]="!editando" class="custom-input"></ion-input>
+          </div>
 
-      <div class="data-group">
-        <label>Correo electrónico:</label>
-        <ion-input type="email" [(ngModel)]="usuarioLogueado.email" [readonly]="!editando" class="custom-input"></ion-input>
-      </div>
+          <div class="data-group">
+            <label>Teléfono:</label>
+            <ion-input type="tel" [(ngModel)]="usuarioLogueado.telefono" [readonly]="!editando"
+              class="custom-input"></ion-input>
+          </div>
 
-      <ion-button *ngIf="!editando" expand="block" class="edit-button" (click)="toggleEdicion()">
-        Editar Perfil
-      </ion-button>
+          <div class="data-group">
+            <label>Correo electrónico:</label>
+            <ion-input type="email" [(ngModel)]="usuarioLogueado.email" [readonly]="!editando"
+              class="custom-input"></ion-input>
+          </div>
 
-      <div *ngIf="editando" class="button-row">
-        <ion-button expand="block" color="medium" fill="outline" (click)="toggleEdicion()">Cancelar</ion-button>
-        <ion-button expand="block" color="primary" (click)="guardarCambios()">Guardar</ion-button>
+          <ion-button *ngIf="!editando" expand="block" class="edit-button" (click)="toggleEdicion()">
+            Editar Perfil
+          </ion-button>
+
+          <div *ngIf="editando" class="button-row">
+            <ion-button expand="block" color="medium" fill="outline" (click)="toggleEdicion()">Cancelar</ion-button>
+            <ion-button expand="block" color="primary" (click)="guardarCambios()">Guardar</ion-button>
+          </div>
+
+        </ion-card>
       </div>
-      
-    </ion-card>
-  </div>
-</ng-container>
+    </ng-container>
   </div>
 </ion-content>

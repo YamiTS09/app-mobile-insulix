@@ -21,7 +21,7 @@ export class AppComponent {
 
   // 2. Método para refrescar los datos (Error TS2339 corregido)
   actualizarDatosMenu() {
-    const session = localStorage.getItem('user_session');
+    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
     if (session) {
       this.usuarioLogueado = JSON.parse(session);
     } else {
@@ -31,7 +31,9 @@ export class AppComponent {
 
   // 3. Método para salir (Error TS2339 corregido)
   cerrarSesion() {
+    localStorage.removeItem('userProfile');
     localStorage.removeItem('user_session');
+    localStorage.removeItem('access_token');
     this.usuarioLogueado = null;
     this.menuCtrl.close(); // Cierra el menú lateral
     this.navCtrl.navigateRoot('/inicio-sesion');

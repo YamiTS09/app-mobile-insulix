@@ -23,17 +23,17 @@
         
         <ion-card-content class="card-wrapper">
           <div class="card-header-flex" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-            <div class="info-section" [routerLink]="['/detalle-paciente', p.usuario]" style="display: flex; align-items: center; flex: 1;">
+            <div class="info-section" [routerLink]="['/detalle-paciente', p.paciente_id]" style="display: flex; align-items: center; flex: 1;">
               <ion-avatar slot="start">
-                <img src="assets/images/perfil-default.png" />
+                <img [src]="p.foto_url || 'assets/images/perfil-default.png'" />
               </ion-avatar>
               <div class="text-content" style="margin-left: 15px;">
                 <ion-text color="dark">
-                  <h3 style="margin: 0; font-weight: 700;">{{ p.nombre }}</h3>
+                  <h3 style="margin: 0; font-weight: 700;">{{ p.nombre }} {{ p.apellido_paterno }}</h3>
                 </ion-text>
                 <p class="glucose-info" style="margin: 5px 0 0 0;">
-                  <ion-icon name="wifi" class="sensor-icon"></ion-icon>
-                  <span class="glucose-value">{{ p.glucosa }} mg/dL</span>
+                  <ion-icon name="water" class="sensor-icon" color="primary"></ion-icon>
+                  <span class="glucose-value">{{ p.glucosa_base }} mg/dL</span>
                 </p>
               </div>
             </div>

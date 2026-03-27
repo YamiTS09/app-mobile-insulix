@@ -1,26 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ToastController } from '@ionic/angular'; // Añadimos ToastController
+import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Importante añadir FormsModule
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule], // Añadimos FormsModule
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class PerfilComponent implements OnInit {
 
   usuarioLogueado: any = null;
-  editando: boolean = false; // Controla el estado de edición
+  editando: boolean = false;
 
-  constructor(private toastCtrl: ToastController) { }
+  constructor(
+    private toastCtrl: ToastController,
+    private http: HttpClient
+  ) { }
 
   ngOnInit() {
-    const session = localStorage.getItem('user_session');
+    this.cargarPerfilCompleto();
+  }
+
+  cargarPerfilCompleto() {
+    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
     if (session) {
       this.usuarioLogueado = JSON.parse(session);
+
+      // Si tenemos UID y rol, obtenemos la información extra
+      const role = this.usuarioLogueado?.role?.toUpperCase();
+      if (this.usuarioLogueado?.uid && (role === 'MEDICO' || role === 'PACIENTE')) {
+        const route = role === 'MEDICO' ? 'medico' : 'paciente';
+        
+        this.http.get(`${environment.apiUrl}/${route}/${this.usuarioLogueado.uid}`).subscribe({
+          next: (datosCompletos: any) => {
+            // Unir datos básicos del JWT con los datos extendidos (ej. especialidad, telefono)
+            this.usuarioLogueado = { ...this.usuarioLogueado, ...datosCompletos };
+            // Actualizar la sesión en local storage para que otras partes lo usen si lo necesitan
+            localStorage.setItem('userProfile', JSON.stringify(this.usuarioLogueado));
+          },
+          error: (err) => console.error('Error cargando datos completos del perfil:', err)
+        });
+      }
     }
   }
 

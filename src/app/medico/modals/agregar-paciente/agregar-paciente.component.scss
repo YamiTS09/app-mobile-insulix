@@ -89,6 +89,20 @@
                 border-color: #0088ff;
                 box-shadow: 0 4px 8px rgba(0, 136, 255, 0.1);
             }
+
+            &.input-error {
+                border-color: #ff3b30 !important;
+                background-color: #fffafb;
+            }
+        }
+
+        .error-msg {
+            color: #ff3b30;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+            margin-left: 5px;
         }
     }
 

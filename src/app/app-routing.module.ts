@@ -6,6 +6,10 @@ import { ConfiguracionComponent } from './components/menu/configuracion/configur
 import { NosotrosComponent } from './components/menu/nosotros/nosotros.component';
 import { AcercadeComponent } from './components/menu/acercade/acercade.component';
 import { DetallePacienteComponent } from './components/detalle-paciente/detalle-paciente.component';
+
+// Importamos el guard que acabas de crear
+import { authGuard } from './guards/auth-guard';
+
 const routes: Routes = [
   {
     path: 'inicio-sesion',
@@ -17,22 +21,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'tabs-medico',
-    loadChildren: () => import('./medico/tabs-medico/tabs-medico.module').then(m => m.TabsMedicoPageModule)
-  },
-  {
-    path: 'tab-pacientes',
-    loadChildren: () => import('./medico/tabs/tab-pacientes/tab-pacientes.module').then(m => m.TabPacientesPageModule)
-  },
-  {
-    path: 'tab-catalogo',
-    loadChildren: () => import('./medico/tabs/tab-catalogo/tab-catalogo.module').then(m => m.TabCatalogoPageModule)
-  },
-  {
-    path: 'tab-reportes',
-    loadChildren: () => import('./medico/tabs/tab-reportes/tab-reportes.module').then(m => m.TabReportesPageModule)
-  },
-  {
     path: 'registro-medico',
     loadChildren: () => import('./login/registro-medico/registro-medico.module').then(m => m.RegistroMedicoPageModule)
   },
@@ -40,33 +28,61 @@ const routes: Routes = [
     path: 'reestablecer-contrasenia',
     loadChildren: () => import('./login/reestablecer-contrasenia/reestablecer-contrasenia.module').then(m => m.ReestablecerContraseniaPageModule)
   },
-  // tabs-routing.module.ts o app-routing.module.ts
-{
-  path: 'detalle-paciente/:id',
-  component: DetallePacienteComponent
-},
-  // Menú personalizado
-  { path: 'perfil', component: PerfilComponent },
-  { path: 'configuracion', component: ConfiguracionComponent },
-  { path: 'nosotros', component: NosotrosComponent },
-  { path: 'acercade', component: AcercadeComponent },
+
+  // --- RUTAS PROTEGIDAS PARA MÉDICOS ---
+  {
+    path: 'tabs-medico',
+    canActivate: [authGuard],
+    loadChildren: () => import('./medico/tabs-medico/tabs-medico.module').then(m => m.TabsMedicoPageModule)
+  },
+  {
+    path: 'tab-pacientes',
+    canActivate: [authGuard],
+    loadChildren: () => import('./medico/tabs/tab-pacientes/tab-pacientes.module').then(m => m.TabPacientesPageModule)
+  },
+  {
+    path: 'tab-catalogo',
+    canActivate: [authGuard],
+    loadChildren: () => import('./medico/tabs/tab-catalogo/tab-catalogo.module').then(m => m.TabCatalogoPageModule)
+  },
+  {
+    path: 'tab-reportes',
+    canActivate: [authGuard],
+    loadChildren: () => import('./medico/tabs/tab-reportes/tab-reportes.module').then(m => m.TabReportesPageModule)
+  },
+  {
+    path: 'detalle-paciente/:id',
+    canActivate: [authGuard],
+    component: DetallePacienteComponent
+  },
+
+  // --- RUTAS PROTEGIDAS PARA PACIENTES ---
   {
     path: 'tabs-paciente',
+    canActivate: [authGuard],
     loadChildren: () => import('./paciente/tabs-paciente/tabs-paciente.module').then( m => m.TabsPacientePageModule)
   },
   {
     path: 'tab-monitoreo',
+    canActivate: [authGuard],
     loadChildren: () => import('./paciente/tabs/tab-monitoreo/tab-monitoreo.module').then( m => m.TabMonitoreoPageModule)
   },
   {
     path: 'tab-bienestar',
+    canActivate: [authGuard],
     loadChildren: () => import('./paciente/tabs/tab-bienestar/tab-bienestar.module').then( m => m.TabBienestarPageModule)
   },
   {
     path: 'tab-historial',
+    canActivate: [authGuard],
     loadChildren: () => import('./paciente/tabs/tab-historial/tab-historial.module').then( m => m.TabHistorialPageModule)
   },
 
+  // --- COMPONENTES DE MENÚ (TAMBIÉN PROTEGIDOS) ---
+  { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
+  { path: 'configuracion', component: ConfiguracionComponent, canActivate: [authGuard] },
+  { path: 'nosotros', component: NosotrosComponent, canActivate: [authGuard] },
+  { path: 'acercade', component: AcercadeComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

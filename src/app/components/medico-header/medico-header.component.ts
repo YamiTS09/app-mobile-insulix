@@ -20,7 +20,7 @@ export class MedicoHeaderComponent implements OnInit {
   }
 
   obtenerSesion() {
-    const session = localStorage.getItem('user_session');
+    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
     if (session) {
       this.medicoLogueado = JSON.parse(session);
     }

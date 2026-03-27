@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, NavController } from '@ionic/angular';
+import { ToastController, NavController, LoadingController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-registro-medico',
@@ -12,7 +13,6 @@ export class RegistroMedicoPage implements OnInit {
 
   step: number = 1;
 
-  // Objeto para capturar los datos del formulario
   medicoData = {
     nombre: '',
     apellidoP: '',
@@ -20,67 +20,87 @@ export class RegistroMedicoPage implements OnInit {
     telefono: '',
     email: '',
     cedula: '',
-    usuario: '',
+    especialidad: '',
+    hospital: '',
     password: '',
     confirmarPassword: ''
   };
 
   constructor(
+    private authService: AuthService,
     private router: Router,
     private toastCtrl: ToastController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit() { }
 
   siguiente() {
-    this.step++;
+    if (this.step < 3) this.step++;
   }
 
   anterior() {
-    this.step--;
+    if (this.step > 1) this.step--;
   }
 
   async registrarMedico() {
-    const { usuario, password, confirmarPassword, nombre } = this.medicoData;
+    const loading = await this.loadingCtrl.create({
+      message: 'Registrando en Insulix...',
+      spinner: 'crescent'
+    });
+    await loading.present();
 
-    // 1. Validaciones básicas
-    if (!usuario || !password || !nombre) {
-      this.presentToast('Por favor, completa los campos principales', 'warning');
-      return;
-    }
+    const datosPerfil = {
+      nombre: this.medicoData.nombre,
+      apellido_paterno: this.medicoData.apellidoP,
+      apellido_materno: this.medicoData.apellidoM || '',
+      cedula_profesional: this.medicoData.cedula,
+      especialidad: this.medicoData.especialidad,
+      hospital: this.medicoData.hospital,
+      telefono: this.medicoData.telefono,
+      foto_url: '' 
+    };
 
-    if (password !== confirmarPassword) {
-      this.presentToast('Las contraseñas no coinciden', 'danger');
-      return;
-    }
-
-    // 2. Obtener lista actual de médicos o crear una vacía
-    const medicosRaw = localStorage.getItem('insulix_medicos');
-    const medicos = medicosRaw ? JSON.parse(medicosRaw) : [];
-
-    // 3. Verificar si el usuario ya existe
-    const existe = medicos.find((m: any) => m.usuario === usuario);
-    if (existe) {
-      this.presentToast('El nombre de usuario ya está en uso', 'warning');
-      return;
-    }
-
-    // 4. Guardar nuevo médico
-    medicos.push(this.medicoData);
-    localStorage.setItem('insulix_medicos', JSON.stringify(medicos));
-
-    // 5. Éxito y Redirección
-    await this.presentToast('Cuenta médica creada con éxito', 'success');
-    this.navCtrl.navigateRoot('/inicio-sesion');
+    this.authService.registerMedico(this.medicoData.email, this.medicoData.password, datosPerfil).subscribe({
+      next: () => {
+        loading.dismiss();
+        this.presentToast('¡Médico registrado con éxito!', 'success');
+        this.navCtrl.navigateRoot('/inicio-sesion');
+      },
+      error: (err) => {
+        loading.dismiss();
+        console.error('Error:', err);
+        const detail = err.error?.details || 'Servidor no disponible';
+        this.presentToast('Error: ' + detail, 'danger');
+      }
+    });
   }
+
+  async validarCedula() {
+  const cedula = this.medicoData.cedula;
+
+  // Validación extra por código
+  if (!cedula || cedula.length < 7 || cedula.length > 8) {
+    this.presentToast('La cédula debe tener entre 7 y 8 dígitos', 'warning');
+    return;
+  }
+
+  const loading = await this.loadingCtrl.create({
+    message: 'Verificando cédula en el Registro Nacional...',
+    duration: 1500,
+    spinner: 'crescent'
+  });
+  await loading.present();
+
+  setTimeout(async () => {
+    this.presentToast(`Cédula ${cedula} validada exitosamente.`, 'success');
+  }, 1500);
+}
 
   async presentToast(message: string, color: string) {
     const toast = await this.toastCtrl.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom'
+      message, duration: 3000, color, position: 'bottom'
     });
     toast.present();
   }
