@@ -9,10 +9,6 @@ import { Component, OnInit } from '@angular/core';
 export class TabMonitoreoPage implements OnInit {
 
   nombre: string = 'Sandra'; // Placeholder or fetch from local storage
-  glucosa: number = 120;
-  estado: 'Alto' | 'Normal' | 'Bajo' = 'Alto'; // Simulating 'Alto' state
-  tendencia: 'subiendo' | 'estable' | 'bajando' = 'subiendo';
-
   constructor() { }
 
   ngOnInit() {

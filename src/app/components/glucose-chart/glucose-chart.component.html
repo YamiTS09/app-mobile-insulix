@@ -1,0 +1,30 @@
+<section class="glucose-chart-section">
+  @if (last; as item) {
+    <article class="latest-card" [style.--status-color]="getStatusColor(item.value)" aria-live="polite">
+      <span class="label">Última medición</span>
+      <strong>{{ item.value }} <small>mg/dL</small></strong>
+      <span class="status">{{ getGlucoseStatus(item.value) }}</span>
+      <time>{{ item.hour }}</time>
+    </article>
+  }
+
+  <div class="chart-scroll" tabindex="0" aria-label="Gráfica desplazable horizontalmente">
+    <div class="chart-canvas">
+      <apx-chart
+        [series]="chartOptions.series" [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
+        [annotations]="chartOptions.annotations" [stroke]="chartOptions.stroke"
+        [markers]="chartOptions.markers" [dataLabels]="chartOptions.dataLabels"
+        [grid]="chartOptions.grid" [tooltip]="chartOptions.tooltip"
+        [title]="chartOptions.title" [colors]="chartOptions.colors">
+      </apx-chart>
+    </div>
+  </div>
+
+  <div class="legend" aria-label="Rangos de glucosa">
+    <span><i class="low"></i>Bajo: menos de 70</span>
+    <span><i class="target"></i>Objetivo: 70–179</span>
+    <span><i class="high"></i>Alto: 180 o más</span>
+  </div>
+
+</section>
