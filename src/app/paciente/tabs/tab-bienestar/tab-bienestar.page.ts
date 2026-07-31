@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DietasService } from '../../../services/dietas.service';
 import { ActividadService } from '../../../services/actividad.service';
 
@@ -8,10 +8,18 @@ import { ActividadService } from '../../../services/actividad.service';
   styleUrls: ['./tab-bienestar.page.scss'],
   standalone: false
 })
-export class TabBienestarPage implements OnInit {
+export class TabBienestarPage implements OnInit, OnDestroy {
 
-  segmentoSeleccionado: 'dieta' | 'ejercicio' = 'dieta';
+  @ViewChild('weightWheel') weightWheel?: ElementRef<HTMLElement>;
+
+  segmentoSeleccionado: 'menu' | 'dieta' | 'ejercicio' | 'peso' = 'menu';
   fechaActual: string = '';
+  pesoSeleccionado = 70;
+  readonly opcionesPeso = Array.from(
+    { length: ((200 - 30) * 2) + 1 },
+    (_, index) => 30 + (index * 0.5)
+  );
+  private weightScrollTimer?: ReturnType<typeof setTimeout>;
   
   // Variables para almacenar los datos asignados por el médico
   dietasAsignadas: any[] = [];
@@ -26,6 +34,12 @@ export class TabBienestarPage implements OnInit {
   ngOnInit() {
     this.establecerFecha();
     this.cargarDatosAsignados();
+  }
+
+  ngOnDestroy() {
+    if (this.weightScrollTimer) {
+      clearTimeout(this.weightScrollTimer);
+    }
   }
 
   establecerFecha() {
@@ -72,7 +86,52 @@ export class TabBienestarPage implements OnInit {
     }
   }
 
-  cambiarSegmento(val: 'dieta' | 'ejercicio') {
+  cambiarSegmento(val: 'menu' | 'dieta' | 'ejercicio' | 'peso') {
     this.segmentoSeleccionado = val;
+
+    if (val === 'peso') {
+      setTimeout(() => this.centrarPesoSeleccionado());
+    }
+  }
+
+  alDesplazarPeso(event: Event) {
+    const wheel = event.target as HTMLElement;
+
+    if (this.weightScrollTimer) {
+      clearTimeout(this.weightScrollTimer);
+    }
+
+    this.weightScrollTimer = setTimeout(() => {
+      const itemHeight = 54;
+      const index = Math.round(wheel.scrollTop / itemHeight);
+      const value = this.opcionesPeso[index];
+
+      if (value !== undefined) {
+        this.pesoSeleccionado = value;
+      }
+    }, 80);
+  }
+
+  seleccionarPeso(peso: number) {
+    this.pesoSeleccionado = peso;
+    this.centrarPesoSeleccionado('smooth');
+  }
+
+  identificarPeso(_index: number, peso: number) {
+    return peso;
+  }
+
+  private centrarPesoSeleccionado(behavior: ScrollBehavior = 'auto') {
+    const wheel = this.weightWheel?.nativeElement;
+
+    if (!wheel) {
+      return;
+    }
+
+    const index = Math.round((this.pesoSeleccionado - 30) * 2);
+    wheel.scrollTo({
+      top: index * 54,
+      behavior
+    });
   }
 }

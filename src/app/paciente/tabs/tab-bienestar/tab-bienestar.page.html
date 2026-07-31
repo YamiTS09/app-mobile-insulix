@@ -1,78 +1,162 @@
 <app-paciente-header></app-paciente-header>
 
-<ion-content [fullscreen]="true" class="main-content">
-  <div class="main-container">
+<ion-content [fullscreen]="true" class="wellness-content">
+  <main class="wellness-page">
+    <header class="welcome-card">
+      <h1>Bienestar</h1>
+      <p>Cuida tu salud cada día.</p>
+    </header>
 
-    <div class="custom-tabs">
-      <div class="tab-item" (click)="cambiarSegmento('dieta')" [class.active]="segmentoSeleccionado === 'dieta'">
-        <ion-icon name="restaurant-outline"></ion-icon>
-        <span>Dieta</span>
+    <section *ngIf="segmentoSeleccionado === 'menu'" class="options-card" aria-labelledby="wellness-options-title">
+      <div class="options-heading">
+        <h2 id="wellness-options-title">¿Qué deseas hacer hoy?</h2>
+        <p>Selecciona una opción para comenzar:</p>
       </div>
-      <div class="tab-item" (click)="cambiarSegmento('ejercicio')" [class.active]="segmentoSeleccionado === 'ejercicio'">
-        <ion-icon name="accessibility-outline"></ion-icon>
-        <span>Actividad física</span>
+
+      <div class="wellness-options">
+        <button type="button" class="wellness-option" (click)="cambiarSegmento('dieta')">
+          <img src="assets/icon/bienestar-icon/dieta-icon.png" alt="" aria-hidden="true">
+          <span>Dieta</span>
+        </button>
+
+        <button type="button" class="wellness-option" (click)="cambiarSegmento('ejercicio')">
+          <img src="assets/icon/bienestar-icon/actividad-icon.png" alt="" aria-hidden="true">
+          <span>Actividad</span>
+        </button>
+
+        <button type="button" class="wellness-option weight-option" (click)="cambiarSegmento('peso')">
+          <img src="assets/icon/bienestar-icon/peso-icon.png" alt="" aria-hidden="true">
+          <span>Peso</span>
+        </button>
       </div>
-    </div>
+    </section>
 
-    <div class="date-header">
-      <div class="line"></div>
-      <div class="date-text">{{ fechaActual }}</div>
-      <div class="line"></div>
-    </div>
+    <section *ngIf="segmentoSeleccionado !== 'menu'" class="detail-card">
+      <button type="button" class="back-button" (click)="cambiarSegmento('menu')" aria-label="Volver a las opciones de bienestar">
+        <ion-icon name="arrow-back" aria-hidden="true"></ion-icon>
+        <span>Volver</span>
+      </button>
 
-    <div *ngIf="segmentoSeleccionado === 'dieta'">
-      <div *ngIf="dietasAsignadas.length > 0; else sinDieta">
-        <ion-accordion-group [multiple]="true" class="catalog-list">
-          
-          <ion-accordion *ngFor="let dieta of dietasAsignadas; let i = index" [value]="'dieta-' + i" class="diet-card-accordion">
-            <ion-item slot="header" lines="none">
-              <div class="card-header-acc">
-                <h3>{{ dieta.tipo || 'Comida' }}: {{ dieta.platillo }}</h3>
+      <div *ngIf="segmentoSeleccionado !== 'peso'" class="detail-title">
+        <img
+          [src]="'assets/icon/bienestar-icon/' +
+            (segmentoSeleccionado === 'dieta' ? 'dieta-icon.png' :
+             segmentoSeleccionado === 'ejercicio' ? 'actividad-icon.png' : 'peso-icon.png')"
+          alt=""
+          aria-hidden="true"
+        >
+        <h2>
+          {{ segmentoSeleccionado === 'dieta' ? 'Dieta' :
+             segmentoSeleccionado === 'ejercicio' ? 'Actividad' : 'Peso' }}
+        </h2>
+      </div>
+
+      <div *ngIf="segmentoSeleccionado === 'peso'" class="selected-weight weight-heading" aria-live="polite">
+        <strong>{{ pesoSeleccionado | number:'1.1-1' }}</strong>
+        <span>kg</span>
+      </div>
+
+      <div *ngIf="segmentoSeleccionado !== 'peso'" class="date-header">
+        <div class="line"></div>
+        <div class="date-text">{{ fechaActual }}</div>
+        <div class="line"></div>
+      </div>
+
+      <div *ngIf="segmentoSeleccionado === 'dieta'">
+        <div *ngIf="dietasAsignadas.length > 0; else sinDieta">
+          <ion-accordion-group [multiple]="true" class="catalog-list">
+            <ion-accordion
+              *ngFor="let dieta of dietasAsignadas; let i = index"
+              [value]="'dieta-' + i"
+              class="wellness-accordion"
+            >
+              <ion-item slot="header" lines="none">
+                <div class="accordion-header">
+                  <h3>{{ dieta.tipo || 'Comida' }}: {{ dieta.platillo }}</h3>
+                </div>
+              </ion-item>
+              <div class="accordion-body" slot="content">
+                <ul>
+                  <li><strong>Acompañante:</strong> {{ dieta.acompanante || 'No especificado' }}</li>
+                  <li><strong>Bebida:</strong> {{ dieta.bebida || 'No especificada' }}</li>
+                </ul>
               </div>
-            </ion-item>
-            <div class="card-body-acc" slot="content">
-              <ul>
-                <li><strong>Acompañante:</strong> {{ dieta.acompanante || 'No especificado' }}</li>
-                <li><strong>Bebida:</strong> {{ dieta.bebida || 'No especificada' }}</li>
-              </ul>
-            </div>
-          </ion-accordion>
-
-        </ion-accordion-group>
-      </div>
-      <ng-template #sinDieta>
-        <div class="ion-text-center ion-padding" style="margin-top: 50px; color: #888;">
-          <ion-icon name="restaurant-outline" style="font-size: 64px; opacity: 0.3;"></ion-icon>
-          <p>Tu médico aún no ha asignado planes alimenticios para hoy.</p>
+            </ion-accordion>
+          </ion-accordion-group>
         </div>
-      </ng-template>
-    </div>
+        <ng-template #sinDieta>
+          <div class="empty-state">
+            <img src="assets/icon/bienestar-icon/dieta-icon.png" alt="">
+            <p>Tu médico aún no ha asignado planes alimenticios para hoy.</p>
+          </div>
+        </ng-template>
+      </div>
 
-    <div *ngIf="segmentoSeleccionado === 'ejercicio'">
-      <div *ngIf="ejercicioAsignado; else sinEjercicio">
-        <ion-accordion-group class="catalog-list">
-          <ion-accordion value="ejercicio_hoy" class="diet-card-accordion">
-            <ion-item slot="header" lines="none">
-              <div class="card-header-acc">
-                <h3>{{ ejercicioAsignado.nombre }}</h3>
+      <div *ngIf="segmentoSeleccionado === 'ejercicio'">
+        <div *ngIf="ejercicioAsignado; else sinEjercicio">
+          <ion-accordion-group class="catalog-list">
+            <ion-accordion value="ejercicio-hoy" class="wellness-accordion">
+              <ion-item slot="header" lines="none">
+                <div class="accordion-header">
+                  <h3>{{ ejercicioAsignado.nombre }}</h3>
+                </div>
+              </ion-item>
+              <div class="accordion-body" slot="content">
+                <ul>
+                  <li><strong>Duración:</strong> {{ ejercicioAsignado.duracion }}</li>
+                  <li><strong>Instrucciones:</strong> {{ ejercicioAsignado.descripcion || 'Realizar de forma moderada siguiendo su ritmo.' }}</li>
+                </ul>
               </div>
-            </ion-item>
-            <div class="card-body-acc" slot="content">
-              <ul>
-                <li><strong>Duración:</strong> {{ ejercicioAsignado.duracion }}</li>
-                <li><strong>Instrucciones:</strong> {{ ejercicioAsignado.descripcion || 'Realizar de forma moderada siguiendo su ritmo.' }}</li>
-              </ul>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </div>
-      <ng-template #sinEjercicio>
-        <div class="ion-text-center ion-padding" style="margin-top: 50px; color: #888;">
-          <ion-icon name="walk-outline" style="font-size: 64px; opacity: 0.3;"></ion-icon>
-          <p>No tienes actividades físicas asignadas por ahora.</p>
+            </ion-accordion>
+          </ion-accordion-group>
         </div>
-      </ng-template>
-    </div>
+        <ng-template #sinEjercicio>
+          <div class="empty-state">
+            <img src="assets/icon/bienestar-icon/actividad-icon.png" alt="">
+            <p>No tienes actividades físicas asignadas por ahora.</p>
+          </div>
+        </ng-template>
+      </div>
 
-  </div>
+      <div *ngIf="segmentoSeleccionado === 'peso'" class="weight-picker-section">
+        <div class="weight-instructions">
+          <h3>Selecciona tu peso actual</h3>
+          <p>Desliza la regla hacia arriba o hacia abajo.</p>
+        </div>
+
+        <div class="weight-wheel-shell">
+          <div class="center-guide" aria-hidden="true">
+            <span class="selection-arrow"></span>
+          </div>
+
+          <div
+            #weightWheel
+            class="weight-wheel"
+            role="listbox"
+            aria-label="Selecciona tu peso en kilogramos"
+            [attr.aria-activedescendant]="'weight-' + pesoSeleccionado"
+            (scroll)="alDesplazarPeso($event)"
+          >
+            <button
+              *ngFor="let peso of opcionesPeso; trackBy: identificarPeso"
+              type="button"
+              class="weight-option-row"
+              [class.selected]="peso === pesoSeleccionado"
+              [class.major]="peso % 1 === 0"
+              [id]="'weight-' + peso"
+              role="option"
+              [attr.aria-selected]="peso === pesoSeleccionado"
+              (click)="seleccionarPeso(peso)"
+            >
+              <i class="ruler-mark left-mark" aria-hidden="true"></i>
+              <span>{{ peso | number:'1.1-1' }}</span>
+              <i class="ruler-mark right-mark" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <p class="weight-range">Rango disponible: 30.0 a 200.0 kg</p>
+      </div>
+    </section>
+  </main>
 </ion-content>

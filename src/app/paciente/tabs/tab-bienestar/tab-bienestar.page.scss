@@ -1,132 +1,484 @@
-/* Estructura Principal */
-.main-content {
-    --background: #f4f6fa;
-    position: relative;
+.wellness-content {
+  --background: #f4f6fa;
 }
 
-.main-container {
-    padding: 20px;
-    background: #f4f6fa;
-    min-height: 100%;
+.wellness-page {
+  min-height: 100%;
+  padding: 12px 12px 22px;
+  color: #333;
 }
 
-/* Custom Top Tabs (Iguales al catálogo) */
-.custom-tabs {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 40px;
-    margin-bottom: 25px;
-    padding-top: 10px;
-
-    .tab-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: #333;
-
-        ion-icon {
-            font-size: 32px;
-            color: #000;
-        }
-
-        span {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        &.active {
-            border-bottom-color: #0088ff;
-            color: #0088ff;
-
-            ion-icon {
-                color: #0088ff;
-            }
-        }
-    }
+.welcome-card,
+.options-card,
+.detail-card {
+  border-radius: 12px;
+  background: #fff;
 }
 
-/* Date Header */
+.welcome-card {
+  margin-bottom: 10px;
+  padding: 14px 24px 18px;
+
+  h1 {
+    margin: 0 0 2px;
+    color: #102960;
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: #4d4d4d;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.options-card {
+  min-height: calc(100vh - 295px);
+  padding: 24px 12px 36px;
+}
+
+.options-heading {
+  padding: 0 6px 20px;
+
+  h2 {
+    margin: 0 0 14px;
+    color: #333;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    color: #5b5b5b;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+.wellness-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 16px;
+  justify-items: center;
+}
+
+.wellness-option {
+  display: flex;
+  width: 100%;
+  min-height: 190px;
+  padding: 24px 8px;
+  border: 0;
+  border-radius: 30px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  background: #0070e0;
+  box-shadow: 0 3px 0 rgb(0 55 120 / 18%);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+
+  img {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+  }
+
+  span {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  }
+
+  &:active {
+    background: #005bb5;
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 4px solid #102960;
+    outline-offset: 3px;
+  }
+}
+
+.weight-option {
+  grid-column: 1 / -1;
+  width: calc(50% - 8px);
+}
+
+.detail-card {
+  min-height: calc(100vh - 245px);
+  padding: 18px;
+}
+
+.back-button {
+  display: inline-flex;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #005bb5;
+  font-size: 17px;
+  font-weight: 800;
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.detail-title {
+  display: flex;
+  margin: 8px 0 22px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  img {
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+    border-radius: 12px;
+    background: #0070e0;
+    object-fit: contain;
+  }
+
+  h2 {
+    margin: 0;
+    color: #102960;
+    font-size: 26px;
+    font-weight: 800;
+  }
+}
+
 .date-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 25px;
+  display: flex;
+  margin-bottom: 24px;
+  align-items: center;
+  justify-content: center;
 
-    .line {
-        height: 1px;
-        background-color: #ccc;
-        flex: 1;
-        margin: 0 10px;
-    }
+  .line {
+    height: 1px;
+    flex: 1;
+    background: #ccc;
+  }
 
-    .date-text {
-        font-weight: 700;
-        color: #555;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+  .date-text {
+    padding: 0 10px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
 }
 
-/* Catalog Style Cards */
 .catalog-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; // Espacio entre "tarjetas-acordeón"
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.diet-card-accordion {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-    margin-bottom: 15px;
+.wellness-accordion {
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid #e6eaf0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 6%);
 
-    /* Estilo del Header (Botón del acordeón) */
-    ion-item {
-        --background: white;
-        --padding-start: 20px;
-        --min-height: 65px;
-        
-        .card-header-acc h3 {
-            color: #0066cc;
-            font-weight: 700;
-            font-size: 18px;
-            margin: 0;
-        }
-    }
-
-    /* Estilo del Contenido Expandido */
-    .card-body-acc {
-        padding: 0 20px 20px 20px;
-        background: white;
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            border-top: 1px solid #f0f0f0; // Línea sutil al expandir
-            padding-top: 15px;
-
-            li {
-                margin-bottom: 8px;
-                color: #444;
-                font-size: 15px;
-                line-height: 1.4;
-
-                strong { color: #000; font-weight: 700; }
-            }
-        }
-    }
+  ion-item {
+    --background: #fff;
+    --min-height: 68px;
+    --padding-start: 18px;
+    --padding-end: 10px;
+  }
 }
 
-/* Eliminar la línea divisoria automática de Ionic en acordeones */
-ion-accordion.accordion-expanding, 
-ion-accordion.accordion-expanded {
-    margin-bottom: 15px;
+.accordion-header h3 {
+  margin: 0;
+  color: #005bb5;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.accordion-body {
+  padding: 0 18px 20px;
+  background: #fff;
+
+  ul {
+    margin: 0;
+    padding: 15px 0 0;
+    border-top: 1px solid #eee;
+    list-style: none;
+  }
+
+  li {
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
+
+.empty-state {
+  display: flex;
+  max-width: 430px;
+  margin: 30px auto 0;
+  padding: 26px 18px;
+  border-radius: 16px;
+  align-items: center;
+  flex-direction: column;
+  background: #f7f9fc;
+  color: #555;
+  text-align: center;
+
+  img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 14px;
+    padding: 10px;
+    border-radius: 14px;
+    background: #0070e0;
+    object-fit: contain;
+  }
+
+  p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    color: #102960;
+    font-size: 21px;
+  }
+
+  span {
+    margin-top: 14px;
+    color: #005bb5;
+    font-size: 15px;
+    font-weight: 800;
+  }
+}
+
+.weight-picker-section {
+  max-width: 440px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.weight-instructions {
+  h3 {
+    margin: 0 0 6px;
+    color: #30343a;
+    font-size: 21px;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    color: #656a70;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+.selected-weight {
+  display: flex;
+  margin: 20px 0 10px;
+  align-items: baseline;
+  justify-content: center;
+  gap: 7px;
+  color: #102960;
+
+  strong {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  span {
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.weight-heading {
+  min-height: 50px;
+  margin: 8px 0 22px;
+}
+
+.weight-wheel-shell {
+  position: relative;
+  width: min(100%, 330px);
+  height: 270px;
+  margin: 20px auto 0;
+  overflow: hidden;
+  border: 1px solid #dde1e7;
+  border-radius: 20px;
+  background: #fafbfc;
+  box-shadow: inset 0 1px 8px rgb(16 41 96 / 5%);
+}
+
+.weight-wheel {
+  position: relative;
+  z-index: 1;
+  height: 270px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 108px 0;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 35%) 16%,
+    #000 40%,
+    #000 60%,
+    rgb(0 0 0 / 35%) 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgb(0 0 0 / 35%) 16%,
+    #000 40%,
+    #000 60%,
+    rgb(0 0 0 / 35%) 84%,
+    transparent 100%
+  );
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.weight-option-row {
+  display: grid;
+  width: 100%;
+  height: 54px;
+  padding: 0;
+  border: 0;
+  align-items: center;
+  grid-template-columns: 1fr 92px 1fr;
+  background: transparent;
+  color: #73777c;
+  font: inherit;
+  font-size: 21px;
+  font-weight: 600;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+
+  span {
+    grid-column: 2;
+  }
+
+  &.selected {
+    color: #20252b;
+    font-size: 25px;
+    font-weight: 800;
+  }
+}
+
+.ruler-mark {
+  display: block;
+  width: 17px;
+  height: 1px;
+  background: #aeb4bb;
+  opacity: 0.55;
+}
+
+.left-mark {
+  justify-self: end;
+}
+
+.right-mark {
+  justify-self: start;
+}
+
+.weight-option-row.major .ruler-mark {
+  width: 29px;
+  height: 2px;
+  background: #8f969e;
+  opacity: 0.65;
+}
+
+.center-guide {
+  position: absolute;
+  z-index: 2;
+  top: 108px;
+  right: 12px;
+  left: 12px;
+  height: 54px;
+  border-top: 1px solid rgb(79 87 96 / 20%);
+  border-bottom: 1px solid rgb(79 87 96 / 20%);
+  pointer-events: none;
+}
+
+.selection-arrow {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-right: 10px solid #626970;
+  border-bottom: 7px solid transparent;
+  transform: translateY(-50%);
+}
+
+.weight-range {
+  margin: 14px 0 0;
+  color: #73777c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .wellness-page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .wellness-option {
+    max-width: 260px;
+  }
+
+  .weight-option {
+    width: 260px;
+  }
+}
+
+@media (max-width: 370px) {
+  .wellness-options {
+    gap: 16px 10px;
+  }
+
+  .wellness-option {
+    min-height: 165px;
+    border-radius: 25px;
+
+    img {
+      width: 58px;
+      height: 58px;
+    }
+
+    span {
+      font-size: 22px;
+    }
+  }
 }
