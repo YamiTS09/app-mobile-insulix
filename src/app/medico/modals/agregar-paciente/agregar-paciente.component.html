@@ -51,9 +51,9 @@
       </div>
 
       <div class="input-row">
-        <div class="input-group">
-          <label>Peso (kg):</label>
-          <input type="number" step="0.1" min="0.1" max="300" [(ngModel)]="patientData.peso" name="peso" class="custom-input" [class.input-error]="getErrors('peso')">
+        <div class="input-group" *ngIf="!itemAEditar">
+          <label>Peso inicial (kg) <small>(opcional)</small>:</label>
+          <input type="number" step="0.5" min="30" max="200" [(ngModel)]="patientData.peso" name="peso" class="custom-input" [class.input-error]="getErrors('peso')">
           <span class="error-msg" *ngIf="getErrors('peso')">{{ getErrors('peso') }}</span>
         </div>
         <div class="input-group">

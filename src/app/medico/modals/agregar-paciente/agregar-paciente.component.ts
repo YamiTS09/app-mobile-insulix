@@ -92,8 +92,8 @@ export class AgregarPacienteComponent implements OnInit {
       case 'apellido_paterno':
         return !value ? 'Obligatorio' : '';
       case 'peso':
-        if (!value) return 'Obligatorio';
-        if (value <= 0 || value > 300) return 'Rango: 0-300 kg';
+        if (value === '' || value === null || value === undefined) return '';
+        if (value < 30 || value > 200) return 'Rango: 30-200 kg';
         return '';
       case 'estatura':
         if (!value) return 'Obligatorio';
@@ -129,7 +129,10 @@ export class AgregarPacienteComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    const fields = ['nombre', 'apellido_paterno', 'peso', 'estatura', 'glucosa_base', 'telefono', 'email'];
+    const fields = ['nombre', 'apellido_paterno', 'estatura', 'glucosa_base', 'telefono', 'email'];
+    if (!this.itemAEditar) {
+      fields.push('peso');
+    }
     if (!this.itemAEditar) {
       fields.push('password', 'confirmarPassword');
     }

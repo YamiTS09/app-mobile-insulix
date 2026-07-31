@@ -294,13 +294,41 @@
   }
 }
 
-.selected-weight {
+.weight-summary {
   display: flex;
-  margin: 20px 0 10px;
+  min-height: 106px;
+  margin: 4px 0 22px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  color: #102960;
+  text-align: center;
+
+  ion-spinner {
+    width: 34px;
+    height: 34px;
+  }
+
+  p {
+    margin: 6px 0 2px;
+    color: #30343a;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  time,
+  small {
+    color: #73777c;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+.current-weight-value {
+  display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 7px;
-  color: #102960;
 
   strong {
     font-size: 42px;
@@ -312,11 +340,10 @@
     font-size: 20px;
     font-weight: 700;
   }
-}
 
-.weight-heading {
-  min-height: 50px;
-  margin: 8px 0 22px;
+  &.no-weight {
+    color: #747b84;
+  }
 }
 
 .weight-wheel-shell {
@@ -446,6 +473,102 @@
   color: #73777c;
   font-size: 14px;
   font-weight: 600;
+}
+
+.datetime-card {
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid #e2e5e9;
+  border-radius: 18px;
+  background: #fff;
+
+  &.open {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 6%);
+  }
+}
+
+.datetime-summary {
+  display: grid;
+  width: 100%;
+  min-height: 68px;
+  padding: 12px 16px;
+  border: 0;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  background: #fff;
+  color: #30343a;
+  font: inherit;
+  text-align: left;
+
+  > span {
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  time {
+    overflow: hidden;
+    color: #74797f;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ion-icon {
+    color: #74797f;
+    font-size: 22px;
+  }
+}
+
+.datetime-picker {
+  padding: 4px 8px 14px;
+  border-top: 1px solid #f0f1f3;
+
+  ion-datetime {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    --background: #fff;
+    --wheel-highlight-background: #f3f4f6;
+    --wheel-highlight-border-radius: 14px;
+    color: #30343a;
+  }
+}
+
+.weight-message {
+  margin: 14px 4px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.success-message {
+  background: #edf7f0;
+  color: #236b3a;
+}
+
+.error-message {
+  background: #fff0ef;
+  color: #a82b24;
+}
+
+.save-weight-button {
+  margin-top: 18px;
+  min-height: 52px;
+  --background: #0070e0;
+  --background-activated: #005bb5;
+  --border-radius: 14px;
+  font-size: 17px;
+  font-weight: 800;
+
+  ion-spinner {
+    width: 20px;
+    height: 20px;
+    margin-right: 9px;
+  }
 }
 
 @media (min-width: 600px) {

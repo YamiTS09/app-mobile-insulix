@@ -51,9 +51,28 @@
         </h2>
       </div>
 
-      <div *ngIf="segmentoSeleccionado === 'peso'" class="selected-weight weight-heading" aria-live="polite">
-        <strong>{{ pesoSeleccionado | number:'1.1-1' }}</strong>
-        <span>kg</span>
+      <div *ngIf="segmentoSeleccionado === 'peso'" class="weight-summary" aria-live="polite">
+        <ion-spinner *ngIf="pesoCargando && !pesoCargado" name="crescent"></ion-spinner>
+
+        <ng-container *ngIf="pesoCargado && pesoActual">
+          <div class="current-weight-value">
+            <strong>{{ +pesoActual.valor_kg | number:'1.1-1' }}</strong>
+            <span>kg</span>
+          </div>
+          <p>Peso actual</p>
+          <time [attr.datetime]="pesoActual.fecha_medicion">
+            {{ formatearFecha(pesoActual.fecha_medicion) }}
+          </time>
+        </ng-container>
+
+        <ng-container *ngIf="pesoCargado && !pesoActual">
+          <div class="current-weight-value no-weight">
+            <strong>—</strong>
+            <span>kg</span>
+          </div>
+          <p>Sin registros de peso</p>
+          <small>Guarda tu primera medición</small>
+        </ng-container>
       </div>
 
       <div *ngIf="segmentoSeleccionado !== 'peso'" class="date-header">
@@ -156,6 +175,52 @@
         </div>
 
         <p class="weight-range">Rango disponible: 30.0 a 200.0 kg</p>
+
+        <section class="datetime-card" [class.open]="selectorFechaAbierto">
+          <button
+            type="button"
+            class="datetime-summary"
+            (click)="alternarSelectorFecha()"
+            [attr.aria-expanded]="selectorFechaAbierto"
+          >
+            <span>Fecha y hora</span>
+            <time>{{ formatearFecha(fechaMedicion) }}</time>
+            <ion-icon
+              [name]="selectorFechaAbierto ? 'chevron-up' : 'chevron-down'"
+              aria-hidden="true"
+            ></ion-icon>
+          </button>
+
+          <div *ngIf="selectorFechaAbierto" class="datetime-picker">
+            <ion-datetime
+              [(ngModel)]="fechaMedicion"
+              presentation="date-time"
+              locale="es-MX"
+              hourCycle="h12"
+              [preferWheel]="true"
+              [max]="fechaMaxima"
+              [showDefaultButtons]="false"
+              aria-label="Fecha y hora de la medición"
+            ></ion-datetime>
+          </div>
+        </section>
+
+        <p *ngIf="mensajePeso" class="weight-message success-message" role="status">
+          {{ mensajePeso }}
+        </p>
+        <p *ngIf="errorPeso" class="weight-message error-message" role="alert">
+          {{ errorPeso }}
+        </p>
+
+        <ion-button
+          expand="block"
+          class="save-weight-button"
+          (click)="guardarPeso()"
+          [disabled]="guardandoPeso || pesoCargando"
+        >
+          <ion-spinner *ngIf="guardandoPeso" name="crescent"></ion-spinner>
+          <span>{{ guardandoPeso ? 'Guardando…' : 'Guardar peso' }}</span>
+        </ion-button>
       </div>
     </section>
   </main>
