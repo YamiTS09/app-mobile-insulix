@@ -523,17 +523,62 @@
 }
 
 .datetime-picker {
-  padding: 4px 8px 14px;
+  position: relative;
+  padding: 8px 4px 12px;
   border-top: 1px solid #f0f1f3;
+  background: #fff;
 
   ion-datetime {
     width: 100%;
+    min-width: 0;
     max-width: 100%;
     margin: 0 auto;
     --background: #fff;
-    --wheel-highlight-background: #f3f4f6;
-    --wheel-highlight-border-radius: 14px;
+    --background-rgb: 255, 255, 255;
+    --wheel-fade-background-rgb: 255, 255, 255;
+    --wheel-highlight-background: rgb(0 112 224 / 6%);
+    --wheel-highlight-border-radius: 10px;
     color: #30343a;
+  }
+
+  ion-datetime::part(wheel-item) {
+    color: #666d75;
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.72;
+  }
+
+  ion-datetime::part(wheel-item active) {
+    color: #0868c7;
+    font-weight: 700;
+    opacity: 1;
+  }
+}
+
+.datetime-column-separators {
+  position: absolute;
+  z-index: 2;
+  inset: 24px 0;
+  pointer-events: none;
+
+  i {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgb(48 52 58 / 9%);
+  }
+
+  i:nth-child(1) {
+    left: 50%;
+  }
+
+  i:nth-child(2) {
+    left: 68%;
+  }
+
+  i:nth-child(3) {
+    left: 84%;
   }
 }
 

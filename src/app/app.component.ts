@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
+import { AuthService } from './services/auth.service';
+import { SessionService } from './services/session.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,9 @@ export class AppComponent {
 
   constructor(
     private menuCtrl: MenuController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private authService: AuthService,
+    private sessionService: SessionService
   ) {
     // Cargamos datos al iniciar
     this.actualizarDatosMenu();
@@ -21,21 +25,17 @@ export class AppComponent {
 
   // 2. Método para refrescar los datos (Error TS2339 corregido)
   actualizarDatosMenu() {
-    const session = localStorage.getItem('userProfile') || localStorage.getItem('user_session');
-    if (session) {
-      this.usuarioLogueado = JSON.parse(session);
-    } else {
-      this.usuarioLogueado = null;
-    }
+    this.usuarioLogueado = this.sessionService.getValidUser();
   }
 
   // 3. Método para salir (Error TS2339 corregido)
   cerrarSesion() {
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('user_session');
-    localStorage.removeItem('access_token');
+    this.sessionService.clearSession();
     this.usuarioLogueado = null;
     this.menuCtrl.close(); // Cierra el menú lateral
-    this.navCtrl.navigateRoot('/inicio-sesion');
+    this.authService.logout().subscribe({
+      next: () => this.navCtrl.navigateRoot('/inicio-sesion'),
+      error: () => this.navCtrl.navigateRoot('/inicio-sesion')
+    });
   }
 }
