@@ -33,7 +33,9 @@
                 </ion-text>
                 <p class="glucose-info" style="margin: 5px 0 0 0;">
                   <ion-icon name="water" class="sensor-icon" color="primary"></ion-icon>
-                  <span class="glucose-value">{{ p.glucosa_base }} mg/dL</span>
+                  <span class="glucose-value">
+                    {{ p.glucosa !== null ? (p.glucosa + ' mg/dL') : 'Sin lectura' }}
+                  </span>
                 </p>
               </div>
             </div>

@@ -43,10 +43,10 @@
             <option value="Otro">Otro</option>
           </select>
         </div>
-        <div class="input-group">
-          <label>Glucosa Base (mg/dL):</label>
-          <input type="number" [(ngModel)]="patientData.glucosa_base" min="1" max="1000" name="glucosa_base" class="custom-input" [class.input-error]="getErrors('glucosa_base')">
-          <span class="error-msg" *ngIf="getErrors('glucosa_base')">{{ getErrors('glucosa_base') }}</span>
+        <div class="input-group" *ngIf="!itemAEditar">
+          <label>Glucosa inicial (mg/dL) <small>(opcional)</small>:</label>
+          <input type="number" [(ngModel)]="patientData.glucosa_inicial" min="20" max="600" name="glucosa_inicial" class="custom-input" [class.input-error]="getErrors('glucosa_inicial')">
+          <span class="error-msg" *ngIf="getErrors('glucosa_inicial')">{{ getErrors('glucosa_inicial') }}</span>
         </div>
       </div>
 
