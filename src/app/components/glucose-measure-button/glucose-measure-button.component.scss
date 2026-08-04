@@ -46,9 +46,15 @@
     outline: 4px solid #102960;
     outline-offset: 5px;
   }
+
+  &:disabled {
+    opacity: 1;
+  }
 }
 
-.drop-icon {
+.drop-icon,
+.reading-icon,
+.success-icon {
   font-size: 58px;
 }
 
@@ -58,7 +64,8 @@
   line-height: 1.05;
 }
 
-.waiting .measure-button {
+.waiting .measure-button,
+.reading .measure-button {
   transform: scale(0.96);
   box-shadow: 0 9px 23px rgb(0 91 181 / 22%);
   cursor: default;
@@ -106,6 +113,45 @@
   height: 36px;
 }
 
+.reading-ring {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  box-sizing: border-box;
+  border: 6px solid rgb(0 105 211 / 16%);
+  border-top-color: #006edc;
+  border-right-color: #49a3ee;
+  border-radius: 50%;
+  animation: reading-rotation 1.15s linear infinite;
+  pointer-events: none;
+}
+
+.reading-icon {
+  font-size: 62px;
+}
+
+.reading-copy,
+.success-copy {
+  font-size: clamp(27px, 8vw, 36px);
+  line-height: 1.12;
+}
+
+.success .measure-button {
+  border-color: #eaf8ed;
+  background: linear-gradient(145deg, #35a853 0%, #218b40 58%, #167032 100%);
+  box-shadow: 0 10px 25px rgb(31 134 62 / 25%);
+  cursor: default;
+}
+
+.success-icon {
+  font-size: 72px;
+  animation: success-appearance 360ms ease-out both;
+}
+
+.success .action-help {
+  color: #227a3a;
+}
+
 .sensor-wave {
   position: absolute;
   z-index: 1;
@@ -147,12 +193,35 @@
   }
 }
 
+@keyframes reading-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes success-appearance {
+  from {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .measure-button {
     transition: none;
   }
 
   .sensor-wave {
+    animation: none;
+  }
+
+  .reading-ring,
+  .success-icon {
     animation: none;
   }
 

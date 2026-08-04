@@ -1,4 +1,9 @@
-<section class="measurement-action" [class.waiting]="isWaiting">
+<section
+  class="measurement-action"
+  [class.waiting]="isWaiting"
+  [class.reading]="isReading"
+  [class.success]="isSuccess"
+>
   <div class="button-stage">
     @if (isWaiting) {
       <span class="sensor-wave wave-one" aria-hidden="true"></span>
@@ -6,28 +11,44 @@
       <span class="sensor-wave wave-three" aria-hidden="true"></span>
     }
 
+    @if (isReading) {
+      <span class="reading-ring" aria-hidden="true"></span>
+    }
+
     <button
       type="button"
       class="measure-button"
-      [attr.aria-label]="isWaiting ? 'Esperando que acerques el teléfono al sensor' : 'Medir glucosa'"
-      [attr.aria-pressed]="isWaiting"
+      [disabled]="isBusy"
+      [attr.aria-label]="ariaLabel"
+      [attr.aria-busy]="isWaiting || isReading"
       (click)="startMeasurement()"
     >
-      @if (isWaiting) {
-        <span class="phone-sensor-icon" aria-hidden="true">
-          <ion-icon name="phone-portrait-outline"></ion-icon>
-          <i class="signal signal-one"></i>
-          <i class="signal signal-two"></i>
-        </span>
-        <span class="button-copy waiting-copy">Acerca el teléfono<br>al sensor</span>
-      } @else {
-        <ion-icon class="drop-icon" name="water" aria-hidden="true"></ion-icon>
-        <span class="button-copy">Medir<br>glucosa</span>
+      @switch (state) {
+        @case ('waitingSensor') {
+          <span class="phone-sensor-icon" aria-hidden="true">
+            <ion-icon name="phone-portrait-outline"></ion-icon>
+            <i class="signal signal-one"></i>
+            <i class="signal signal-two"></i>
+          </span>
+          <span class="button-copy waiting-copy">Acerca el teléfono<br>al sensor</span>
+        }
+        @case ('reading') {
+          <ion-icon class="reading-icon" name="pulse-outline" aria-hidden="true"></ion-icon>
+          <span class="button-copy reading-copy">Leyendo<br>glucosa&hellip;</span>
+        }
+        @case ('success') {
+          <ion-icon class="success-icon" name="checkmark-circle-outline" aria-hidden="true"></ion-icon>
+          <span class="button-copy success-copy">Medición<br>lista</span>
+        }
+        @default {
+          <ion-icon class="drop-icon" name="water" aria-hidden="true"></ion-icon>
+          <span class="button-copy">Medir<br>glucosa</span>
+        }
       }
     </button>
   </div>
 
   <p class="action-help" role="status" aria-live="polite">
-    {{ isWaiting ? 'Esperando lectura' : 'Presiona para comenzar' }}
+    {{ helpText }}
   </p>
 </section>

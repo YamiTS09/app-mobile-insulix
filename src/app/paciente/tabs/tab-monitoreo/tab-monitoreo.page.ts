@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { GlucoseMeasurementState } from '../../../components/glucose-measure-button/glucose-measure-button.component';
-import { ReportesService } from '../../../services/reportes.service';
+import { GlucoseReading, ReportesService } from '../../../services/reportes.service';
 import { SessionService } from '../../../services/session.service';
 
 type GlucoseStatus = 'Bajo' | 'Objetivo' | 'Alto';
@@ -17,7 +19,7 @@ interface LatestMeasurementView {
   styleUrls: ['./tab-monitoreo.page.scss'],
   standalone: false
 })
-export class TabMonitoreoPage implements OnInit {
+export class TabMonitoreoPage implements OnInit, OnDestroy {
 
   nombre = 'Paciente';
   measurementState: GlucoseMeasurementState = 'idle';
@@ -26,14 +28,20 @@ export class TabMonitoreoPage implements OnInit {
   latestMeasurement: LatestMeasurementView | null = null;
   latestMeasurementLoading = true;
   latestMeasurementMessage = 'Aún no hay lecturas registradas';
+
   private patientId = '';
+  private sensorDetectionTimer?: ReturnType<typeof setTimeout>;
+  private readingTimer?: ReturnType<typeof setTimeout>;
+  private successTimer?: ReturnType<typeof setTimeout>;
+  private measurementRequest?: Subscription;
 
   constructor(
     private reportesService: ReportesService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private toastController: ToastController
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarDatosUsuario();
   }
 
@@ -42,7 +50,15 @@ export class TabMonitoreoPage implements OnInit {
     this.loadLatestMeasurement();
   }
 
-  cargarDatosUsuario() {
+  ionViewDidLeave(): void {
+    this.resetMeasurement();
+  }
+
+  ngOnDestroy(): void {
+    this.resetMeasurement();
+  }
+
+  cargarDatosUsuario(): void {
     const user = this.sessionService.getValidUser();
     if (user) {
       this.patientId = user.uid;
@@ -68,12 +84,7 @@ export class TabMonitoreoPage implements OnInit {
           return;
         }
 
-        const value = Number(medicion.valor_mgdl);
-        this.latestMeasurement = {
-          value,
-          status: this.getGlucoseStatus(value),
-          dateLabel: this.formatMeasurementDate(medicion.fecha_hora)
-        };
+        this.updateLatestMeasurement(medicion);
       },
       error: (error) => {
         console.error('Error consultando la última lectura de glucosa', error);
@@ -85,7 +96,91 @@ export class TabMonitoreoPage implements OnInit {
   }
 
   startGlucoseMeasurement(): void {
+    if (this.measurementState !== 'idle') return;
+    if (!this.patientId) {
+      void this.showMeasurementError('No fue posible identificar al paciente');
+      return;
+    }
+
     this.measurementState = 'waitingSensor';
+    this.simulateSensorDetection();
+  }
+
+  private simulateSensorDetection(): void {
+    this.sensorDetectionTimer = setTimeout(() => {
+      this.startSimulatedReading();
+    }, 2000);
+  }
+
+  private startSimulatedReading(): void {
+    if (this.measurementState !== 'waitingSensor') return;
+    this.measurementState = 'reading';
+
+    // TODO: Sustituir esta simulación por la detección real del sensor NFC.
+    try {
+      if (typeof navigator !== 'undefined') navigator.vibrate?.(80);
+    } catch {
+      // La vibración es una mejora opcional y no debe interrumpir la lectura.
+    }
+
+    this.readingTimer = setTimeout(() => {
+      this.completeSimulatedMeasurement();
+    }, 3000);
+  }
+
+  private completeSimulatedMeasurement(): void {
+    if (this.measurementState !== 'reading' || this.measurementRequest) return;
+
+    this.measurementRequest = this.reportesService.agregarLecturaSimulada().subscribe({
+      next: (reading) => {
+        this.measurementRequest = undefined;
+        this.updateLatestMeasurement(reading);
+        this.measurementState = 'success';
+        this.successTimer = setTimeout(() => this.resetMeasurement(), 1500);
+      },
+      error: (error) => {
+        console.error('Error guardando la lectura simulada de glucosa', error);
+        this.measurementRequest = undefined;
+        this.resetMeasurement();
+        void this.showMeasurementError('No fue posible guardar la lectura. Inténtalo nuevamente.');
+      }
+    });
+  }
+
+  private updateLatestMeasurement(reading: GlucoseReading): void {
+    const value = Number(reading.valor_mgdl);
+    this.latestMeasurementLoading = false;
+    this.latestMeasurement = {
+      value,
+      status: this.getGlucoseStatus(value),
+      dateLabel: this.formatMeasurementDate(reading.fecha_hora)
+    };
+  }
+
+  private resetMeasurement(): void {
+    this.clearMeasurementTimers();
+    this.measurementRequest?.unsubscribe();
+    this.measurementRequest = undefined;
+    this.measurementState = 'idle';
+  }
+
+  private clearMeasurementTimers(): void {
+    if (this.sensorDetectionTimer) clearTimeout(this.sensorDetectionTimer);
+    if (this.readingTimer) clearTimeout(this.readingTimer);
+    if (this.successTimer) clearTimeout(this.successTimer);
+    this.sensorDetectionTimer = undefined;
+    this.readingTimer = undefined;
+    this.successTimer = undefined;
+  }
+
+  private async showMeasurementError(message: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color: 'danger',
+      position: 'bottom'
+    });
+    await toast.present();
   }
 
   private getGlucoseStatus(value: number): GlucoseStatus {
@@ -117,5 +212,4 @@ export class TabMonitoreoPage implements OnInit {
 
     return `${day}, ${time}`;
   }
-
 }
