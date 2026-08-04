@@ -1,92 +1,61 @@
-ion-content {
-    --background: #f0f8ff;
-    /* Light blue background like the image */
+.monitoring-content {
+  --background: #f2f7fc;
+}
+
+.monitoring-page {
+  width: 100%;
+  max-width: 560px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 24px 18px 30px;
+  color: #20252b;
 }
 
 .greeting-section {
-    text-align: left;
-    margin-top: 20px;
-    margin-bottom: 30px;
-    padding: 0 10px;
+  margin: 0 4px 24px;
 
-    h1 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        margin: 0;
-    }
+  h1 {
+    margin: 0;
+    color: #202124;
+    font-size: clamp(28px, 8vw, 35px);
+    font-weight: 850;
+    line-height: 1.15;
+  }
 
-    h2 {
-        font-size: 20px;
-        font-weight: 500;
-        color: #333;
-        margin: 5px 0 0 0;
-    }
+  p {
+    margin: 7px 0 0;
+    color: #30343a;
+    font-size: clamp(21px, 6vw, 27px);
+    font-weight: 500;
+    line-height: 1.25;
+  }
 }
 
-.glucose-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-    gap: 20px;
-
-    .glucose-value {
-        font-size: 64px;
-        font-weight: bold;
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        line-height: 1;
-
-        .unit {
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-    }
-
-    .trend-indicator {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        &.high {
-            color: #ff0000;
-            /* Red for high */
-        }
-
-        ion-icon {
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .status-text {
-            font-size: 24px;
-            font-weight: bold;
-        }
-    }
+app-glucose-measure-button {
+  margin-top: 34px;
 }
 
-.chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+.saved-chart {
+  margin-top: 28px;
+}
 
-    img {
-        width: 90%;
-        max-width: 350px;
-        border-radius: 10px;
-        /* Optional shadow if needed */
-        // box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    }
+@media (max-height: 760px) {
+  .monitoring-page {
+    padding-top: 16px;
+  }
 
-    .chart-label {
-        margin-top: 15px;
-        font-size: 16px;
-        color: #333;
-        font-weight: 500;
-    }
+  .greeting-section {
+    margin-bottom: 18px;
+  }
+
+  app-glucose-measure-button {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 370px) {
+  .monitoring-page {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
 }

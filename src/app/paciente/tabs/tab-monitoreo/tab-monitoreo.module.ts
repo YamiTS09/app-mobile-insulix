@@ -9,6 +9,8 @@ import { TabMonitoreoPageRoutingModule } from './tab-monitoreo-routing.module';
 import { TabMonitoreoPage } from './tab-monitoreo.page';
 import { PacienteHeaderComponent } from '../../../components/paciente-header/paciente-header.component';
 import { GlucoseChartComponent } from '../../../components/glucose-chart/glucose-chart.component';
+import { LatestGlucoseCardComponent } from '../../../components/latest-glucose-card/latest-glucose-card.component';
+import { GlucoseMeasureButtonComponent } from '../../../components/glucose-measure-button/glucose-measure-button.component';
 
 @NgModule({
   imports: [
@@ -17,7 +19,9 @@ import { GlucoseChartComponent } from '../../../components/glucose-chart/glucose
     IonicModule,
     TabMonitoreoPageRoutingModule,
     PacienteHeaderComponent,
-    GlucoseChartComponent
+    GlucoseChartComponent,
+    LatestGlucoseCardComponent,
+    GlucoseMeasureButtonComponent
   ],
   declarations: [TabMonitoreoPage]
 })

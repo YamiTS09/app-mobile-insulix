@@ -1,0 +1,19 @@
+<article
+  class="latest-reading"
+  [attr.data-tone]="tone"
+  [attr.aria-busy]="loading"
+  aria-labelledby="latest-reading-title"
+  aria-live="polite"
+>
+  <h2 id="latest-reading-title">Última medición</h2>
+
+  <div class="reading-row">
+    <p class="reading-value">
+      <strong>{{ loading || value === null ? '—' : value }}</strong>
+      <span>mg/dL</span>
+    </p>
+    <p class="reading-status">{{ loading ? 'Cargando' : status }}</p>
+  </div>
+
+  <time>{{ loading ? 'Consultando la última lectura…' : dateLabel }}</time>
+</article>

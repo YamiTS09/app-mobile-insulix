@@ -1,10 +1,27 @@
 <app-paciente-header></app-paciente-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="greeting-section">
-    <h1>¡Hola {{ nombre }}!</h1>
-    <h2>¿Cómo te sientes hoy?</h2>
-  </div>
+<ion-content [fullscreen]="true" class="monitoring-content">
+  <main class="monitoring-page">
+    <header class="greeting-section">
+      <h1>¡Hola {{ nombre }}!</h1>
+      <p>¿Cómo te sientes hoy?</p>
+    </header>
 
-  <app-glucose-chart></app-glucose-chart>
+    <app-latest-glucose-card
+      [value]="latestMeasurement?.value ?? null"
+      [status]="latestMeasurement?.status ?? 'Sin registros'"
+      [dateLabel]="latestMeasurement?.dateLabel ?? latestMeasurementMessage"
+      [loading]="latestMeasurementLoading"
+    ></app-latest-glucose-card>
+
+    <app-glucose-measure-button
+      [state]="measurementState"
+      (measureRequested)="startGlucoseMeasurement()"
+    ></app-glucose-measure-button>
+
+    <!-- La gráfica se conserva para mostrarla desde el botón que se agregará después. -->
+    <section *ngIf="showGlucoseChart" class="saved-chart">
+      <app-glucose-chart></app-glucose-chart>
+    </section>
+  </main>
 </ion-content>

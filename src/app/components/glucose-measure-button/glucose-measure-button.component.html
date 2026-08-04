@@ -1,0 +1,33 @@
+<section class="measurement-action" [class.waiting]="isWaiting">
+  <div class="button-stage">
+    @if (isWaiting) {
+      <span class="sensor-wave wave-one" aria-hidden="true"></span>
+      <span class="sensor-wave wave-two" aria-hidden="true"></span>
+      <span class="sensor-wave wave-three" aria-hidden="true"></span>
+    }
+
+    <button
+      type="button"
+      class="measure-button"
+      [attr.aria-label]="isWaiting ? 'Esperando que acerques el teléfono al sensor' : 'Medir glucosa'"
+      [attr.aria-pressed]="isWaiting"
+      (click)="startMeasurement()"
+    >
+      @if (isWaiting) {
+        <span class="phone-sensor-icon" aria-hidden="true">
+          <ion-icon name="phone-portrait-outline"></ion-icon>
+          <i class="signal signal-one"></i>
+          <i class="signal signal-two"></i>
+        </span>
+        <span class="button-copy waiting-copy">Acerca el teléfono<br>al sensor</span>
+      } @else {
+        <ion-icon class="drop-icon" name="water" aria-hidden="true"></ion-icon>
+        <span class="button-copy">Medir<br>glucosa</span>
+      }
+    </button>
+  </div>
+
+  <p class="action-help" role="status" aria-live="polite">
+    {{ isWaiting ? 'Esperando lectura' : 'Presiona para comenzar' }}
+  </p>
+</section>
