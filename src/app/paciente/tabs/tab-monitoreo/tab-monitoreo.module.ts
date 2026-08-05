@@ -8,7 +8,6 @@ import { TabMonitoreoPageRoutingModule } from './tab-monitoreo-routing.module';
 
 import { TabMonitoreoPage } from './tab-monitoreo.page';
 import { PacienteHeaderComponent } from '../../../components/paciente-header/paciente-header.component';
-import { GlucoseChartComponent } from '../../../components/glucose-chart/glucose-chart.component';
 import { LatestGlucoseCardComponent } from '../../../components/latest-glucose-card/latest-glucose-card.component';
 import { GlucoseMeasureButtonComponent } from '../../../components/glucose-measure-button/glucose-measure-button.component';
 
@@ -19,7 +18,6 @@ import { GlucoseMeasureButtonComponent } from '../../../components/glucose-measu
     IonicModule,
     TabMonitoreoPageRoutingModule,
     PacienteHeaderComponent,
-    GlucoseChartComponent,
     LatestGlucoseCardComponent,
     GlucoseMeasureButtonComponent
   ],

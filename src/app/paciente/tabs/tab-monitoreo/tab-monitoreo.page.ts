@@ -23,8 +23,6 @@ export class TabMonitoreoPage implements OnInit, OnDestroy {
 
   nombre = 'Paciente';
   measurementState: GlucoseMeasurementState = 'idle';
-  // Se activará desde el botón de gráfica que se agregará posteriormente.
-  showGlucoseChart = false;
   latestMeasurement: LatestMeasurementView | null = null;
   latestMeasurementLoading = true;
   latestMeasurementMessage = 'Aún no hay lecturas registradas';

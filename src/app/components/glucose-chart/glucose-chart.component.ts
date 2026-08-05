@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { GlucoseMeasurement, GlucoseStatus } from '../../models/glucose-measurement.interface';
 import { GlucoseSimulationService } from '../../services/glucose-simulation.service';
@@ -11,6 +11,8 @@ import { GlucoseSimulationService } from '../../services/glucose-simulation.serv
   imports: [NgApexchartsModule]
 })
 export class GlucoseChartComponent implements OnInit {
+  @Input() showLatestCard = true;
+
   all: GlucoseMeasurement[] = [];
   visible: GlucoseMeasurement[] = [];
 

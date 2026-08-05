@@ -1,5 +1,5 @@
 <section class="glucose-chart-section">
-  @if (last; as item) {
+  @if (showLatestCard && last; as item) {
     <article class="latest-card" [style.--status-color]="getStatusColor(item.value)" aria-live="polite">
       <span class="label">Última medición</span>
       <strong>{{ item.value }} <small>mg/dL</small></strong>

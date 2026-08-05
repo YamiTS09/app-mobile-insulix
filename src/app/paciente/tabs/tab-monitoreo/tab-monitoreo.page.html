@@ -19,9 +19,15 @@
       (measureRequested)="startGlucoseMeasurement()"
     ></app-glucose-measure-button>
 
-    <!-- La gráfica se conserva para mostrarla desde el botón que se agregará después. -->
-    <section *ngIf="showGlucoseChart" class="saved-chart">
-      <app-glucose-chart></app-glucose-chart>
-    </section>
+    <ion-button
+      expand="block"
+      class="view-chart-button"
+      [routerLink]="['grafica']"
+      [disabled]="measurementState !== 'idle'"
+      aria-label="Ver gráfica de glucosa"
+    >
+      <ion-icon name="stats-chart-outline" slot="start" aria-hidden="true"></ion-icon>
+      Ver gráfica de glucosa
+    </ion-button>
   </main>
 </ion-content>

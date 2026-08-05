@@ -35,8 +35,23 @@ app-glucose-measure-button {
   margin-top: 34px;
 }
 
-.saved-chart {
-  margin-top: 28px;
+.view-chart-button {
+  color: #f2f7fc;
+  min-height: 54px;
+  margin: 22px 0 0;
+  --background: #0879e8;
+  --background-activated: #0062c5;
+  --background-hover: #0671d8;
+  --border-radius: 14px;
+  --box-shadow: 0 7px 17px rgb(0 92 184 / 20%);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+
+  ion-icon {
+    font-size: 24px;
+  }
 }
 
 @media (max-height: 760px) {

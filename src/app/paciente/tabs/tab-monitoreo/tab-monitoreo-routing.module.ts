@@ -5,6 +5,10 @@ import { TabMonitoreoPage } from './tab-monitoreo.page';
 
 const routes: Routes = [
   {
+    path: 'grafica',
+    loadComponent: () => import('./grafica-monitoreo.page').then(m => m.GraficaMonitoreoPage)
+  },
+  {
     path: '',
     component: TabMonitoreoPage
   }

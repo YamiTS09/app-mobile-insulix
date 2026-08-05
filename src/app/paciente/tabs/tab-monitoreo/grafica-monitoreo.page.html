@@ -1,0 +1,22 @@
+<app-paciente-header></app-paciente-header>
+
+<ion-content [fullscreen]="true" class="chart-content">
+  <main class="chart-page">
+    <ion-button
+      fill="clear"
+      class="back-button"
+      [routerLink]="['../']"
+      routerDirection="back"
+      aria-label="Regresar a la pantalla de monitoreo"
+    >
+      <ion-icon name="arrow-back-outline" slot="start" aria-hidden="true"></ion-icon>
+      Regresar
+    </ion-button>
+
+    <header class="chart-heading">
+      <h1>Gráfica de glucosa</h1>
+    </header>
+
+    <app-glucose-chart [showLatestCard]="false"></app-glucose-chart>
+  </main>
+</ion-content>
