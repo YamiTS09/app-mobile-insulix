@@ -1,5 +1,35 @@
 :host { display: block; font-family: Arial, sans-serif; }
 .glucose-chart-section { max-width: 1100px; margin: auto; }
+.period-selector {
+  width: 100%;
+  max-width: 430px;
+  min-height: 56px;
+  margin: 0 auto 20px;
+  padding: 4px;
+  border: 1px solid rgb(19 68 111 / 14%);
+  border-radius: 16px;
+  background: #e5edf6;
+  box-shadow: inset 0 1px 2px rgb(21 53 83 / 7%);
+  --background: transparent;
+
+  ion-segment-button {
+    min-width: 0;
+    min-height: 48px;
+    margin: 0;
+    --border-radius: 12px;
+    --color: #34465a;
+    --color-checked: #fff;
+    --indicator-color: #0879e8;
+    --indicator-box-shadow: 0 4px 10px rgb(0 91 181 / 23%);
+    font-size: 21px;
+    font-weight: 850;
+
+    &::part(indicator-background) {
+      border-radius: 12px;
+    }
+  }
+}
+
 .latest-card {
   --status-color: #238636;
   display: grid; grid-template-columns: 1fr auto; gap: 4px 20px;
@@ -19,6 +49,44 @@
   touch-action: pan-x;
 }
 .chart-canvas { min-width: 980px; padding: 8px; touch-action: pan-x; }
+.chart-state {
+  display: flex;
+  min-height: 210px;
+  padding: 28px 20px;
+  border: 1px solid rgb(23 63 95 / 12%);
+  border-radius: 14px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 7%);
+  color: #334155;
+  text-align: center;
+
+  strong {
+    font-size: 20px;
+  }
+
+  span {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+}
+
+.error-state {
+  border-color: rgb(181 47 41 / 25%);
+  color: #8f2e29;
+}
+
+.loading-indicator {
+  width: 34px;
+  height: 34px;
+  border: 4px solid rgb(0 112 224 / 18%);
+  border-top-color: #0070e0;
+  border-radius: 50%;
+  animation: chart-loading 900ms linear infinite;
+}
 .legend {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 22px;
   margin: 16px 0; font-size: 16px; font-weight: 700; color: #263238;
@@ -33,6 +101,14 @@
   border-left: 6px solid; background: #fff; font: 17px/1.55 Arial, sans-serif;
   white-space: normal;
 }
+@keyframes chart-loading {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-indicator { animation: none; }
+}
+
 @media (max-width: 600px) {
   .chart-canvas { min-width: 900px; }
   .latest-card { max-width: none; }

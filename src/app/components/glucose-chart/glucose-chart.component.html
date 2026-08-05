@@ -1,5 +1,26 @@
 <section class="glucose-chart-section">
-  @if (showLatestCard && last; as item) {
+  <ion-segment
+    mode="ios"
+    class="period-selector"
+    [value]="selectedPeriod"
+    (ionChange)="selectPeriod($any($event.detail.value))"
+    aria-label="Seleccionar periodo de la gráfica"
+  >
+    <ion-segment-button value="day" aria-label="Mostrar el último día" title="Día">
+      <ion-label>D</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="week" aria-label="Mostrar la última semana" title="Semana">
+      <ion-label>S</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="month" aria-label="Mostrar el último mes" title="Mes">
+      <ion-label>M</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="year" aria-label="Mostrar el último año" title="Año">
+      <ion-label>A</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  @if (!loading && !errorMessage && showLatestCard && last; as item) {
     <article class="latest-card" [style.--status-color]="getStatusColor(item.value)" aria-live="polite">
       <span class="label">Última medición</span>
       <strong>{{ item.value }} <small>mg/dL</small></strong>
@@ -8,23 +29,40 @@
     </article>
   }
 
-  <div class="chart-scroll" tabindex="0" aria-label="Gráfica desplazable horizontalmente">
-    <div class="chart-canvas">
-      <apx-chart
-        [series]="chartOptions.series" [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
-        [annotations]="chartOptions.annotations" [stroke]="chartOptions.stroke"
-        [markers]="chartOptions.markers" [dataLabels]="chartOptions.dataLabels"
-        [grid]="chartOptions.grid" [tooltip]="chartOptions.tooltip"
-        [title]="chartOptions.title" [colors]="chartOptions.colors">
-      </apx-chart>
+  @if (loading) {
+    <div class="chart-state" role="status" aria-live="polite">
+      <span class="loading-indicator" aria-hidden="true"></span>
+      <strong>Cargando mediciones…</strong>
     </div>
-  </div>
+  } @else if (errorMessage) {
+    <div class="chart-state error-state" role="alert">
+      <strong>{{ errorMessage }}</strong>
+      <span>Verifica tu conexión e inténtalo nuevamente.</span>
+    </div>
+  } @else if (visible.length === 0) {
+    <div class="chart-state" role="status">
+      <strong>No hay mediciones en este periodo</strong>
+      <span>Prueba seleccionando otro periodo o registra una nueva lectura.</span>
+    </div>
+  } @else {
+    <div class="chart-scroll" tabindex="0" aria-label="Gráfica desplazable horizontalmente">
+      <div class="chart-canvas">
+        <apx-chart
+          [series]="chartOptions.series" [chart]="chartOptions.chart"
+          [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
+          [annotations]="chartOptions.annotations" [stroke]="chartOptions.stroke"
+          [markers]="chartOptions.markers" [dataLabels]="chartOptions.dataLabels"
+          [grid]="chartOptions.grid" [tooltip]="chartOptions.tooltip"
+          [title]="chartOptions.title" [colors]="chartOptions.colors">
+        </apx-chart>
+      </div>
+    </div>
 
-  <div class="legend" aria-label="Rangos de glucosa">
-    <span><i class="low"></i>Bajo: menos de 70</span>
-    <span><i class="target"></i>Objetivo: 70–179</span>
-    <span><i class="high"></i>Alto: 180 o más</span>
-  </div>
+    <div class="legend" aria-label="Rangos de glucosa">
+      <span><i class="low"></i>Bajo: menos de 70</span>
+      <span><i class="target"></i>Objetivo: 70–179</span>
+      <span><i class="high"></i>Alto: 180 o más</span>
+    </div>
+  }
 
 </section>
