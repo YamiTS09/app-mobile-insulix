@@ -1,24 +1,51 @@
 <section class="glucose-chart-section">
-  <ion-segment
-    mode="ios"
-    class="period-selector"
-    [value]="selectedPeriod"
-    (ionChange)="selectPeriod($any($event.detail.value))"
-    aria-label="Seleccionar periodo de la gráfica"
-  >
-    <ion-segment-button value="day" aria-label="Mostrar el último día" title="Día">
-      <ion-label>D</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="week" aria-label="Mostrar la última semana" title="Semana">
-      <ion-label>S</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="month" aria-label="Mostrar el último mes" title="Mes">
-      <ion-label>M</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="year" aria-label="Mostrar el último año" title="Año">
-      <ion-label>A</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <section class="chart-filter-card" aria-label="Filtros de la gráfica">
+    <div class="filter-group">
+      <h2 id="period-filter-title">Periodo</h2>
+      <ion-segment
+        mode="ios"
+        class="filter-segment period-selector"
+        [value]="selectedPeriod"
+        (ionChange)="selectPeriod($any($event.detail.value))"
+        aria-labelledby="period-filter-title"
+      >
+        <ion-segment-button value="day" aria-label="Mostrar el último día" title="Día">
+          <ion-label>D</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="week" aria-label="Mostrar la última semana" title="Semana">
+          <ion-label>S</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="month" aria-label="Mostrar el último mes" title="Mes">
+          <ion-label>M</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="year" aria-label="Mostrar el último año" title="Año">
+          <ion-label>A</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="filter-group source-filter-group">
+      <h2 id="source-filter-title">Tipo de lectura</h2>
+      <ion-segment
+        mode="ios"
+        class="filter-segment source-selector"
+        [value]="selectedSource"
+        (ionChange)="selectSource($any($event.detail.value))"
+        aria-labelledby="source-filter-title"
+      >
+        <ion-segment-button value="real" aria-label="Mostrar lecturas reales">
+          <ion-label>Reales</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="simulated" aria-label="Mostrar lecturas simuladas">
+          <ion-label>Simuladas</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <p class="source-summary" role="status" aria-live="polite">
+      Mostrando lecturas {{ selectedSource === 'real' ? 'reales' : 'simuladas' }}
+    </p>
+  </section>
 
   @if (!loading && !errorMessage && showLatestCard && last; as item) {
     <article class="latest-card" [style.--status-color]="getStatusColor(item.value)" aria-live="polite">
@@ -31,7 +58,6 @@
 
   @if (loading) {
     <div class="chart-state" role="status" aria-live="polite">
-      <span class="loading-indicator" aria-hidden="true"></span>
       <strong>Cargando mediciones…</strong>
     </div>
   } @else if (errorMessage) {
@@ -41,8 +67,12 @@
     </div>
   } @else if (visible.length === 0) {
     <div class="chart-state" role="status">
-      <strong>No hay mediciones en este periodo</strong>
-      <span>Prueba seleccionando otro periodo o registra una nueva lectura.</span>
+      <strong>No hay lecturas {{ selectedSource === 'real' ? 'reales' : 'simuladas' }} en este periodo</strong>
+      <span>
+        {{ selectedSource === 'real'
+          ? 'Prueba seleccionando otro periodo o registra una lectura manual.'
+          : 'Prueba seleccionando otro periodo o registra una lectura de prueba.' }}
+      </span>
     </div>
   } @else {
     <div class="chart-scroll" tabindex="0" aria-label="Gráfica desplazable horizontalmente">
@@ -64,5 +94,4 @@
       <span><i class="high"></i>Alto: 180 o más</span>
     </div>
   }
-
 </section>

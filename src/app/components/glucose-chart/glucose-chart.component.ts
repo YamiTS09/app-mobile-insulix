@@ -7,6 +7,11 @@ import { GlucoseReading, ReportesService } from '../../services/reportes.service
 import { SessionService } from '../../services/session.service';
 
 type GlucosePeriod = 'day' | 'week' | 'month' | 'year';
+type GlucoseSource = 'real' | 'simulated';
+
+interface ChartMeasurement extends GlucoseMeasurement {
+  isSimulated: boolean;
+}
 
 @Component({
   selector: 'app-glucose-chart',
@@ -18,9 +23,10 @@ type GlucosePeriod = 'day' | 'week' | 'month' | 'year';
 export class GlucoseChartComponent implements OnInit, OnDestroy {
   @Input() showLatestCard = true;
 
-  all: GlucoseMeasurement[] = [];
-  visible: GlucoseMeasurement[] = [];
+  all: ChartMeasurement[] = [];
+  visible: ChartMeasurement[] = [];
   selectedPeriod: GlucosePeriod = 'day';
+  selectedSource: GlucoseSource = 'real';
   loading = true;
   errorMessage = '';
   private historyRequest?: Subscription;
@@ -29,7 +35,7 @@ export class GlucoseChartComponent implements OnInit, OnDestroy {
     series: [{ name: 'Glucosa', data: [] }],
     chart: {
       type: 'line', height: 400, fontFamily: 'Arial, sans-serif', background: '#fff',
-      animations: { enabled: true, easing: 'easeinout', speed: 450 },
+      animations: { enabled: false },
       toolbar: { show: false },
       zoom: { enabled: false },
       selection: { enabled: false }
@@ -86,6 +92,12 @@ export class GlucoseChartComponent implements OnInit, OnDestroy {
     this.loadHistory();
   }
 
+  selectSource(value: unknown): void {
+    if (!this.isGlucoseSource(value) || value === this.selectedSource) return;
+    this.selectedSource = value;
+    this.applySourceFilter();
+  }
+
   private loadHistory(): void {
     const user = this.sessionService.getValidUser();
     if (!user || user.role !== 'PACIENTE') {
@@ -126,16 +138,24 @@ export class GlucoseChartComponent implements OnInit, OnDestroy {
     this.all = readings
       .map(reading => ({
         date: new Date(reading.fecha_hora),
-        value: Number(reading.valor_mgdl)
+        value: Number(reading.valor_mgdl),
+        isSimulated: reading.es_simulado === true || reading.origen === 'SIMULADOR'
       }))
       .filter(item => !Number.isNaN(item.date.getTime()) && Number.isFinite(item.value))
       .sort((first, second) => first.date.getTime() - second.date.getTime())
       .map(item => ({
         hour: this.formatDateLabel(item.date),
         value: item.value,
-        status: this.getGlucoseStatus(item.value)
+        status: this.getGlucoseStatus(item.value),
+        isSimulated: item.isSimulated
       }));
-    this.visible = [...this.all];
+    this.applySourceFilter();
+  }
+
+  private applySourceFilter(): void {
+    this.visible = this.all.filter(item =>
+      this.selectedSource === 'simulated' ? item.isSimulated : !item.isSimulated
+    );
     this.updateSeries();
   }
 
@@ -173,6 +193,10 @@ export class GlucoseChartComponent implements OnInit, OnDestroy {
 
   private isGlucosePeriod(value: unknown): value is GlucosePeriod {
     return value === 'day' || value === 'week' || value === 'month' || value === 'year';
+  }
+
+  private isGlucoseSource(value: unknown): value is GlucoseSource {
+    return value === 'real' || value === 'simulated';
   }
 
   private formatDateLabel(date: Date): string {
