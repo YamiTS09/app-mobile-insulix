@@ -12,6 +12,7 @@ export type GlucoseMeasurementState = 'idle' | 'waitingSensor' | 'reading' | 'su
 })
 export class GlucoseMeasureButtonComponent {
   @Input() state: GlucoseMeasurementState = 'idle';
+  @Input() disabled = false;
   @Output() measureRequested = new EventEmitter<void>();
 
   get isWaiting(): boolean {
@@ -32,23 +33,25 @@ export class GlucoseMeasureButtonComponent {
 
   get ariaLabel(): string {
     switch (this.state) {
-      case 'waitingSensor': return 'Esperando que acerques el teléfono al sensor';
-      case 'reading': return 'Leyendo glucosa. Mantén el teléfono cerca del sensor';
-      case 'success': return 'Medición lista y guardada correctamente';
-      default: return 'Medir glucosa';
+      case 'waitingSensor': return 'Preparando una lectura simulada';
+      case 'reading': return 'Guardando una lectura simulada';
+      case 'success': return 'Lectura simulada guardada correctamente';
+      default: return 'Simular lectura de glucosa';
     }
   }
 
   get helpText(): string {
+    if (this.disabled && !this.isBusy) return 'Cierra el registro manual para iniciar una prueba';
+
     switch (this.state) {
-      case 'waitingSensor': return 'Esperando lectura';
-      case 'reading': return 'Mantén el teléfono cerca del sensor';
-      case 'success': return 'Lectura guardada correctamente';
-      default: return 'Presiona para comenzar';
+      case 'waitingSensor': return 'Preparando lectura de prueba';
+      case 'reading': return 'Guardando lectura de prueba';
+      case 'success': return 'Lectura de prueba guardada';
+      default: return 'Genera un dato de prueba';
     }
   }
 
   startMeasurement(): void {
-    if (!this.isBusy) this.measureRequested.emit();
+    if (!this.isBusy && !this.disabled) this.measureRequested.emit();
   }
 }

@@ -25,8 +25,8 @@ export class ReportesService {
   private http = inject(HttpClient);
   private readonly API_URL = environment.reportesUrl;
 
-  agregarLecturaGlucosa(lectura: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/glucosa`, lectura);
+  agregarLecturaGlucosa(lectura: { valor_mgdl: number; fecha_hora?: string }): Observable<GlucoseReading> {
+    return this.http.post<GlucoseReading>(`${this.API_URL}/glucosa`, lectura);
   }
 
   agregarLecturaSimulada(): Observable<GlucoseReading> {

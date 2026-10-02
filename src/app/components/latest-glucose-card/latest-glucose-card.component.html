@@ -7,13 +7,28 @@
 >
   <h2 id="latest-reading-title">Última medición</h2>
 
-  <div class="reading-row">
+  <div class="reading-main-row">
     <p class="reading-value">
       <strong>{{ loading || value === null ? '—' : value }}</strong>
       <span>mg/dL</span>
     </p>
-    <p class="reading-status">{{ loading ? 'Cargando' : status }}</p>
+
+    <p class="reading-status">
+      <ion-icon [name]="statusIcon" aria-hidden="true"></ion-icon>
+      <span>{{ loading ? 'Cargando' : status }}</span>
+    </p>
   </div>
 
-  <time>{{ loading ? 'Consultando la última lectura…' : dateLabel }}</time>
+  <div *ngIf="value !== null && !loading" class="reading-meta">
+    <div class="reading-time">
+      <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+      <time>{{ dateLabel }}</time>
+    </div>
+    <span class="meta-divider" aria-hidden="true"></span>
+    <span class="reading-origin">{{ originLabel }}</span>
+  </div>
+
+  <p *ngIf="value === null || loading" class="reading-empty">
+    {{ loading ? 'Consultando la última lectura…' : dateLabel }}
+  </p>
 </article>

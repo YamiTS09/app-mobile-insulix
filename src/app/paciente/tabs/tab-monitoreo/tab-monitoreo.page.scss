@@ -31,40 +31,185 @@
   }
 }
 
-app-glucose-measure-button {
-  margin-top: 34px;
+.monitoring-actions {
+  margin-top: 28px;
 }
 
-.view-chart-button {
-  color: #f2f7fc;
-  min-height: 54px;
-  margin: 22px 0 0;
-  --background: #0879e8;
-  --background-activated: #0062c5;
-  --background-hover: #0671d8;
-  --border-radius: 14px;
-  --box-shadow: 0 7px 17px rgb(0 92 184 / 20%);
-  font-size: 18px;
-  font-weight: 800;
+.actions-heading {
+  margin: 0 4px 18px;
+
+  h2 {
+    margin: 0;
+    color: #102960;
+    font-size: clamp(23px, 6.5vw, 28px);
+    font-weight: 850;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 7px 0 0;
+    color: #4d5c70;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+}
+
+.action-item + .action-item {
+  margin-top: 13px;
+}
+
+.action-button {
+  width: 100%;
+  min-height: 96px;
+  margin: 0;
+  --background: linear-gradient(105deg, #0783ed 0%, #006dd3 100%);
+  --background-activated: linear-gradient(105deg, #0873cf 0%, #075bad 100%);
+  --background-hover: linear-gradient(105deg, #0783ed 0%, #006dd3 100%);
+  --border-radius: 21px;
+  --box-shadow: 0 5px 12px rgb(0 83 160 / 17%);
+  --color: #fff;
+  --padding-start: 20px;
+  --padding-end: 16px;
+  font-size: 23px;
+  font-weight: 850;
   letter-spacing: 0;
+  text-align: left;
   text-transform: none;
 
-  ion-icon {
-    font-size: 24px;
+  &::part(native) {
+    justify-content: flex-start;
+    transition: none;
+  }
+
+  ion-icon[slot='start'] {
+    flex: 0 0 48px;
+    font-size: 42px;
+  }
+
+  ion-icon[slot='end'] {
+    flex: 0 0 32px;
+    font-size: 32px;
   }
 }
 
-@media (max-height: 760px) {
-  .monitoring-page {
-    padding-top: 16px;
+.action-label {
+  flex: 1 1 auto;
+  padding: 2px 8px;
+  line-height: 1.12;
+  text-align: left;
+  white-space: normal;
+}
+
+.manual-button {
+  --background: linear-gradient(105deg, #21a65b 0%, #168447 100%);
+  --background-activated: linear-gradient(105deg, #198b4b 0%, #116d39 100%);
+  --background-hover: linear-gradient(105deg, #21a65b 0%, #168447 100%);
+}
+
+.action-feedback,
+.manual-entry-message {
+  margin: 10px 2px 0;
+  padding: 11px 13px;
+  border: 1px solid #60758b;
+  border-radius: 10px;
+  background: #fff;
+  color: #263b4f;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.feedback-error {
+  border-color: #a5271d;
+  background: #fff4f2;
+  color: #8f1d14;
+}
+
+.feedback-success {
+  border-color: #27743c;
+  background: #f0f8f1;
+  color: #1f6031;
+}
+
+.manual-entry-form {
+  margin-top: 12px;
+  padding: 18px;
+  border: 1px solid #b8c9da;
+  border-radius: 16px;
+  background: #fff;
+
+  > label {
+    display: block;
+    margin-bottom: 8px;
+    color: #20252b;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.manual-value-field {
+  display: flex;
+  min-height: 64px;
+  padding: 0 14px;
+  border: 2px solid #5b6f82;
+  border-radius: 12px;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+
+  ion-input {
+    min-height: 58px;
+    color: #17212b;
+    font-size: 25px;
+    font-weight: 700;
+    --padding-start: 2px;
+    --padding-end: 2px;
   }
 
-  .greeting-section {
-    margin-bottom: 18px;
+  > span {
+    flex: 0 0 auto;
+    color: #303b46;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.manual-entry-help {
+  margin: 9px 0 0;
+  color: #3d4854;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.manual-entry-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 10px;
+  margin-top: 16px;
+
+  ion-button {
+    min-height: 54px;
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: none;
+    --border-radius: 12px;
+
+    &::part(native) {
+      transition: none;
+    }
   }
 
-  app-glucose-measure-button {
-    margin-top: 22px;
+  .save-entry-button {
+    --background: #0870c9;
+    --background-activated: #075ba3;
+    --color: #fff;
+  }
+
+  .cancel-entry-button {
+    --border-color: #40566b;
+    --color: #263b4f;
   }
 }
 
@@ -72,5 +217,36 @@ app-glucose-measure-button {
   .monitoring-page {
     padding-right: 13px;
     padding-left: 13px;
+  }
+
+  .manual-entry-form {
+    padding: 15px;
+  }
+
+  .action-button {
+    min-height: 88px;
+    font-size: 20px;
+    --padding-start: 15px;
+    --padding-end: 12px;
+  }
+
+  .action-button ion-icon[slot='start'] {
+    flex-basis: 40px;
+    font-size: 36px;
+  }
+
+  .action-button ion-icon[slot='end'] {
+    flex-basis: 27px;
+    font-size: 27px;
+  }
+
+  .manual-entry-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 760px) {
+  .monitoring-page {
+    padding-top: 16px;
   }
 }

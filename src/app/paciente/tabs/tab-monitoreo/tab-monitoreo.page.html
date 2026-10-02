@@ -11,23 +11,123 @@
       [value]="latestMeasurement?.value ?? null"
       [status]="latestMeasurement?.status ?? 'Sin registros'"
       [dateLabel]="latestMeasurement?.dateLabel ?? latestMeasurementMessage"
+      [originLabel]="latestMeasurement?.originLabel ?? ''"
       [loading]="latestMeasurementLoading"
     ></app-latest-glucose-card>
 
-    <app-glucose-measure-button
-      [state]="measurementState"
-      (measureRequested)="startGlucoseMeasurement()"
-    ></app-glucose-measure-button>
+    <section class="monitoring-actions" aria-labelledby="monitoring-actions-title">
+      <header class="actions-heading">
+        <h2 id="monitoring-actions-title">¿Qué deseas hacer hoy?</h2>
+        <p>Tu salud está en buenas manos.</p>
+      </header>
 
-    <ion-button
-      expand="block"
-      class="view-chart-button"
-      [routerLink]="['grafica']"
-      [disabled]="measurementState !== 'idle'"
-      aria-label="Ver gráfica de glucosa"
-    >
-      <ion-icon name="stats-chart-outline" slot="start" aria-hidden="true"></ion-icon>
-      Ver gráfica de glucosa
-    </ion-button>
+      <div class="action-item">
+        <ion-button
+          expand="block"
+          class="action-button simulation-button"
+          (click)="simulateReading()"
+          [disabled]="simulatingReading || savingManualReading || manualFormOpen"
+          [attr.aria-busy]="simulatingReading"
+        >
+          <ion-icon name="water" slot="start" aria-hidden="true"></ion-icon>
+          <span class="action-label">Simular<br>lectura</span>
+          <ion-icon name="chevron-forward" slot="end" aria-hidden="true"></ion-icon>
+        </ion-button>
+        <p
+          *ngIf="simulationMessage"
+          class="action-feedback"
+          [class.feedback-error]="simulationMessageType === 'error'"
+          [class.feedback-success]="simulationMessageType === 'success'"
+          [attr.role]="simulationMessageType === 'error' ? 'alert' : 'status'"
+          aria-live="polite"
+        >
+          {{ simulationMessage }}
+        </p>
+      </div>
+
+      <div class="action-item">
+        <ion-button
+          expand="block"
+          class="action-button manual-button"
+          (click)="toggleManualForm()"
+          [disabled]="simulatingReading || savingManualReading"
+          [attr.aria-expanded]="manualFormOpen"
+          aria-controls="manual-glucose-form"
+        >
+          <ion-icon name="create-outline" slot="start" aria-hidden="true"></ion-icon>
+          <span class="action-label">Registrar<br>lectura manual</span>
+          <ion-icon name="chevron-forward" slot="end" aria-hidden="true"></ion-icon>
+        </ion-button>
+
+        <form
+          *ngIf="manualFormOpen"
+          id="manual-glucose-form"
+          class="manual-entry-form"
+          (ngSubmit)="saveManualReading()"
+        >
+          <label for="manual-glucose-value">Valor de glucosa</label>
+          <div class="manual-value-field">
+            <ion-input
+              id="manual-glucose-value"
+              name="manualGlucoseValue"
+              type="number"
+              inputmode="decimal"
+              min="20"
+              max="600"
+              step="0.1"
+              placeholder="Ejemplo: 120"
+              [(ngModel)]="manualGlucoseValue"
+              [disabled]="savingManualReading"
+              aria-describedby="manual-glucose-help"
+              required
+            ></ion-input>
+            <span aria-hidden="true">mg/dL</span>
+          </div>
+          <p id="manual-glucose-help" class="manual-entry-help">
+            Escribe el número que aparece en tu glucómetro. Se guardará con la fecha y hora actuales.
+          </p>
+
+          <p *ngIf="manualEntryError" class="manual-entry-message feedback-error" role="alert">
+            {{ manualEntryError }}
+          </p>
+
+          <div class="manual-entry-actions">
+            <ion-button
+              type="button"
+              fill="outline"
+              class="cancel-entry-button"
+              (click)="closeManualForm()"
+              [disabled]="savingManualReading"
+            >
+              Cancelar
+            </ion-button>
+            <ion-button
+              type="submit"
+              class="save-entry-button"
+              [disabled]="savingManualReading || simulatingReading"
+            >
+              {{ savingManualReading ? 'Guardando' : 'Guardar lectura' }}
+            </ion-button>
+          </div>
+        </form>
+
+        <p *ngIf="manualEntrySuccess" class="action-feedback feedback-success" role="status" aria-live="polite">
+          {{ manualEntrySuccess }}
+        </p>
+      </div>
+
+      <div class="action-item">
+        <ion-button
+          expand="block"
+          class="action-button chart-button"
+          [routerLink]="['grafica']"
+          [disabled]="simulatingReading || savingManualReading"
+        >
+          <ion-icon name="bar-chart-outline" slot="start" aria-hidden="true"></ion-icon>
+          <span class="action-label">Ver gráfica<br>de glucosa</span>
+          <ion-icon name="chevron-forward" slot="end" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </div>
+    </section>
   </main>
 </ion-content>
