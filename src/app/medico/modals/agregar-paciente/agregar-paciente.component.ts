@@ -20,7 +20,7 @@ export class AgregarPacienteComponent implements OnInit {
     fecha_nacimiento: '',
     sexo: 'M',
     tipo_diabetes: 'Tipo 2',
-    glucosa_base: null as any,
+    glucosa_inicial: null as any,
     peso: null as any,
     estatura: null as any,
     telefono: '',
@@ -92,16 +92,16 @@ export class AgregarPacienteComponent implements OnInit {
       case 'apellido_paterno':
         return !value ? 'Obligatorio' : '';
       case 'peso':
-        if (!value) return 'Obligatorio';
-        if (value <= 0 || value > 300) return 'Rango: 0-300 kg';
+        if (value === '' || value === null || value === undefined) return '';
+        if (value < 30 || value > 200) return 'Rango: 30-200 kg';
         return '';
       case 'estatura':
         if (!value) return 'Obligatorio';
         if (value <= 0 || value > 3) return 'Rango: 0.1-3 metros';
         return '';
-      case 'glucosa_base':
-        if (!value) return 'Obligatorio';
-        if (value <= 0 || value > 1000) return 'Rango: 1-1000 mg/dL';
+      case 'glucosa_inicial':
+        if (value === '' || value === null || value === undefined) return '';
+        if (value < 20 || value > 600) return 'Rango: 20-600 mg/dL';
         return '';
       case 'telefono':
         if (!value) return 'Obligatorio';
@@ -129,9 +129,9 @@ export class AgregarPacienteComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    const fields = ['nombre', 'apellido_paterno', 'peso', 'estatura', 'glucosa_base', 'telefono', 'email'];
+    const fields = ['nombre', 'apellido_paterno', 'estatura', 'telefono', 'email'];
     if (!this.itemAEditar) {
-      fields.push('password', 'confirmarPassword');
+      fields.push('glucosa_inicial', 'peso', 'password', 'confirmarPassword');
     }
     return fields.every(f => this.getErrors(f) === '');
   }

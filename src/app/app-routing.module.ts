@@ -8,11 +8,12 @@ import { AcercadeComponent } from './components/menu/acercade/acercade.component
 import { DetallePacienteComponent } from './components/detalle-paciente/detalle-paciente.component';
 
 // Importamos el guard que acabas de crear
-import { authGuard } from './guards/auth-guard';
+import { authGuard, publicOnlyGuard } from './guards/auth-guard';
 
 const routes: Routes = [
   {
     path: 'inicio-sesion',
+    canActivate: [publicOnlyGuard],
     loadChildren: () => import('./login/Inicio-sesión/inicio-sesion.module').then(m => m.InicioSesionPageModule)
   },
   {
@@ -22,10 +23,12 @@ const routes: Routes = [
   },
   {
     path: 'registro-medico',
+    canActivate: [publicOnlyGuard],
     loadChildren: () => import('./login/registro-medico/registro-medico.module').then(m => m.RegistroMedicoPageModule)
   },
   {
     path: 'reestablecer-contrasenia',
+    canActivate: [publicOnlyGuard],
     loadChildren: () => import('./login/reestablecer-contrasenia/reestablecer-contrasenia.module').then(m => m.ReestablecerContraseniaPageModule)
   },
 
@@ -33,26 +36,31 @@ const routes: Routes = [
   {
     path: 'tabs-medico',
     canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
     loadChildren: () => import('./medico/tabs-medico/tabs-medico.module').then(m => m.TabsMedicoPageModule)
   },
   {
     path: 'tab-pacientes',
     canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
     loadChildren: () => import('./medico/tabs/tab-pacientes/tab-pacientes.module').then(m => m.TabPacientesPageModule)
   },
   {
     path: 'tab-catalogo',
     canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
     loadChildren: () => import('./medico/tabs/tab-catalogo/tab-catalogo.module').then(m => m.TabCatalogoPageModule)
   },
   {
     path: 'tab-reportes',
     canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
     loadChildren: () => import('./medico/tabs/tab-reportes/tab-reportes.module').then(m => m.TabReportesPageModule)
   },
   {
     path: 'detalle-paciente/:id',
     canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
     component: DetallePacienteComponent
   },
 
@@ -60,29 +68,34 @@ const routes: Routes = [
   {
     path: 'tabs-paciente',
     canActivate: [authGuard],
+    data: { roles: ['PACIENTE'] },
     loadChildren: () => import('./paciente/tabs-paciente/tabs-paciente.module').then( m => m.TabsPacientePageModule)
   },
   {
     path: 'tab-monitoreo',
     canActivate: [authGuard],
+    data: { roles: ['PACIENTE'] },
     loadChildren: () => import('./paciente/tabs/tab-monitoreo/tab-monitoreo.module').then( m => m.TabMonitoreoPageModule)
   },
   {
     path: 'tab-bienestar',
     canActivate: [authGuard],
+    data: { roles: ['PACIENTE'] },
     loadChildren: () => import('./paciente/tabs/tab-bienestar/tab-bienestar.module').then( m => m.TabBienestarPageModule)
   },
   {
     path: 'tab-historial',
     canActivate: [authGuard],
+    data: { roles: ['PACIENTE'] },
     loadChildren: () => import('./paciente/tabs/tab-historial/tab-historial.module').then( m => m.TabHistorialPageModule)
   },
 
   // --- COMPONENTES DE MENÚ (TAMBIÉN PROTEGIDOS) ---
-  { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
-  { path: 'configuracion', component: ConfiguracionComponent, canActivate: [authGuard] },
-  { path: 'nosotros', component: NosotrosComponent, canActivate: [authGuard] },
-  { path: 'acercade', component: AcercadeComponent, canActivate: [authGuard] },
+  { path: 'perfil', component: PerfilComponent, canActivate: [authGuard], data: { roles: ['MEDICO', 'PACIENTE'] } },
+  { path: 'configuracion', component: ConfiguracionComponent, canActivate: [authGuard], data: { roles: ['MEDICO', 'PACIENTE'] } },
+  { path: 'nosotros', component: NosotrosComponent, canActivate: [authGuard], data: { roles: ['MEDICO', 'PACIENTE'] } },
+  { path: 'acercade', component: AcercadeComponent, canActivate: [authGuard], data: { roles: ['MEDICO', 'PACIENTE'] } },
+  { path: '**', redirectTo: 'inicio-sesion' },
 ];
 
 @NgModule({

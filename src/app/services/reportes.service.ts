@@ -3,6 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+export interface GlucoseReading {
+  lectura_id: string;
+  paciente_id: string;
+  sensor_id: string | null;
+  valor_mgdl: number;
+  fecha_hora: string;
+  fecha_registro: string;
+  es_simulado: boolean;
+  origen: 'SENSOR' | 'MEDICO' | 'PACIENTE' | 'SIMULADOR';
+}
+
+export interface CurrentGlucoseResponse {
+  medicion: GlucoseReading | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,15 +25,31 @@ export class ReportesService {
   private http = inject(HttpClient);
   private readonly API_URL = environment.reportesUrl;
 
-  agregarLecturaGlucosa(lectura: any): Observable<any> {
-    return this.http.post(`${this.API_URL}/glucosa`, lectura);
+  agregarLecturaGlucosa(lectura: { valor_mgdl: number; fecha_hora?: string }): Observable<GlucoseReading> {
+    return this.http.post<GlucoseReading>(`${this.API_URL}/glucosa`, lectura);
   }
 
-  getHistorialGlucosa(pacienteId: string | number, startDate?: string, endDate?: string): Observable<any[]> {
+  agregarLecturaSimulada(): Observable<GlucoseReading> {
+    return this.http.post<GlucoseReading>(`${this.API_URL}/glucosa/simulada`, {});
+  }
+
+  getHistorialGlucosa(
+    pacienteId: string | number,
+    startDate?: string,
+    endDate?: string,
+    limit = 500,
+    offset = 0
+  ): Observable<GlucoseReading[]> {
     let params: any = {};
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
-    return this.http.get<any[]>(`${this.API_URL}/glucosa/${pacienteId}`, { params });
+    params.limit = limit;
+    params.offset = offset;
+    return this.http.get<GlucoseReading[]>(`${this.API_URL}/glucosa/${pacienteId}`, { params });
+  }
+
+  getCurrentGlucose(pacienteId: string): Observable<CurrentGlucoseResponse> {
+    return this.http.get<CurrentGlucoseResponse>(`${this.API_URL}/glucosa/${pacienteId}/actual`);
   }
 
   updateLectura(id: string, lectura: any): Observable<any> {

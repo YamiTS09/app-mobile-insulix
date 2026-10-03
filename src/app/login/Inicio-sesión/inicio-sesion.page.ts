@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs';
+import { SessionService } from '../../services/session.service';
 @Component({
   selector: 'app-inicio-sesion',
   templateUrl: 'inicio-sesion.page.html',
@@ -21,7 +22,8 @@ export class InicioSesionPage {
     private http: HttpClient,
     private navCtrl: NavController,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private sessionService: SessionService
   ) {}
 
   async login() {
@@ -52,21 +54,14 @@ export class InicioSesionPage {
         loading.dismiss();
 
         if (response.valid && response.access_token) {
-          localStorage.setItem('access_token', response.access_token);
-          localStorage.setItem('userProfile', JSON.stringify(response.user));
+          const user = this.sessionService.saveSession(response.access_token, response.user);
 
-          if (response.user.role === 'MEDICO') {
-            this.navCtrl.navigateRoot('/tabs-medico/tab-pacientes');
-          } else if (response.user.role === 'PACIENTE') {
-            this.navCtrl.navigateRoot('/tabs-paciente/tab-monitoreo');
-          } else {
-            // fallback
-            if (response.user.cedula_profesional) {
-              this.navCtrl.navigateRoot('/tabs-medico/tab-pacientes');
-            } else {
-              this.navCtrl.navigateRoot('/tabs-paciente/tab-monitoreo');
-            }
+          if (!user) {
+            this.presentToast('La sesión recibida no tiene un rol válido', 'danger');
+            return;
           }
+
+          this.navCtrl.navigateRoot(this.sessionService.getHomeRoute(user.role));
         } else {
           this.presentToast('No se pudo validar al usuario', 'danger');
         }

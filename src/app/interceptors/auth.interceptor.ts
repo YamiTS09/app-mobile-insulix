@@ -2,6 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { switchMap, take } from 'rxjs';
+import { SessionService } from '../services/session.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Si la petición es hacia /verify, dejamos pasar la petición tal como viene
@@ -10,7 +11,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   // De lo contrario, inyectar el Custom JWT del backend almacenado
-  const customToken = localStorage.getItem('access_token');
+  const customToken = inject(SessionService).getValidToken();
   if (customToken) {
     const cloned = req.clone({
       setHeaders: { Authorization: `Bearer ${customToken}` }

@@ -1,92 +1,252 @@
-ion-content {
-    --background: #f0f8ff;
-    /* Light blue background like the image */
+.monitoring-content {
+  --background: #f2f7fc;
+}
+
+.monitoring-page {
+  width: 100%;
+  max-width: 560px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 24px 18px 30px;
+  color: #20252b;
 }
 
 .greeting-section {
-    text-align: left;
-    margin-top: 20px;
-    margin-bottom: 30px;
-    padding: 0 10px;
+  margin: 0 4px 24px;
 
-    h1 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        margin: 0;
-    }
+  h1 {
+    margin: 0;
+    color: #202124;
+    font-size: clamp(28px, 8vw, 35px);
+    font-weight: 850;
+    line-height: 1.15;
+  }
 
-    h2 {
-        font-size: 20px;
-        font-weight: 500;
-        color: #333;
-        margin: 5px 0 0 0;
-    }
+  p {
+    margin: 7px 0 0;
+    color: #30343a;
+    font-size: clamp(21px, 6vw, 27px);
+    font-weight: 500;
+    line-height: 1.25;
+  }
 }
 
-.glucose-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-    gap: 20px;
-
-    .glucose-value {
-        font-size: 64px;
-        font-weight: bold;
-        color: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        line-height: 1;
-
-        .unit {
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-    }
-
-    .trend-indicator {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-
-        &.high {
-            color: #ff0000;
-            /* Red for high */
-        }
-
-        ion-icon {
-            font-size: 40px;
-            font-weight: bold;
-        }
-
-        .status-text {
-            font-size: 24px;
-            font-weight: bold;
-        }
-    }
+.monitoring-actions {
+  margin-top: 28px;
 }
 
-.chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+.actions-heading {
+  margin: 0 4px 18px;
 
-    img {
-        width: 90%;
-        max-width: 350px;
-        border-radius: 10px;
-        /* Optional shadow if needed */
-        // box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-    }
+  h2 {
+    margin: 0;
+    color: #102960;
+    font-size: clamp(23px, 6.5vw, 28px);
+    font-weight: 850;
+    line-height: 1.2;
+  }
 
-    .chart-label {
-        margin-top: 15px;
-        font-size: 16px;
-        color: #333;
-        font-weight: 500;
+  p {
+    margin: 7px 0 0;
+    color: #4d5c70;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+}
+
+.action-item + .action-item {
+  margin-top: 13px;
+}
+
+.action-button {
+  width: 100%;
+  min-height: 96px;
+  margin: 0;
+  --background: linear-gradient(105deg, #0783ed 0%, #006dd3 100%);
+  --background-activated: linear-gradient(105deg, #0873cf 0%, #075bad 100%);
+  --background-hover: linear-gradient(105deg, #0783ed 0%, #006dd3 100%);
+  --border-radius: 21px;
+  --box-shadow: 0 5px 12px rgb(0 83 160 / 17%);
+  --color: #fff;
+  --padding-start: 20px;
+  --padding-end: 16px;
+  font-size: 23px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+
+  &::part(native) {
+    justify-content: flex-start;
+    transition: none;
+  }
+
+  ion-icon[slot='start'] {
+    flex: 0 0 48px;
+    font-size: 42px;
+  }
+
+  ion-icon[slot='end'] {
+    flex: 0 0 32px;
+    font-size: 32px;
+  }
+}
+
+.action-label {
+  flex: 1 1 auto;
+  padding: 2px 8px;
+  line-height: 1.12;
+  text-align: left;
+  white-space: normal;
+}
+
+.manual-button {
+  --background: linear-gradient(105deg, #21a65b 0%, #168447 100%);
+  --background-activated: linear-gradient(105deg, #198b4b 0%, #116d39 100%);
+  --background-hover: linear-gradient(105deg, #21a65b 0%, #168447 100%);
+}
+
+.action-feedback,
+.manual-entry-message {
+  margin: 10px 2px 0;
+  padding: 11px 13px;
+  border: 1px solid #60758b;
+  border-radius: 10px;
+  background: #fff;
+  color: #263b4f;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.feedback-error {
+  border-color: #a5271d;
+  background: #fff4f2;
+  color: #8f1d14;
+}
+
+.feedback-success {
+  border-color: #27743c;
+  background: #f0f8f1;
+  color: #1f6031;
+}
+
+.manual-entry-form {
+  margin-top: 12px;
+  padding: 18px;
+  border: 1px solid #b8c9da;
+  border-radius: 16px;
+  background: #fff;
+
+  > label {
+    display: block;
+    margin-bottom: 8px;
+    color: #20252b;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.manual-value-field {
+  display: flex;
+  min-height: 64px;
+  padding: 0 14px;
+  border: 2px solid #5b6f82;
+  border-radius: 12px;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+
+  ion-input {
+    min-height: 58px;
+    color: #17212b;
+    font-size: 25px;
+    font-weight: 700;
+    --padding-start: 2px;
+    --padding-end: 2px;
+  }
+
+  > span {
+    flex: 0 0 auto;
+    color: #303b46;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.manual-entry-help {
+  margin: 9px 0 0;
+  color: #3d4854;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.manual-entry-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 10px;
+  margin-top: 16px;
+
+  ion-button {
+    min-height: 54px;
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: none;
+    --border-radius: 12px;
+
+    &::part(native) {
+      transition: none;
     }
+  }
+
+  .save-entry-button {
+    --background: #0870c9;
+    --background-activated: #075ba3;
+    --color: #fff;
+  }
+
+  .cancel-entry-button {
+    --border-color: #40566b;
+    --color: #263b4f;
+  }
+}
+
+@media (max-width: 370px) {
+  .monitoring-page {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+
+  .manual-entry-form {
+    padding: 15px;
+  }
+
+  .action-button {
+    min-height: 88px;
+    font-size: 20px;
+    --padding-start: 15px;
+    --padding-end: 12px;
+  }
+
+  .action-button ion-icon[slot='start'] {
+    flex-basis: 40px;
+    font-size: 36px;
+  }
+
+  .action-button ion-icon[slot='end'] {
+    flex-basis: 27px;
+    font-size: 27px;
+  }
+
+  .manual-entry-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 760px) {
+  .monitoring-page {
+    padding-top: 16px;
+  }
 }

@@ -4,6 +4,7 @@ import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signO
 import { HttpClient } from '@angular/common/http';
 import { Observable, from, switchMap, take, tap } from 'rxjs';
 import { environment } from 'src/environments/environment'; // Importamos tu config
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthService {
   private auth = inject(Auth);
   private http = inject(HttpClient);
   private injector = inject(EnvironmentInjector);
+  private sessionService = inject(SessionService);
   
   // Estado del usuario en tiempo real
   user$ = user(this.auth);
@@ -56,7 +58,7 @@ export class AuthService {
   logout() {
     return from(signOut(this.auth)).pipe(
       tap(() => {
-        localStorage.removeItem('userProfile'); // Si decides guardar el perfil local
+        this.sessionService.clearSession();
       })
     );
   }

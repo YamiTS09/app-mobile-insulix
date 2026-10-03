@@ -1,0 +1,160 @@
+﻿<section class="glucose-chart-section">
+  <section class="chart-filter-card" aria-label="Filtros de la gr&#225;fica">
+    <div class="filter-group">
+      <h2 id="period-filter-title">Periodo</h2>
+      <ion-segment
+        mode="ios"
+        class="filter-segment period-selector"
+        [value]="selectedPeriod"
+        (ionChange)="selectPeriod($any($event.detail.value))"
+        aria-labelledby="period-filter-title"
+      >
+        <ion-segment-button value="day" aria-label="Mostrar el d&#237;a seleccionado" title="D&#237;a">
+          <ion-label>D</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="week" aria-label="Mostrar la semana seleccionada" title="Semana">
+          <ion-label>S</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="month" aria-label="Mostrar el mes seleccionado" title="Mes">
+          <ion-label>M</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="year" aria-label="Mostrar el a&#241;o seleccionado" title="A&#241;o">
+          <ion-label>A</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="filter-group source-filter-group">
+      <h2 id="source-filter-title">Tipo de lectura</h2>
+      <ion-segment
+        mode="ios"
+        class="filter-segment source-selector"
+        [value]="selectedSource"
+        (ionChange)="selectSource($any($event.detail.value))"
+        aria-labelledby="source-filter-title"
+      >
+        <ion-segment-button value="real" aria-label="Mostrar lecturas reales">
+          <ion-label>Reales</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="simulated" aria-label="Mostrar lecturas simuladas">
+          <ion-label>Simuladas</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <p class="source-summary" role="status" aria-live="polite">
+      Mostrando lecturas {{ selectedSource === 'real' ? 'reales' : 'simuladas' }}
+    </p>
+  </section>
+
+  <nav class="period-navigation" aria-label="Navegaci&#243;n por periodos">
+    <ion-button fill="clear" class="period-arrow" (click)="navigatePeriod(-1)" aria-label="Periodo anterior">
+      <ion-icon slot="icon-only" name="chevron-back-outline" aria-hidden="true"></ion-icon>
+    </ion-button>
+    <h2 aria-live="polite">{{ selectedPeriodLabel }}</h2>
+    <ion-button
+      fill="clear"
+      class="period-arrow"
+      (click)="navigatePeriod(1)"
+      [disabled]="!canNavigateNext"
+      aria-label="Periodo siguiente"
+    >
+      <ion-icon slot="icon-only" name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+    </ion-button>
+  </nav>
+
+  @if (showLatestCard && last; as item) {
+    <article class="latest-card" [style.--status-color]="getStatusColor(item.value!)" aria-live="polite">
+      @if (loading) {
+        <div class="latest-refresh" role="status">Actualizando &#250;ltima medici&#243;n...</div>
+      } @else if (errorMessage) {
+        <div class="latest-refresh" role="status">No se pudo actualizar el resumen.</div>
+      } @else {
+        <span class="label">&#218;ltima medici&#243;n</span>
+        <strong>{{ item.value | number:'1.0-1' }} <small>mg/dL</small></strong>
+        <span class="status">{{ getGlucoseStatus(item.value!) }}</span>
+        <time>{{ item.dateLabel }}</time>
+      }
+    </article>
+  }
+
+  <div
+    class="chart-frame"
+    [class.is-updating]="loading"
+    [class.has-state]="loading || errorMessage.length > 0 || visible.length === 0"
+    aria-label="Gr&#225;fica de glucosa. Desliza a izquierda o derecha para cambiar de periodo."
+    (touchstart)="onChartTouchStart($event)"
+    (touchend)="onChartTouchEnd($event)"
+  >
+    <div
+      class="chart-canvas"
+      [class.chart-hidden]="loading || errorMessage.length > 0 || visible.length === 0"
+    >
+      <apx-chart
+        [series]="chartOptions.series" [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis" [yaxis]="chartOptions.yaxis"
+        [annotations]="chartOptions.annotations" [stroke]="chartOptions.stroke"
+        [markers]="chartOptions.markers" [dataLabels]="chartOptions.dataLabels"
+        [grid]="chartOptions.grid" [tooltip]="chartOptions.tooltip"
+        [title]="chartOptions.title" [colors]="chartOptions.colors">
+      </apx-chart>
+    </div>
+
+    @if (loading) {
+      <div class="chart-overlay" role="status" aria-live="polite">
+        <strong>{{ hasLoaded ? 'Actualizando gr&#225;fica' : 'Cargando gr&#225;fica' }}</strong>
+        <span>{{ selectedPeriodLabel }}</span>
+      </div>
+    } @else if (errorMessage) {
+      <div class="chart-overlay error-state" role="alert">
+        <strong>{{ errorMessage }}</strong>
+        <span>Verifica tu conexi&#243;n e int&#233;ntalo nuevamente.</span>
+      </div>
+    } @else if (visible.length === 0) {
+      <div class="chart-overlay" role="status">
+        <strong>No hay lecturas {{ selectedSource === 'real' ? 'reales' : 'simuladas' }} en este periodo</strong>
+        <span>
+          {{ selectedSource === 'real'
+            ? 'Prueba seleccionando otro periodo o registra una lectura manual.'
+            : 'Prueba seleccionando otro periodo o registra una lectura de prueba.' }}
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (selectedPoint; as point) {
+    <article class="selected-point-card" [class.is-updating]="loading" aria-live="polite">
+      @if (loading) {
+        <div class="detail-refresh" role="status">
+          Actualizando los detalles para el periodo seleccionado...
+        </div>
+      } @else if (point.value !== null) {
+        <div class="detail-heading">
+          <strong>{{ getPointKindLabel(point.kind) }}</strong>
+          <ion-button fill="clear" class="detail-close" (click)="closePointDetails()" aria-label="Cerrar detalle de lectura">
+            <ion-icon slot="icon-only" name="close-outline" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </div>
+        <p class="detail-value">{{ point.value | number:'1.0-1' }} <small>mg/dL</small></p>
+        <p class="detail-status" [style.--status-color]="getStatusColor(point.value)">
+          {{ getGlucoseStatus(point.value) }}
+        </p>
+        <p class="detail-date">{{ point.dateLabel }}</p>
+        @if (point.kind === 'reading' && point.sourceLabel) {
+          <p class="detail-source">{{ point.sourceLabel }}</p>
+        }
+        @if (point.kind !== 'reading') {
+          <p class="detail-count">
+            Calculado con {{ point.readingCount }} {{ point.readingCount === 1 ? 'lectura' : 'lecturas' }}
+          </p>
+        }
+      }
+    </article>
+  }
+
+  <div class="legend" aria-label="Rangos de glucosa">
+    <span><i class="low"></i>Bajo: menos de 70</span>
+    <span><i class="target"></i>Objetivo: 70&#8211;179</span>
+    <span><i class="high"></i>Alto: 180 o m&#225;s</span>
+  </div>
+</section>

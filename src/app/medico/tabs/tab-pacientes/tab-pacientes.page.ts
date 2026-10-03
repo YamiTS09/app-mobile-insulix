@@ -38,15 +38,18 @@ export class TabPacientesPage implements OnInit {
     this.http.get(`${environment.apiUrl}/paciente?medico_id=${this.usuarioLogueado.uid}`).subscribe({
       next: (res: any) => {
         this.pacientes = res.map((p: any) => {
-          const g = Number(p.glucosa_base);
-          let estadoCalculado = 'normal';
-          if (g > 180) estadoCalculado = 'alto';
-          else if (g < 70) estadoCalculado = 'bajo';
+          const tieneLectura = p.glucosa_actual !== null &&
+            p.glucosa_actual !== undefined && p.glucosa_actual !== '';
+          const g = tieneLectura ? Number(p.glucosa_actual) : null;
+          let estadoCalculado = 'sin-registro';
+          if (g !== null) {
+            estadoCalculado = g > 180 ? 'alto' : (g < 70 ? 'bajo' : 'normal');
+          }
           
           p.estado = estadoCalculado;
           // Asseguramos la compatibilidad del routerLink anterior
           p.usuario = p.paciente_id;
-          p.glucosa = p.glucosa_base;
+          p.glucosa = g;
           return p;
         });
         localStorage.setItem('insulix_pacientes', JSON.stringify(this.pacientes));
