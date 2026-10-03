@@ -36,11 +36,15 @@ export class ReportesService {
   getHistorialGlucosa(
     pacienteId: string | number,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    limit = 500,
+    offset = 0
   ): Observable<GlucoseReading[]> {
     let params: any = {};
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
+    params.limit = limit;
+    params.offset = offset;
     return this.http.get<GlucoseReading[]>(`${this.API_URL}/glucosa/${pacienteId}`, { params });
   }
 
