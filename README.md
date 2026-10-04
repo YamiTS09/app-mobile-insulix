@@ -2,6 +2,11 @@
 
 INSULIX es una aplicación móvil en desarrollo para apoyar el seguimiento de personas con diabetes. Permite registrar y consultar lecturas de glucosa, revisar su evolución y acceder a funciones de bienestar. También contempla herramientas para que el personal médico dé seguimiento a sus pacientes.
 
+## Componentes de INSULIX
+
+- Aplicación móvil: https://github.com/milaneso69/app-mobile-insulix
+- API: https://github.com/YamiTS09/API-INSULIX
+
 ## Funciones principales
 
 - Inicio de sesión y acceso según el tipo de usuario.
