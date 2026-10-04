@@ -75,40 +75,61 @@
         </ng-container>
       </div>
 
-      <div *ngIf="segmentoSeleccionado !== 'peso'" class="date-header">
+      <div *ngIf="segmentoSeleccionado === 'ejercicio'" class="date-header">
         <div class="line"></div>
         <div class="date-text">{{ fechaActual }}</div>
         <div class="line"></div>
       </div>
 
-      <div *ngIf="segmentoSeleccionado === 'dieta'">
-        <div *ngIf="dietasAsignadas.length > 0; else sinDieta">
-          <ion-accordion-group [multiple]="true" class="catalog-list">
-            <ion-accordion
-              *ngFor="let dieta of dietasAsignadas; let i = index"
-              [value]="'dieta-' + i"
-              class="wellness-accordion"
-            >
-              <ion-item slot="header" lines="none">
-                <div class="accordion-header">
-                  <h3>{{ dieta.tipo || 'Comida' }}: {{ dieta.platillo }}</h3>
-                </div>
-              </ion-item>
-              <div class="accordion-body" slot="content">
-                <ul>
-                  <li><strong>Acompañante:</strong> {{ dieta.acompanante || 'No especificado' }}</li>
-                  <li><strong>Bebida:</strong> {{ dieta.bebida || 'No especificada' }}</li>
-                </ul>
-              </div>
-            </ion-accordion>
-          </ion-accordion-group>
-        </div>
-        <ng-template #sinDieta>
-          <div class="empty-state">
-            <img src="assets/icon/bienestar-icon/dieta-icon.png" alt="">
-            <p>Tu médico aún no ha asignado planes alimenticios para hoy.</p>
+      <div *ngIf="segmentoSeleccionado === 'dieta'" class="patient-weekly-diet">
+        <div class="patient-week-selector">
+          <button type="button" (click)="moverSemanaDietas(-1)" aria-label="Semana anterior">
+            <ion-icon name="chevron-back" aria-hidden="true"></ion-icon>
+          </button>
+          <div>
+            <strong>Plan semanal</strong>
+            <span>{{ formatearFechaPlan(semanaDietasInicio) }} – {{ formatearFechaPlan(semanaDietasFin) }}</span>
           </div>
-        </ng-template>
+          <button type="button" (click)="moverSemanaDietas(1)" aria-label="Semana siguiente">
+            <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+
+        <div *ngIf="cargandoDietas" class="patient-diet-state" role="status">Consultando tu plan…</div>
+        <div *ngIf="errorDietas && !cargandoDietas" class="patient-diet-state error" role="alert">{{ errorDietas }}</div>
+
+        <div *ngIf="!cargandoDietas && !errorDietas && dietasAsignadas.length > 0" class="patient-meal-list">
+          <article *ngFor="let dieta of dietasAsignadas" class="patient-meal-card">
+            <div class="patient-meal-time">
+              <strong>{{ formatearFechaPlan(dieta.fecha) }}</strong>
+              <span>{{ dieta.tipo_comida }} · {{ dieta.hora | slice:0:5 }}</span>
+            </div>
+            <img *ngIf="dieta.imagen_url" [src]="dieta.imagen_url" [alt]="'Platillo: ' + dieta.nombre_platillo" loading="lazy">
+            <div class="patient-meal-content">
+              <h3>{{ dieta.nombre_platillo }}</h3>
+              <p *ngIf="dieta.descripcion">{{ dieta.descripcion }}</p>
+              <p class="patient-portion">Porción: {{ dieta.porcion_cantidad }} {{ dieta.porcion_unidad }} · {{ dieta.calorias_kcal }} kcal</p>
+              <p *ngIf="dieta.bebida_nombre"><strong>Bebida:</strong> {{ dieta.bebida_nombre }}<span *ngIf="dieta.bebida_cantidad_ml">, {{ dieta.bebida_cantidad_ml }} ml</span><span *ngIf="dieta.bebida_notas"> · {{ dieta.bebida_notas }}</span></p>
+              <p *ngIf="dieta.comentario" class="patient-meal-note"><strong>Sugerencia:</strong> {{ dieta.comentario }}</p>
+              <details *ngIf="dieta.carbohidratos_g !== null || dieta.proteinas_g !== null || dieta.grasas_g !== null || dieta.azucares_g !== null || dieta.fibra_g !== null || dieta.colesterol_mg !== null" class="nutrition-details">
+                <summary>Ver información nutricional</summary>
+                <ul>
+                  <li *ngIf="dieta.carbohidratos_g !== null">Carbohidratos: {{ dieta.carbohidratos_g }} g</li>
+                  <li *ngIf="dieta.proteinas_g !== null">Proteínas: {{ dieta.proteinas_g }} g</li>
+                  <li *ngIf="dieta.grasas_g !== null">Grasas: {{ dieta.grasas_g }} g</li>
+                  <li *ngIf="dieta.azucares_g !== null">Azúcares: {{ dieta.azucares_g }} g</li>
+                  <li *ngIf="dieta.fibra_g !== null">Fibra: {{ dieta.fibra_g }} g</li>
+                  <li *ngIf="dieta.colesterol_mg !== null">Colesterol: {{ dieta.colesterol_mg }} mg</li>
+                </ul>
+              </details>
+            </div>
+          </article>
+        </div>
+
+        <div *ngIf="!cargandoDietas && !errorDietas && dietasAsignadas.length === 0" class="empty-state">
+          <img src="assets/icon/bienestar-icon/dieta-icon.png" alt="">
+          <p>Tu médico aún no ha publicado un plan para esta semana.</p>
+        </div>
       </div>
 
       <div *ngIf="segmentoSeleccionado === 'ejercicio'">

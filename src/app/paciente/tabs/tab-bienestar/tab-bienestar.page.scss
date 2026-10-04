@@ -272,6 +272,58 @@
   }
 }
 
+.patient-week-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0 16px;
+  border: 1px solid #d6e2ef;
+  border-radius: 14px;
+  background: #f5f9fe;
+
+  > div { display: grid; gap: 4px; text-align: center; }
+  strong { color: #153769; font-size: 16px; }
+  span { color: #52627b; font-size: 13px; text-transform: capitalize; }
+  button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border: 1px solid #c5d4e6;
+    border-radius: 12px;
+    color: #075fbd;
+    background: #fff;
+    font-size: 22px;
+  }
+}
+
+.patient-meal-list { display: grid; gap: 12px; }
+.patient-meal-card {
+  display: block;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #dce6f0;
+  border-left: 5px solid #0876dc;
+  border-radius: 15px;
+  background: #fff;
+
+  > img { display: block; width: 100%; max-height: 190px; margin-bottom: 12px; object-fit: cover; border-radius: 12px; }
+}
+.patient-meal-time { display: grid; gap: 3px; }
+.patient-meal-time strong { color: #075fbd; font-size: 15px; text-transform: capitalize; }
+.patient-meal-time span { color: #334967; font-size: 14px; font-weight: 700; }
+.patient-meal-content h3 { margin: 0 0 7px; color: #142f5d; font-size: 19px; }
+.patient-meal-content p { margin: 5px 0; color: #3f5069; font-size: 15px; line-height: 1.45; }
+.patient-meal-content .patient-portion { color: #1c3556; font-weight: 700; }
+.nutrition-details { margin-top: 12px; color: #324762; font-size: 14px; }
+.nutrition-details summary { padding: 9px 0; color: #075fbd; font-weight: 700; }
+.nutrition-details ul { margin: 4px 0 0; padding-left: 20px; line-height: 1.7; }
+.patient-diet-state { color: #52627b; text-align: center; }
+.patient-diet-state.error { color: #8a1c13; }
+
 .weight-picker-section {
   max-width: 440px;
   margin: 0 auto;

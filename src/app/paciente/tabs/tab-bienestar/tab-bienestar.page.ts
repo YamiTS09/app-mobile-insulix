@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { DietasService } from '../../../services/dietas.service';
+import { DietasService, PlannedDish, WeeklyMealPlan } from '../../../services/dietas.service';
 import { ActividadService } from '../../../services/actividad.service';
 import { WeightMeasurement, WeightService } from '../../../services/weight.service';
 
@@ -32,7 +32,12 @@ export class TabBienestarPage implements OnInit, OnDestroy {
   private weightScrollTimer?: ReturnType<typeof setTimeout>;
   
   // Variables para almacenar los datos asignados por el médico
-  dietasAsignadas: any[] = [];
+  dietasAsignadas: PlannedDish[] = [];
+  planAlimenticio: WeeklyMealPlan | null = null;
+  semanaDietasInicio = this.obtenerLunesISO(new Date());
+  semanaDietasFin = this.sumarDiasISO(this.semanaDietasInicio, 6);
+  cargandoDietas = false;
+  errorDietas = '';
   ejercicioAsignado: any = null;
   usuarioLogueado: any = null;
   pacienteId = '';
@@ -67,17 +72,7 @@ export class TabBienestarPage implements OnInit, OnDestroy {
       const pacienteId = this.usuarioLogueado.usuario_id || this.usuarioLogueado.usuario || this.usuarioLogueado.uid;
       this.pacienteId = pacienteId;
 
-      // Obtener dietas de la API
-      this.dietasService.getAsignaciones(pacienteId).subscribe({
-        next: (asignaciones: any[]) => {
-          this.dietasAsignadas = asignaciones.map((a: any) => ({
-            ...a.dieta_id,
-            nombre: a.dieta_id?.nombre_platillo,
-            tipo: a.dieta_id?.categoria
-          }));
-        },
-        error: (e: any) => console.error('Error cargando dietas del paciente', e)
-      });
+      this.cargarPlanAlimenticio();
 
       // Obtener ejercicio de la API
       this.actividadService.getAsignaciones(pacienteId).subscribe({
@@ -112,6 +107,54 @@ export class TabBienestarPage implements OnInit, OnDestroy {
       this.errorPeso = '';
       this.cargarPesoActual(true);
     }
+  }
+
+  moverSemanaDietas(direccion: number) {
+    this.semanaDietasInicio = this.sumarDiasISO(this.semanaDietasInicio, direccion * 7);
+    this.semanaDietasFin = this.sumarDiasISO(this.semanaDietasInicio, 6);
+    this.cargarPlanAlimenticio();
+  }
+
+  cargarPlanAlimenticio() {
+    if (!this.pacienteId) return;
+    this.cargandoDietas = true;
+    this.errorDietas = '';
+    this.dietasService.getWeeklyPlan(this.pacienteId, this.semanaDietasInicio).subscribe({
+      next: plan => {
+        this.planAlimenticio = plan;
+        this.dietasAsignadas = plan?.comidas || [];
+        this.cargandoDietas = false;
+      },
+      error: error => {
+        this.planAlimenticio = null;
+        this.dietasAsignadas = [];
+        this.cargandoDietas = false;
+        this.errorDietas = error?.error?.message || 'No fue posible consultar el plan alimenticio.';
+      }
+    });
+  }
+
+  formatearFechaPlan(fecha: string): string {
+    const [year, month, day] = fecha.slice(0, 10).split('-').map(Number);
+    return new Intl.DateTimeFormat('es-MX', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    }).format(new Date(year, month - 1, day));
+  }
+
+  private obtenerLunesISO(date: Date): string {
+    const monday = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = monday.getDay();
+    monday.setDate(monday.getDate() + (day === 0 ? -6 : 1 - day));
+    return this.formatearFechaISO(monday);
+  }
+
+  private sumarDiasISO(value: string, days: number): string {
+    const [year, month, day] = value.split('-').map(Number);
+    return this.formatearFechaISO(new Date(year, month - 1, day + days));
+  }
+
+  private formatearFechaISO(date: Date): string {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
   cargarPesoActual(centrarRueda = false) {

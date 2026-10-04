@@ -2,73 +2,69 @@
 
 <ion-content [fullscreen]="true" class="main-content">
   <div class="main-container">
-
-    <div class="custom-tabs">
-      <div class="tab-item" (click)="segmentValue = 'dieta'; filterItems()" [class.active]="segmentValue === 'dieta'">
-        <ion-icon name="restaurant-outline"></ion-icon>
-        <span>Dieta</span>
-      </div>
-      <div class="tab-item" (click)="segmentValue = 'ejercicio'; filterItems()" [class.active]="segmentValue === 'ejercicio'">
-        <ion-icon name="accessibility-outline"></ion-icon>
-        <span>Actividad física</span>
-      </div>
+    <div class="custom-tabs" role="tablist" aria-label="Catálogo">
+      <button type="button" class="tab-item" (click)="segmentValue = 'dieta'; filterItems()" [class.active]="segmentValue === 'dieta'">
+        <ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon><span>Platillos</span>
+      </button>
+      <button type="button" class="tab-item" (click)="segmentValue = 'ejercicio'; filterItems()" [class.active]="segmentValue === 'ejercicio'">
+        <ion-icon name="accessibility-outline" aria-hidden="true"></ion-icon><span>Actividad física</span>
+      </button>
     </div>
 
-    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterItems()" class="custom-searchbar" placeholder="Buscar..."></ion-searchbar>
+    <p class="page-intro" *ngIf="segmentValue === 'dieta'">Guarda platillos para reutilizarlos al preparar el plan semanal de cada paciente.</p>
+    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterItems()" class="custom-searchbar" placeholder="Buscar en el catálogo" aria-label="Buscar en el catálogo"></ion-searchbar>
 
-    <div class="filter-buttons" *ngIf="segmentValue === 'dieta'">
-      <button (click)="setFiltroComida('Desayuno')" [class.active]="filtroComida === 'Desayuno'">Desayuno</button>
-      <button (click)="setFiltroComida('Comida')" [class.active]="filtroComida === 'Comida'">Comida</button>
-      <button (click)="setFiltroComida('Cena')" [class.active]="filtroComida === 'Cena'">Cena</button>
+    <div class="filter-buttons" *ngIf="segmentValue === 'dieta'" aria-label="Filtrar categoría sugerida">
+      <button type="button" (click)="setFiltroComida('')" [class.active]="filtroComida === ''">Todos</button>
+      <button type="button" (click)="setFiltroComida('Desayuno')" [class.active]="filtroComida === 'Desayuno'">Desayuno</button>
+      <button type="button" (click)="setFiltroComida('Comida')" [class.active]="filtroComida === 'Comida'">Comida</button>
+      <button type="button" (click)="setFiltroComida('Cena')" [class.active]="filtroComida === 'Cena'">Cena</button>
+      <button type="button" (click)="setFiltroComida('Colación')" [class.active]="filtroComida === 'Colación'">Colación</button>
     </div>
 
     <div class="catalog-list">
-      <div *ngFor="let item of itemsFiltrados" class="diet-card">
-        
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>{{ segmentValue === 'dieta' ? (item.nombre || item.tipo) : item.nombre }}</h3>
-          
+      <article *ngFor="let item of itemsFiltrados" class="diet-card">
+        <img *ngIf="segmentValue === 'dieta' && item.imagen_url" class="catalog-image" [src]="item.imagen_url" [alt]="'Platillo: ' + item.nombre" loading="lazy">
+        <div class="card-header">
+          <div>
+            <h3>{{ item.nombre }}</h3>
+            <span *ngIf="segmentValue === 'dieta' && item.categoria_sugerida" class="suggested-category">{{ item.categoria_sugerida }} sugerido</span>
+          </div>
           <div class="action-buttons">
-            <ion-button fill="clear" (click)="openAddModal(item)" size="small">
-              <ion-icon name="create-outline" slot="icon-only" color="primary"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="eliminarItem(item)" size="small">
-              <ion-icon name="trash-outline" slot="icon-only" color="danger"></ion-icon>
-            </ion-button>
+            <ion-button fill="clear" aria-label="Editar" (click)="openAddModal(item)" size="small"><ion-icon name="create-outline" slot="icon-only" color="primary"></ion-icon></ion-button>
+            <ion-button fill="clear" aria-label="Eliminar" (click)="eliminarItem(item)" size="small"><ion-icon name="trash-outline" slot="icon-only" color="danger"></ion-icon></ion-button>
           </div>
         </div>
-        
-        <div class="card-body">
-          <ul *ngIf="segmentValue === 'dieta'">
-            <li><strong>Platillo:</strong> {{ item.platillo }}</li>
-            <li><strong>Acompañante:</strong> {{ item.acompanante }}</li>
-            <li><strong>Bebida:</strong> {{ item.bebida }}</li>
-          </ul>
-          <ul *ngIf="segmentValue === 'ejercicio'">
-            <li><strong>Duración:</strong> {{ item.duracion }}</li>
-            <li><strong>Instrucciones:</strong> {{ item.descripcion }}</li>
+
+        <div class="card-body" *ngIf="segmentValue === 'dieta'">
+          <p *ngIf="item.descripcion">{{ item.descripcion }}</p>
+          <ul>
+            <li><strong>Porción:</strong> {{ item.porcion_cantidad }} {{ item.porcion_unidad }}</li>
+            <li><strong>Calorías:</strong> {{ item.calorias_kcal }} kcal por porción</li>
+            <li *ngIf="item.carbohidratos_g !== null"><strong>Carbohidratos:</strong> {{ item.carbohidratos_g }} g</li>
+            <li *ngIf="item.proteinas_g !== null"><strong>Proteínas:</strong> {{ item.proteinas_g }} g</li>
+            <li *ngIf="item.grasas_g !== null"><strong>Grasas:</strong> {{ item.grasas_g }} g</li>
+            <li *ngIf="item.azucares_g !== null"><strong>Azúcares:</strong> {{ item.azucares_g }} g</li>
+            <li *ngIf="item.fibra_g !== null"><strong>Fibra:</strong> {{ item.fibra_g }} g</li>
+            <li *ngIf="item.colesterol_mg !== null"><strong>Colesterol:</strong> {{ item.colesterol_mg }} mg</li>
+            <li *ngIf="item.bebida_nombre"><strong>Bebida:</strong> {{ item.bebida_nombre }}<span *ngIf="item.bebida_cantidad_ml">, {{ item.bebida_cantidad_ml }} ml</span><span *ngIf="item.bebida_notas"> · {{ item.bebida_notas }}</span></li>
           </ul>
         </div>
-        
-        <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
-          <span class="assigned-text">Asignado a: {{ item.pacientes || 0 }} pacientes</span>
-          
-          <ion-button *ngIf="pacienteEnSeleccion" 
-                      fill="solid" 
-                      color="success" 
-                      size="small" 
-                      style="--border-radius: 20px;"
-                      (click)="seleccionarItem(item)">
-            Asignar
-          </ion-button>
+        <div class="card-body" *ngIf="segmentValue === 'ejercicio'"><p>{{ item.duracion }} · {{ item.descripcion }}</p></div>
+
+        <div class="card-footer">
+          <span class="assigned-text" *ngIf="segmentValue === 'dieta'">Usado en {{ item.pacientes || 0 }} pacientes</span>
+          <ion-button *ngIf="pacienteEnSeleccion && segmentValue === 'ejercicio'" fill="solid" color="success" size="small" (click)="seleccionarItem(item)">Asignar actividad</ion-button>
         </div>
+      </article>
+      <div *ngIf="itemsFiltrados.length === 0" class="empty-catalog">
+        <ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon>
+        <p>No hay elementos que coincidan con la búsqueda.</p>
       </div>
     </div>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
-    <ion-fab-button (click)="openAddModal()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
+    <ion-fab-button aria-label="Agregar al catálogo" (click)="openAddModal()"><ion-icon name="add"></ion-icon></ion-fab-button>
   </ion-fab>
 </ion-content>
