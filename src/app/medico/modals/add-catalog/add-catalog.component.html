@@ -1,68 +1,129 @@
 <div class="modal-container">
   <div class="modal-header">
-    <ion-icon name="close-circle-outline" class="close-icon" (click)="dismiss()"></ion-icon>
+    <ion-button fill="clear" aria-label="Cerrar" (click)="dismiss()">
+      <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+    </ion-button>
   </div>
 
   <div class="modal-content">
     <h2 class="modal-title">
-      {{ itemAEditar ? 'Editar' : 'Nueva' }} {{ type === 'dieta' ? 'dieta' : 'actividad física' }}
+      {{ type === 'dieta' ? (itemAEditar ? 'Editar platillo del catálogo' : 'Nuevo platillo del catálogo') : (itemAEditar ? 'Editar actividad física' : 'Nueva actividad física') }}
     </h2>
-    <div class="title-underline"></div>
+    <div class="draft-notice" role="status">
+      <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+      <div>
+        <p>{{ draftRestored ? 'Retomamos el borrador que dejaste pendiente.' : 'Si cierras este formulario, conservaremos lo que escribas durante esta sesión.' }}</p>
+        <button *ngIf="hasChanges || draftRestored" type="button" class="discard-draft" (click)="discardDraft()">Descartar borrador</button>
+      </div>
+    </div>
+    <p class="modal-intro" *ngIf="type === 'dieta'">Los datos del platillo se guardan por porción.</p>
 
-    <form>
-      <div *ngIf="type === 'dieta'" class="fields-list">
+    <form *ngIf="type === 'dieta'" class="fields-list" (ngSubmit)="save()">
+      <div class="input-group">
+        <label for="dish-name">Nombre del platillo <span>(obligatorio)</span></label>
+        <input id="dish-name" type="text" [(ngModel)]="dietaData.nombre" name="nombreD" class="custom-input" maxlength="120" required>
+      </div>
+
+      <div class="input-group">
+        <label for="dish-description">Descripción o ingredientes</label>
+        <textarea id="dish-description" [(ngModel)]="dietaData.descripcion" name="descripcionD" class="custom-input" rows="3" placeholder="Describe qué contiene el platillo"></textarea>
+      </div>
+
+      <div class="input-group">
+        <label>Imagen del platillo <span>(opcional)</span></label>
+        <input #dishFile class="file-input" type="file" accept="image/*" capture="environment" (change)="seleccionarImagen($event)">
+        <ion-button type="button" fill="outline" class="image-select-button" (click)="dishFile.click()">
+          <ion-icon name="camera-outline" slot="start"></ion-icon>
+          Tomar o elegir imagen
+        </ion-button>
+        <img *ngIf="dietaData.imagen_preview || dietaData.imagen_url"
+          class="dish-preview" [src]="dietaData.imagen_preview || dietaData.imagen_url" alt="Vista previa del platillo">
+        <ion-button *ngIf="dietaData.imagen_preview || dietaData.imagen_url" type="button" fill="clear" size="small" (click)="quitarImagen()">
+          Quitar imagen
+        </ion-button>
+      </div>
+
+      <div class="field-row">
         <div class="input-group">
-          <label>Categoría (Filtro):</label>
-          <select [(ngModel)]="dietaData.tipo" name="tipoD" class="custom-input">
+          <label for="portion-amount">Porción <span>(obligatoria)</span></label>
+          <input id="portion-amount" type="number" min="0.01" step="0.01" [(ngModel)]="dietaData.porcion_cantidad" name="porcionCantidad" class="custom-input" placeholder="Ej. 150" required>
+        </div>
+        <div class="input-group">
+          <label for="portion-unit">Unidad</label>
+          <select id="portion-unit" [(ngModel)]="dietaData.porcion_unidad" name="porcionUnidad" class="custom-input">
+            <option value="g">gramos (g)</option>
+            <option value="ml">mililitros (ml)</option>
+            <option value="pieza">pieza</option>
+            <option value="taza">taza</option>
+            <option value="porción">porción</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="input-group">
+          <label for="dish-calories">Calorías por porción <span>(kcal, obligatorias)</span></label>
+          <input id="dish-calories" type="number" min="0" step="0.1" [(ngModel)]="dietaData.calorias_kcal" name="calorias" class="custom-input" placeholder="Ej. 350" required>
+        </div>
+        <div class="input-group">
+          <label for="meal-suggestion">Categoría sugerida</label>
+          <select id="meal-suggestion" [(ngModel)]="dietaData.categoria_sugerida" name="categoriaSugerida" class="custom-input">
+            <option value="">Sin sugerencia</option>
             <option value="Desayuno">Desayuno</option>
             <option value="Comida">Comida</option>
             <option value="Cena">Cena</option>
+            <option value="Colación">Colación</option>
           </select>
         </div>
-
-        <div class="input-group">
-          <label>Nombre del plan:</label>
-          <input type="text" [(ngModel)]="dietaData.nombre" name="nombreD" class="custom-input">
-        </div>
-
-        <div class="input-group">
-          <label>Platillo principal:</label>
-          <input type="text" [(ngModel)]="dietaData.platillo" name="platilloD" class="custom-input">
-        </div>
-
-        <div class="input-group">
-          <label>Acompañante:</label>
-          <input type="text" [(ngModel)]="dietaData.acompanante" name="acompananteD" class="custom-input">
-        </div>
-
-        <div class="input-group">
-          <label>Bebida:</label>
-          <input type="text" [(ngModel)]="dietaData.bebida" name="bebidaD" class="custom-input">
-        </div>
       </div>
 
-      <div *ngIf="type === 'ejercicio'" class="fields-list">
-        <div class="input-group">
-          <label>Nombre de la actividad:</label>
-          <input type="text" [(ngModel)]="ejercicioData.nombre" name="nombreE" class="custom-input">
+      <details class="optional-section">
+        <summary>Información nutricional opcional</summary>
+        <p>Captura los valores que tengas por porción. Si no conoces un valor, déjalo vacío.</p>
+        <div class="field-row">
+          <div class="input-group"><label>Carbohidratos (g)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.carbohidratos_g" name="carbohidratos" class="custom-input"></div>
+          <div class="input-group"><label>Proteínas (g)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.proteinas_g" name="proteinas" class="custom-input"></div>
         </div>
-
-        <div class="input-group">
-          <label>Duración sugerida:</label>
-          <input type="text" [(ngModel)]="ejercicioData.duracion" name="duracionE" class="custom-input">
+        <div class="field-row">
+          <div class="input-group"><label>Grasas (g)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.grasas_g" name="grasas" class="custom-input"></div>
+          <div class="input-group"><label>Azúcares (g)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.azucares_g" name="azucares" class="custom-input"></div>
         </div>
-
-        <div class="input-group">
-          <label>Descripción:</label>
-          <input type="text" [(ngModel)]="ejercicioData.descripcion" name="descripcionE" class="custom-input">
+        <div class="field-row">
+          <div class="input-group"><label>Fibra (g)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.fibra_g" name="fibra" class="custom-input"></div>
+          <div class="input-group"><label>Colesterol (mg)</label><input type="number" min="0" step="0.1" [(ngModel)]="dietaData.colesterol_mg" name="colesterol" class="custom-input"></div>
         </div>
-      </div>
+      </details>
 
+      <details class="optional-section">
+        <summary>Bebida opcional</summary>
+        <p>Indica el nombre y, si aplica, la cantidad recomendada.</p>
+        <div class="input-group">
+          <label for="drink-name">Nombre de la bebida</label>
+          <input id="drink-name" type="text" [(ngModel)]="dietaData.bebida_nombre" name="bebidaNombre" class="custom-input" placeholder="Ej. Agua de jamaica">
+        </div>
+        <div class="input-group">
+          <label for="drink-amount">Cantidad (ml)</label>
+          <input id="drink-amount" type="number" min="1" step="1" [(ngModel)]="dietaData.bebida_cantidad_ml" name="bebidaCantidad" class="custom-input" placeholder="Ej. 250">
+        </div>
+        <div class="input-group">
+          <label for="drink-notes">Preparación o indicaciones</label>
+          <input id="drink-notes" type="text" [(ngModel)]="dietaData.bebida_notas" name="bebidaNotas" class="custom-input" placeholder="Ej. Sin azúcar">
+        </div>
+      </details>
+
+      <p *ngIf="errorMessage" class="form-error" role="alert">{{ errorMessage }}</p>
       <div class="button-container">
-        <button type="button" (click)="save()" class="save-button">
-          {{ itemAEditar ? 'Actualizar registro' : 'Guardar en catálogo' }}
-        </button>
+        <ion-button type="submit" expand="block" class="save-button">
+          {{ itemAEditar ? 'Guardar cambios' : 'Guardar en catálogo' }}
+        </ion-button>
       </div>
+    </form>
+
+    <form *ngIf="type === 'ejercicio'" class="fields-list" (ngSubmit)="save()">
+      <div class="input-group"><label>Nombre de la actividad:</label><input type="text" [(ngModel)]="ejercicioData.nombre" name="nombreE" class="custom-input"></div>
+      <div class="input-group"><label>Duración sugerida:</label><input type="text" [(ngModel)]="ejercicioData.duracion" name="duracionE" class="custom-input"></div>
+      <div class="input-group"><label>Descripción:</label><input type="text" [(ngModel)]="ejercicioData.descripcion" name="descripcionE" class="custom-input"></div>
+      <div class="button-container"><ion-button type="submit" expand="block" class="save-button">{{ itemAEditar ? 'Actualizar registro' : 'Guardar en catálogo' }}</ion-button></div>
     </form>
   </div>
 </div>

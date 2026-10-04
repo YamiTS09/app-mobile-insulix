@@ -28,6 +28,8 @@
         padding-bottom: 10px;
         border-bottom: 2px solid transparent;
         cursor: pointer;
+        border: 0;
+        background: transparent;
         transition: all 0.2s;
         color: #333;
         /* Default color */
@@ -56,6 +58,13 @@
     }
 }
 
+.page-intro {
+  margin: -10px 2px 16px;
+  color: #42536d;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 .custom-searchbar {
     --background: #ffffff;
     --border-radius: 30px;
@@ -73,23 +82,24 @@
 .filter-buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 25px;
 
     button {
         background: white;
         border: 1px solid #ccc;
-        padding: 6px 20px;
+        padding: 8px 14px;
         border-radius: 20px;
         font-size: 14px;
         font-weight: 600;
-        color: #777;
+        color: #33445d;
         background: white;
         transition: all 0.2s;
 
         &.active {
-            color: #007bff;
-            border-color: #007bff;
+            color: #fff;
+            border-color: #0876dc;
+            background: #0876dc;
         }
     }
 }
@@ -119,7 +129,23 @@
         }
     }
 
+    .catalog-image {
+        width: 100%;
+        max-height: 190px;
+        object-fit: cover;
+        border-radius: 14px;
+        margin-bottom: 12px;
+    }
+
+    .suggested-category {
+        display: inline-block;
+        margin-top: 5px;
+        color: #52627b;
+        font-size: 13px;
+    }
+
     .card-body {
+        p { color: #42536d; line-height: 1.45; margin: 0 0 10px; }
         ul {
             list-style-type: disc;
             padding-left: 20px;
@@ -154,6 +180,15 @@
             }
         }
     }
+}
+
+.empty-catalog {
+  padding: 28px 16px;
+  text-align: center;
+  color: #52627b;
+  background: #fff;
+  border-radius: 16px;
+  ion-icon { font-size: 34px; color: #718096; }
 }
 
 .custom-fab {

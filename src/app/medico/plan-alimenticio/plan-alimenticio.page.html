@@ -1,0 +1,149 @@
+<app-medico-header></app-medico-header>
+
+<ion-content [fullscreen]="true" class="weekly-plan-content">
+  <main class="weekly-plan-page">
+    <button class="back-link" type="button" (click)="volver()">
+      <ion-icon name="arrow-back" aria-hidden="true"></ion-icon><span>Regresar al paciente</span>
+    </button>
+
+    <header class="page-heading">
+      <p>Plan alimenticio</p>
+      <h1>{{ pacienteNombre }}</h1>
+    </header>
+
+    <section class="week-card" aria-labelledby="week-heading">
+      <h2 id="week-heading">Seleccionar semana</h2>
+      <p>Elige una fecha. El plan se organizará de lunes a domingo.</p>
+      <div class="week-controls">
+        <label for="week-date">Fecha de inicio</label>
+        <input id="week-date" type="date" [ngModel]="fechaInicio" (ngModelChange)="alCambiarSemana($event)">
+        <p class="week-range">{{ formatearFecha(fechaInicio) }} – {{ formatearFecha(fechaFin) }}</p>
+        <ion-button fill="outline" expand="block" (click)="cargarPlan()" [disabled]="cargando">Consultar semana</ion-button>
+      </div>
+    </section>
+
+    <p *ngIf="errorMessage" class="status-message error" role="alert">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="status-message success" role="status">{{ successMessage }}</p>
+    <div *ngIf="cargando" class="loading-state"><ion-spinner name="crescent"></ion-spinner><span>Cargando plan…</span></div>
+
+    <section *ngIf="!cargando && !plan" class="empty-plan-card">
+      <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+      <h2>No hay un plan para esta semana</h2>
+      <p>Al crearlo podrás agregar platillos del catálogo y asignarlos por día y hora.</p>
+      <ion-button expand="block" (click)="crearPlan()" [disabled]="guardando">Crear plan semanal</ion-button>
+    </section>
+
+    <section *ngIf="!cargando && plan" class="plan-card">
+      <div class="plan-card-heading">
+        <div>
+          <h2>Semana del {{ formatearFecha(plan.fecha_inicio) }}</h2>
+          <p>{{ formatearFecha(plan.fecha_inicio) }} – {{ formatearFecha(plan.fecha_fin) }}</p>
+        </div>
+        <span class="plan-status" [class.published]="plan.estado === 'PUBLICADO'">
+          {{ plan.estado === 'PUBLICADO' ? 'Publicado' : 'Borrador' }}
+        </span>
+      </div>
+
+      <div *ngIf="plan.estado === 'BORRADOR'" class="add-meal-form">
+        <h3>Agregar un platillo</h3>
+        <label id="catalog-dish-label" for="catalog-dish">Platillo del catálogo</label>
+        <div class="dish-picker" (keydown.escape)="cerrarSelectorPlatillos()">
+          <button #selectorPlatillo id="catalog-dish" type="button" class="dish-picker-trigger"
+            [class.has-selection]="!!platilloSeleccionado" [attr.aria-expanded]="selectorPlatillosAbierto"
+            aria-controls="catalog-dish-options" aria-labelledby="catalog-dish-label catalog-dish-value"
+            [disabled]="guardando || !catalogo.length" (click)="alternarSelectorPlatillos()">
+            <ng-container *ngIf="platilloSeleccionado as item; else sinPlatillo">
+              <img *ngIf="item.imagen_url; else iconoPlatillo" class="dish-thumbnail" [src]="item.imagen_url" alt="">
+              <ng-template #iconoPlatillo><span class="dish-thumbnail placeholder"><ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon></span></ng-template>
+              <span class="dish-option-text" id="catalog-dish-value">
+                <strong>{{ item.nombre }}</strong>
+                <small>{{ item.porcion_cantidad | number:'1.0-2' }} {{ item.porcion_unidad }} · {{ item.calorias_kcal | number:'1.0-2' }} kcal</small>
+              </span>
+            </ng-container>
+            <ng-template #sinPlatillo>
+              <span class="dish-thumbnail placeholder"><ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon></span>
+              <span class="dish-option-text" id="catalog-dish-value"><strong>Seleccionar platillo</strong><small>Busca en tu catálogo</small></span>
+            </ng-template>
+            <ion-icon [name]="selectorPlatillosAbierto ? 'chevron-up' : 'chevron-down'" class="picker-chevron" aria-hidden="true"></ion-icon>
+          </button>
+
+          <div *ngIf="selectorPlatillosAbierto" id="catalog-dish-options" class="dish-picker-panel">
+            <label for="dish-search">Buscar por nombre</label>
+            <input #busquedaInput id="dish-search" type="search" [(ngModel)]="busquedaPlatillo" placeholder="Ej. pollo, arroz o ensalada" autocomplete="off" [disabled]="guardando">
+            <div class="dish-options" role="group" aria-label="Platillos disponibles">
+              <button *ngFor="let item of platillosFiltrados; trackBy: identificarPlatillo" type="button" class="dish-option"
+                [class.selected]="nuevaComida.catalogo_platillo_id === item.catalogo_platillo_id"
+                [attr.aria-pressed]="nuevaComida.catalogo_platillo_id === item.catalogo_platillo_id"
+                [disabled]="guardando"
+                (click)="seleccionarPlatillo(item)">
+                <img *ngIf="item.imagen_url; else sinImagenOpcion" class="dish-thumbnail" [src]="item.imagen_url" alt="" loading="lazy">
+                <ng-template #sinImagenOpcion><span class="dish-thumbnail placeholder"><ion-icon name="restaurant-outline" aria-hidden="true"></ion-icon></span></ng-template>
+                <span class="dish-option-text">
+                  <strong>{{ item.nombre }}</strong>
+                  <small>{{ item.porcion_cantidad | number:'1.0-2' }} {{ item.porcion_unidad }} · {{ item.calorias_kcal | number:'1.0-2' }} kcal</small>
+                </span>
+                <ion-icon *ngIf="nuevaComida.catalogo_platillo_id === item.catalogo_platillo_id" name="checkmark-circle" class="selected-icon" aria-hidden="true"></ion-icon>
+              </button>
+              <p *ngIf="!platillosFiltrados.length" class="picker-empty" role="status">No hay platillos con ese nombre.</p>
+            </div>
+            <button type="button" class="picker-close" (click)="cerrarSelectorPlatillos()">Cerrar lista</button>
+          </div>
+        </div>
+
+        <fieldset class="meal-type-fieldset" [disabled]="guardando">
+          <legend>Tipo de comida</legend>
+          <div class="meal-type-options">
+            <label *ngFor="let tipo of tiposComida" class="meal-type-option" [class.selected]="nuevaComida.tipo_comida === tipo">
+              <input type="radio" name="meal-type" [value]="tipo" [(ngModel)]="nuevaComida.tipo_comida">
+              <span>{{ tipo }}</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="form-row">
+          <div>
+            <label for="meal-date">Día</label>
+            <input id="meal-date" type="date" [min]="plan.fecha_inicio" [max]="plan.fecha_fin" [(ngModel)]="nuevaComida.fecha" [disabled]="guardando">
+          </div>
+          <div>
+            <label for="meal-time">Hora</label>
+            <input id="meal-time" type="time" [(ngModel)]="nuevaComida.hora" [disabled]="guardando">
+          </div>
+        </div>
+
+        <label for="meal-comment">Sugerencias para el paciente <span>(opcional)</span></label>
+        <textarea id="meal-comment" rows="3" [(ngModel)]="nuevaComida.comentario" placeholder="Ej. Preparar sin azúcar añadida" [disabled]="guardando"></textarea>
+
+        <ion-button expand="block" (click)="agregarComida()" [disabled]="guardando || !catalogo.length">
+          <ion-icon name="add" slot="start"></ion-icon>Agregar al plan
+        </ion-button>
+        <p *ngIf="!catalogo.length" class="helper-text">Primero agrega platillos en el catálogo.</p>
+      </div>
+
+      <div class="meals-list">
+        <h3>Comidas de la semana</h3>
+        <div *ngIf="!plan.comidas?.length" class="empty-meals">Aún no agregas platillos a esta semana.</div>
+        <article *ngFor="let comida of plan.comidas" class="meal-item">
+          <img *ngIf="comida.imagen_url" [src]="comida.imagen_url" [alt]="'Platillo: ' + comida.nombre_platillo" loading="lazy">
+          <div class="meal-content">
+            <p class="meal-schedule">{{ formatearFecha(comida.fecha) }} · {{ comida.tipo_comida }} · {{ comida.hora | slice:0:5 }}</p>
+            <h4>{{ comida.nombre_platillo }}</h4>
+            <p *ngIf="comida.descripcion">{{ comida.descripcion }}</p>
+            <p class="meal-nutrition">Porción: {{ comida.porcion_cantidad }} {{ comida.porcion_unidad }} · {{ comida.calorias_kcal }} kcal</p>
+            <p *ngIf="comida.bebida_nombre" class="meal-drink">Bebida: {{ comida.bebida_nombre }}<span *ngIf="comida.bebida_cantidad_ml">, {{ comida.bebida_cantidad_ml }} ml</span><span *ngIf="comida.bebida_notas"> · {{ comida.bebida_notas }}</span></p>
+            <p *ngIf="comida.comentario" class="meal-comment">{{ comida.comentario }}</p>
+          </div>
+          <ion-button *ngIf="plan.estado === 'BORRADOR'" fill="clear" color="danger" aria-label="Quitar platillo" (click)="quitarComida(comida)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </article>
+      </div>
+
+      <div class="plan-actions">
+        <ion-button *ngIf="plan.estado === 'BORRADOR'" expand="block" (click)="cambiarEstado('PUBLICADO')" [disabled]="guardando || !plan.comidas.length">Publicar plan para el paciente</ion-button>
+        <ion-button *ngIf="plan.estado === 'PUBLICADO'" expand="block" fill="outline" (click)="cambiarEstado('BORRADOR')" [disabled]="guardando">Reabrir para editar</ion-button>
+        <p *ngIf="plan.estado === 'PUBLICADO'">El paciente ya puede consultar este plan.</p>
+      </div>
+    </section>
+  </main>
+</ion-content>

@@ -52,31 +52,11 @@
 
         <div class="assignment-box">
           <h4 style="color: #0070e0; margin-bottom: 10px;">Plan Alimenticio</h4>
-
-          <div *ngIf="paciente.dietasAsignadas?.length > 0; else noDieta">
-            <div *ngFor="let dieta of paciente.dietasAsignadas; let i = index" class="assigned-info"
-              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <div>
-                <p><strong>{{ dieta.platillo }}</strong></p>
-                <small>{{ dieta.bebida }}</small>
-              </div>
-              <ion-button fill="clear" color="danger" (click)="quitarDieta(i)">
-                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-              </ion-button>
-            </div>
-
-            <ion-button expand="block" fill="outline" (click)="irAlCatalogo('dieta')" style="margin-top: 10px;">
-              <ion-icon name="add" slot="start"></ion-icon>
-              Agregar otra dieta
-            </ion-button>
-          </div>
-
-          <ng-template #noDieta>
-            <ion-button expand="block" fill="outline" (click)="irAlCatalogo('dieta')">
-              <ion-icon name="add" slot="start"></ion-icon>
-              Asignar dieta
-            </ion-button>
-          </ng-template>
+          <p class="wellness-summary">Organiza los platillos por día y horario. El paciente verá el plan cuando lo publiques.</p>
+          <ion-button expand="block" fill="outline" (click)="irAlCatalogo('dieta')">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            Crear o revisar plan semanal
+          </ion-button>
         </div>
 
         <div style="border-top: 1px solid #f0f0f0; margin: 15px 0;"></div>

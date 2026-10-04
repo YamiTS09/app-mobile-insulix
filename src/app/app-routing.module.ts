@@ -63,6 +63,12 @@ const routes: Routes = [
     data: { roles: ['MEDICO'] },
     component: DetallePacienteComponent
   },
+  {
+    path: 'plan-alimenticio/:id',
+    canActivate: [authGuard],
+    data: { roles: ['MEDICO'] },
+    loadChildren: () => import('./medico/plan-alimenticio/plan-alimenticio.module').then(m => m.PlanAlimenticioPageModule)
+  },
 
   // --- RUTAS PROTEGIDAS PARA PACIENTES ---
   {

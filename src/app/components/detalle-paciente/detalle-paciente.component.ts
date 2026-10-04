@@ -1,9 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, NavController, AlertController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 
-import { DietasService } from '../../services/dietas.service';
 import { ActividadService } from '../../services/actividad.service';
 
 @Component({
@@ -17,14 +16,11 @@ export class DetallePacienteComponent implements OnInit {
   
   paciente: any = null;
 
-  private dietasService = inject(DietasService);
   private actividadService = inject(ActividadService);
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private navCtrl: NavController,
-    private alertCtrl: AlertController
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -43,19 +39,6 @@ export class DetallePacienteComponent implements OnInit {
     }
     
     if (this.paciente) {
-      // Pedir dietas
-      this.dietasService.getAsignaciones(id).subscribe({
-        next: (asignaciones: any[]) => {
-          this.paciente.dietasAsignadas = asignaciones.map((a: any) => ({
-            ...a.dieta_id,
-            nombre: a.dieta_id?.nombre_platillo,
-            tipo: a.dieta_id?.categoria,
-            asignacion_id: a._id
-          }));
-        },
-        error: (e: any) => console.error('Error obteniendo dietas del paciente', e)
-      });
-
       // Pedir actividades
       this.actividadService.getAsignaciones(id).subscribe({
         next: (asignaciones: any[]) => {
@@ -78,37 +61,16 @@ export class DetallePacienteComponent implements OnInit {
   }
 
   irAlCatalogo(categoria: 'dieta' | 'ejercicio') {
+    if (categoria === 'dieta') {
+      this.router.navigate(['/plan-alimenticio', this.paciente.usuario]);
+      return;
+    }
     this.router.navigate(['/tabs-medico/tab-catalogo'], {
       queryParams: { 
         segmento: categoria,
         asignarAPaciente: this.paciente.usuario 
       }
     });
-  }
-
-  async quitarDieta(index: number) {
-    const alert = await this.alertCtrl.create({
-      header: 'Eliminar dieta',
-      message: '¿Estás seguro de quitar esta dieta del plan?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          handler: () => {
-             const dieta = this.paciente.dietasAsignadas[index];
-             if (dieta.asignacion_id) {
-                this.dietasService.deleteAsignacion(dieta.asignacion_id).subscribe({
-                   next: () => this.paciente.dietasAsignadas.splice(index, 1),
-                   error: (e: any) => console.error('Error al quitar dieta', e)
-                });
-             } else {
-                this.paciente.dietasAsignadas.splice(index, 1);
-             }
-          }
-        }
-      ]
-    });
-    await alert.present();
   }
 
   async quitarActividad() {
