@@ -4,8 +4,8 @@ INSULIX es una aplicación móvil en desarrollo para apoyar el seguimiento de pe
 
 ## Componentes de INSULIX
 
-- Aplicación móvil: https://github.com/milaneso69/app-mobile-insulix
-- API: https://github.com/YamiTS09/API-INSULIX
+- [Aplicación móvil — app-mobile-insulix](https://github.com/milaneso69/app-mobile-insulix)
+- [API — API-INSULIX](https://github.com/YamiTS09/API-INSULIX)
 
 ## Funciones principales
 
